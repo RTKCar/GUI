@@ -3,28 +3,28 @@ import QtPositioning 5.5
 
 TestMenuForm {
     id:testMenu1
-    //signal followMe(QtPositioning.coordinate cord)
     signal followMe()
-    property bool follow: false
-    //property variant follow: Boolean
-    //property variant followCoordinate: QtPositioning.coordinate
+    property var mapSourca
 
-    /*Component.onCompleted: {
-        followButton.clicked.connect(followMe)
-        //testMenu1
-        //followButton.
-    }*/
 
-    /*followButton: {
-
-        onClicked : testMenu1.followME()
-    }*/
+    Component.onCompleted: {
+        mapSourca.zoomLevel = 14
+        mapSource = mapSourca
+    }
 
     followButton.onClicked: {
         //follow = !follow
         followMe()
+    }
 
+    zoomSlider.onValueChanged: {
+        mapSource.zoomLevel = zoomSlider.value
+        zoomValue.text = zoomSlider.value
+        //zoomValue.text = Math.floor(zoomSlider.value)
     }
 
     //switchDelegate.
+    //mouseDelegate:
+    //markerDelegate:
+    //handDelegate:
 }

@@ -14,15 +14,16 @@ Item {
     Layout.fillWidth: true
     Layout.fillHeight: true*/
     property bool foll: false
+    property alias mapMap: map
 
     Plugin {
         id: mapPlugin
         name: "osm"
     }
 
-    onFollChanged: {
+    /*onFollChanged: {
         map.followme = foll
-    }
+    }*/
 
     Map {
         id: map
@@ -35,16 +36,18 @@ Item {
         property int pressX : -1
         property int pressY : -1
         property int jitterThreshold : 30
-        property bool followme: false
+        //property bool followme: false
         property PositionSource positionSource
 
         anchors.fill: parent
         plugin: mapPlugin
         center: QtPositioning.coordinate(56.41548, 12.987562) // Hasslöv
-        maximumZoomLevel: 10
-        minimumZoomLevel: 20
-        //zoomLevel:14
-        zoomLevel: Math.floor((maximumZoomLevel - minimumZoomLevel)/2)
+        maximumZoomLevel: 20
+        //maximumZoomLevel: 10
+        minimumZoomLevel: 3
+        //minimumZoomLevel: 20
+        zoomLevel:14
+        //zoomLevel: Math.floor((maximumZoomLevel - minimumZoomLevel)/2)
 
 
         /*function followME() {
@@ -52,26 +55,55 @@ Item {
             map.center = currentPosition
         }*/
 
+        function calculateScale()
+        {
+            var coord1, coord2, dist, text, f
+            f = 0
+            coord1 = map.toCoordinate(Qt.point(0,scale.y))
+            coord2 = map.toCoordinate(Qt.point(0+scaleImage.sourceSize.width,scale.y))
+            dist = Math.round(coord1.distanceTo(coord2))
+
+            if (dist === 0) {
+                // not visible
+            } else {
+                for (var i = 0; i < scaleLengths.length-1; i++) {
+                    if (dist < (scaleLengths[i] + scaleLengths[i+1]) / 2 ) {
+                        f = scaleLengths[i] / dist
+                        dist = scaleLengths[i]
+                        break;
+                    }
+                }
+                if (f === 0) {
+                    f = dist / scaleLengths[i]
+                    dist = scaleLengths[i]
+                }
+            }
+
+            text = Helper.formatDistance(dist)
+            //scaleImage.width = (scaleImage.sourceSize.width * f) - 2 * scaleImageLeft.sourceSize.width
+            //scaleText.text = text
+        }
+
         //! [mapnavigation]
         // Enable pan, flick, and pinch gestures to zoom in and out
         gesture.acceptedGestures: MapGestureArea.PanGesture | MapGestureArea.FlickGesture | MapGestureArea.PinchGesture | MapGestureArea.RotationGesture | MapGestureArea.TiltGesture
         gesture.flickDeceleration: 3000
         gesture.enabled: true
 
-        onFollowmeChanged: {
+        /*onFollowmeChanged: {
             //testTools.follow = map.followme
             console.log("followed", followme)
-        }
+        }*/
 
         onCenterChanged:{
             scaleTimer.restart()
-            if (map.followme)
-                if (map.center != positionSource.position.coordinate) map.followme = false
+            /*if (map.followme)
+                if (map.center != positionSource.position.coordinate) map.followme = false*/
         }
 
         onZoomLevelChanged:{
             scaleTimer.restart()
-            if (map.followme) map.center = positionSource.position.coordinate
+            //if (map.followme) map.center = positionSource.position.coordinate
         }
 
         onWidthChanged:{
@@ -90,6 +122,7 @@ Item {
 
             onPositionChanged: {
                 map.center = positionSource.position.coordinate
+                foll = false
             }
         }
 
@@ -99,7 +132,7 @@ Item {
             running: false
             repeat: false
             onTriggered: {
-                map.calculateScale()
+                //map.calculateScale()
             }
         }
 

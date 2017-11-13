@@ -14,6 +14,7 @@ ApplicationWindow {
     visible: true
     height: 600
     width: 800
+    title: qsTr("RTKCar")
     //height: Screen.height
     //width: Screen.width
 
@@ -41,6 +42,7 @@ ApplicationWindow {
                 console.log("clicked")
                 mapview.foll = !mapview.foll
             }
+            mapSourca: mapview.mapMap
         }
 
         /*Item {
