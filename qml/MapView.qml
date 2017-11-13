@@ -7,23 +7,15 @@ import "map"
 
 Item {
     id: appWindow
-    /*Layout.minimumWidth: 100
-    Layout.preferredWidth: mainWindow.height
-    Layout.maximumWidth: mainWindow.width - SideTools.width
-    Layout.minimumHeight: 150
-    Layout.fillWidth: true
-    Layout.fillHeight: true*/
     property bool foll: false
     property alias mapMap: map
+    //property IntValidator validator : 0
+    property alias delegateIndex: map.delegateIndex
 
     Plugin {
         id: mapPlugin
         name: "osm"
     }
-
-    /*onFollChanged: {
-        map.followme = foll
-    }*/
 
     Map {
         id: map
@@ -36,6 +28,7 @@ Item {
         property int pressX : -1
         property int pressY : -1
         property int jitterThreshold : 30
+        property int delegateIndex : 0
         //property bool followme: false
         property PositionSource positionSource
 
@@ -48,12 +41,6 @@ Item {
         //minimumZoomLevel: 20
         zoomLevel:14
         //zoomLevel: Math.floor((maximumZoomLevel - minimumZoomLevel)/2)
-
-
-        /*function followME() {
-            var currentPosition = positionSource.position.coordinate
-            map.center = currentPosition
-        }*/
 
         function calculateScale()
         {
@@ -90,11 +77,6 @@ Item {
         gesture.flickDeceleration: 3000
         gesture.enabled: true
 
-        /*onFollowmeChanged: {
-            //testTools.follow = map.followme
-            console.log("followed", followme)
-        }*/
-
         onCenterChanged:{
             scaleTimer.restart()
             /*if (map.followme)
@@ -113,6 +95,10 @@ Item {
 
         onHeightChanged:{
             scaleTimer.restart()
+        }
+
+        onDelegateIndexChanged: {
+            console.log("delegate", delegateIndex)
         }
 
         PositionSource{

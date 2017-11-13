@@ -15,6 +15,8 @@ Item {
     property var mapSource
     width: 200
     height: 400
+    property alias listView1: listView1
+    property alias buttonGroup: buttonGroup
 
     Column {
         id: column
@@ -32,25 +34,34 @@ Item {
                 id: radioDelegate1
                 x: 0
                 y: 68
+                width: 120
+                height: 33
+                checked: true
                 text: qsTr("Mouse")
             }
 
             RadioDelegate {
                 id: radioDelegate2
                 x: 0
-                y: 126
+                y: 112
+                width: 120
+                height: 32
                 text: qsTr("Marker")
             }
 
             RadioDelegate {
                 id: radioDelegate3
                 x: 0
-                y: 184
+                y: 155
+                width: 120
+                height: 30
                 text: qsTr("Hand")
             }
 
             SwitchDelegate {
                 id: switchDelegate
+                x: 0
+                y: 292
                 text: qsTr("Switch Delegate")
             }
 
@@ -97,7 +108,20 @@ Item {
                     //text: qsTr("value: " + zoomS.value.totring())
                 }
             }
+        }
 
+        ButtonGroup {
+            id: buttonGroup
+        }
+
+        ListView {
+            id: listView1
+            model: ["Option 1", "Option 2", "Option 3"]
+            delegate: RadioDelegate {
+                text: modelData
+                checked: index == 0
+                ButtonGroup.group: buttonGroup
+            }
         }
     }
 }

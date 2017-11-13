@@ -43,6 +43,10 @@ ApplicationWindow {
                 mapview.foll = !mapview.foll
             }
             mapSourca: mapview.mapMap
+            onDelegate: {
+                mapview.delegateIndex = index
+                //console.log("delegate", index)
+            }
         }
 
         /*Item {
