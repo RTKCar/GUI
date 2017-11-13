@@ -22,13 +22,13 @@ ApplicationWindow {
         anchors.fill: parent
 
         MapView {
-            id: map
+            id: mapview
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.minimumHeight: 400
             Layout.preferredHeight: appWindow.height
             Layout.minimumWidth: 400
-            Layout.preferredWidth: appWindow.width - tools.width
+            Layout.preferredWidth: appWindow.width - TestMenu.width
         }
 
         /*Item {
@@ -64,7 +64,15 @@ ApplicationWindow {
             anchors.left: map.right
         }*/
         TestMenu{
-
+            id:testTools
+            /*onFollowButtonChanged: {
+                console.log("cliced")
+                mapview.foll = !mapview.foll
+            }*/
+            onFollowMe: {
+                console.log("clicked")
+                mapview.foll = !mapview.foll
+            }
         }
     }
 }

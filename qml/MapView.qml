@@ -13,11 +13,15 @@ Item {
     Layout.minimumHeight: 150
     Layout.fillWidth: true
     Layout.fillHeight: true*/
-
+    property bool foll: false
 
     Plugin {
         id: mapPlugin
         name: "osm"
+    }
+
+    onFollChanged: {
+        map.followme = foll
     }
 
     Map {
@@ -32,6 +36,8 @@ Item {
         property int pressY : -1
         property int jitterThreshold : 30
         property bool followme: false
+        property PositionSource positionSource
+
         anchors.fill: parent
         plugin: mapPlugin
         center: QtPositioning.coordinate(56.41548, 12.987562) // Hasslöv
@@ -40,11 +46,22 @@ Item {
         //zoomLevel:14
         zoomLevel: Math.floor((maximumZoomLevel - minimumZoomLevel)/2)
 
+
+        /*function followME() {
+            var currentPosition = positionSource.position.coordinate
+            map.center = currentPosition
+        }*/
+
         //! [mapnavigation]
         // Enable pan, flick, and pinch gestures to zoom in and out
         gesture.acceptedGestures: MapGestureArea.PanGesture | MapGestureArea.FlickGesture | MapGestureArea.PinchGesture | MapGestureArea.RotationGesture | MapGestureArea.TiltGesture
         gesture.flickDeceleration: 3000
         gesture.enabled: true
+
+        onFollowmeChanged: {
+            //testTools.follow = map.followme
+            console.log("followed", followme)
+        }
 
         onCenterChanged:{
             scaleTimer.restart()
@@ -58,11 +75,22 @@ Item {
         }
 
         onWidthChanged:{
+            //followME()
             scaleTimer.restart()
         }
 
         onHeightChanged:{
             scaleTimer.restart()
+        }
+
+        PositionSource{
+            id: positionSource
+            active: foll
+            //active: followme
+
+            onPositionChanged: {
+                map.center = positionSource.position.coordinate
+            }
         }
 
         Timer {

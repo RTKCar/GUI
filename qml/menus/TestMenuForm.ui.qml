@@ -4,6 +4,12 @@ import QtQuick.Window 2.0
 import QtQuick.Layouts 1.3
 
 Item {
+    property alias mouseDelegate: radioDelegate1
+    property alias markerDelegate: radioDelegate2
+    property alias handDelegate: radioDelegate3
+    property alias followButton: followButton
+    property alias zoomSlider: zoomSlider
+    property alias switchDelegate: switchDelegate
     width: 200
     height: 400
 
@@ -20,21 +26,21 @@ Item {
             y: 0
 
             RadioDelegate {
-                id: radioDelegate
+                id: radioDelegate1
                 x: 0
                 y: 68
                 text: qsTr("Mouse")
             }
 
             RadioDelegate {
-                id: radioDelegate1
+                id: radioDelegate2
                 x: 0
                 y: 126
                 text: qsTr("Marker")
             }
 
             RadioDelegate {
-                id: radioDelegate2
+                id: radioDelegate3
                 x: 0
                 y: 184
                 text: qsTr("Hand")
@@ -46,7 +52,7 @@ Item {
             }
 
             Button {
-                id: button
+                id: followButton
                 x: 0
                 y: 253
                 text: qsTr("Follow")
@@ -59,7 +65,7 @@ Item {
                 text: qsTr("Zoom")
 
                 Slider {
-                    id: slider
+                    id: zoomSlider
                     x: -75
                     y: 18
                     value: 0.5
