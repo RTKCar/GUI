@@ -31,6 +31,18 @@ ApplicationWindow {
             Layout.preferredWidth: appWindow.width - TestMenu.width
         }
 
+        TestMenu{
+            id:testTools
+            /*onFollowButtonChanged: {
+                console.log("cliced")
+                mapview.foll = !mapview.foll
+            }*/
+            onFollowMe: {
+                console.log("clicked")
+                mapview.foll = !mapview.foll
+            }
+        }
+
         /*Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -63,16 +75,5 @@ ApplicationWindow {
             Layout.preferredWidth: appWindow.width/4
             anchors.left: map.right
         }*/
-        TestMenu{
-            id:testTools
-            /*onFollowButtonChanged: {
-                console.log("cliced")
-                mapview.foll = !mapview.foll
-            }*/
-            onFollowMe: {
-                console.log("clicked")
-                mapview.foll = !mapview.foll
-            }
-        }
     }
 }
