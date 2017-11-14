@@ -39,6 +39,14 @@ TestMenuForm {
             delegate(2)
     }
 
+    tab0.onClicked: {
+        stackLayout.currentIndex = 0
+    }
+
+    tab1.onClicked: {
+        stackLayout.currentIndex = 1
+    }
+
     //switchDelegate.
     //mouseDelegate:
     //markerDelegate:

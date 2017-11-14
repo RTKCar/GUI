@@ -8,5 +8,14 @@
         <file>qml/main.qml</file>
         <file>qml/menus/TestMenu.qml</file>
         <file>qml/menus/TestMenuForm.ui.qml</file>
+        <file>qml/map/Circle.qml</file>
+        <file>qml/resources/marker.png</file>
+        <file>qml/Marks.qml</file>
+        <file>qml/map/Mark.qml</file>
+        <file>qml/resources/down-arrow.svg</file>
+        <file>qml/resources/left-arrow.svg</file>
+        <file>qml/resources/play-button.svg</file>
+        <file>qml/resources/right-arrow.svg</file>
+        <file>qml/resources/up-arrow.svg</file>
     </qresource>
 </RCC>
