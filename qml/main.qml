@@ -42,6 +42,12 @@ ApplicationWindow {
                 console.log("clicked")
                 mapview.foll = !mapview.foll
             }
+            onDeleteAll: {
+                console.log("del detected")
+                mapview.deleteAll = !mapview.deleteAll
+                //deletAll()
+            }
+
             mapSourca: mapview.mapMap
             onDelegate: {
                 mapview.delegateIndex = index

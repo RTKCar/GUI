@@ -37,7 +37,7 @@ MapQuickItem {
             drag.target: marker
             preventStealing: true
 
-            onPressed : {
+            onClicked : {
                 overlay.pressX = mouse.x
                 overlay.pressY = mouse.y
                 var prev = false
@@ -52,10 +52,11 @@ MapQuickItem {
                 for (var i = 0; i< overlay.markers.length; i++){
                     if (marker == overlay.markers[i]){
                         overlay.currentMarker = i
-                        if(!prev) {
+                        overlay.connectMarkers()
+                        /*if(!prev) {
                             overlay.connectMarkers()
-                        }
-                        console.log("currentMarker set to: ", i)
+                        }*/
+                        //console.log("currentMarker set to: ", i)
                         break
                     }
                 }

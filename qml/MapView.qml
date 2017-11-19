@@ -9,6 +9,7 @@ import "./map"
 Item {
     id: appWindow
     property bool foll: false
+    property bool deleteAll: false
     property alias mapMap: map
     //property IntValidator validator : 0
     property alias delegateIndex: overlay.delegateIndex
@@ -17,6 +18,16 @@ Item {
         id: mapPlugin
         name: "osm"
     }
+
+    onDeleteAllChanged: {
+        console.log("bool changed")
+        overlay.deleteMarkers()
+        overlay.deletePolylines()
+    }
+
+    /*onDeletAllaChanged: {
+        overlay.deleteMarkers()
+    }*/
 
     Map {
         id: map

@@ -9,6 +9,7 @@ Item {
     property alias markerDelegate: radioDelegate2
     property alias handDelegate: radioDelegate3
     property alias followButton: followButton
+    property alias deleteAllButton: deleteAllButton
     property alias zoomSlider: zoomS
     property alias zoomValue: zoomVal
     property alias tab0: tabButton
@@ -74,7 +75,7 @@ Item {
                 }
 
                 Button {
-                    id: button
+                    id: centerButton
                     x: 100
                     width: 90
                     text: qsTr("Center")
@@ -222,10 +223,10 @@ Item {
                 }
 
                 Button {
-                    id: button3
+                    id: deleteAllButton
                     x: 135
                     width: 60
-                    text: qsTr("Delete")
+                    text: qsTr("Delete All")
                 }
             }
         }

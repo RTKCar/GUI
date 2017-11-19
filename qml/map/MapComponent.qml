@@ -57,6 +57,7 @@ Map {
             //if new Marker was added
             if(currentMarker > 0) {
                 //extending from a pressed marker
+                console.log("extending?")
 
                 markers[currentMarker].connectMarker(marker)
                 //addGeoItem("PolylineItem", markers[currentMarker].coordinate, marker.coordinate)
@@ -64,11 +65,9 @@ Map {
                 addPolyline(markers[currentMarker].coordinate, marker.coordinate)
                 currentMarker = -1
             } else {
-                ///NEVER GETS EXECUTED
-
                 //extending from previous placed marker
-                console.log(markerCounter -1)
-                console.log(markerCounter -2)
+                //console.log(markerCounter -1)
+                //console.log(markerCounter -2)
                 markers[markerCounter -2].connectMarker(marker)
                 //addGeoItem("PolylineItem", markers[markerCounter -1].coordinate, marker.coordinate)
                 //addQuickPoly(markers[markerCounter -1].coordinate, marker.coordinate)
@@ -117,7 +116,7 @@ Map {
             myArray.push(o)
             mapItems = myArray
 
-            console.log("connected between ", coordinate1, " and ", coordinate2)
+            //console.log("connected between ", coordinate1, " and ", coordinate2)
 
         } else {
             console.log(" is not supported right now, please call us later.")
@@ -193,6 +192,18 @@ Map {
         console.log("markersDeleted")
     }
 
+    function deletePolylines()
+    {
+        var count = mapOverlay.mapItems.length
+        for (var i = 0; i<count; i++){
+            mapOverlay.removeMapItem(mapOverlay.mapItems[i])
+            mapOverlay.mapItems[i].destroy()
+        }
+        mapOverlay.mapItems = []
+        //markerCounter = 0
+        console.log("ItemsDeleted")
+    }
+
     function connectMarkers() {
         // if connection to node from previousMarker or existing
         if(markerCounter > 1 && currentMarker > -1) {
@@ -202,11 +213,15 @@ Map {
                 addPolyline(markers[previousMarker].coordinate, markers[currentMarker].coordinate)
                 previousMarker = -1
                 currentMarker = -1
-            } else {
+                console.log("connection between existing")
+            } else if((markerCounter -1) != currentMarker){
                 // connection from previously placed node to existing
                 markers[markerCounter -1].connectMarker(markers[currentMarker])
                 addPolyline(markers[markerCounter -1].coordinate, markers[currentMarker].coordinate)
                 currentMarker = -1
+                console.log("connect to existing")
+            } else {
+                console.log("node choosed for next round")
             }
         }
     }
@@ -233,7 +248,7 @@ Map {
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton | Qt.RightButton
 
-        onPressed : {
+        onClicked : {
             //console.log("first?")
             mapOverlay.lastX = mouse.x
             mapOverlay.lastY = mouse.y

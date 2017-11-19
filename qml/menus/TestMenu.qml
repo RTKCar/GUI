@@ -5,6 +5,7 @@ TestMenuForm {
     id:testMenu1
     signal followMe()
     signal delegate(var index)
+    signal deleteAll()
     property var mapSourca
 
 
@@ -16,6 +17,11 @@ TestMenuForm {
     followButton.onClicked: {
         //follow = !follow
         followMe()
+    }
+
+    deleteAllButton.onClicked: {
+        console.log("del clicked")
+        deleteAll()
     }
 
     zoomSlider.onValueChanged: {
