@@ -10,8 +10,8 @@ Item {
     id: appWindow
     property bool foll: false
     property bool deleteAll: false
+    property bool center: false
     property alias mapMap: map
-    //property IntValidator validator : 0
     property alias delegateIndex: overlay.delegateIndex
 
     Plugin {
@@ -20,28 +20,17 @@ Item {
     }
 
     onDeleteAllChanged: {
-        console.log("bool changed")
         overlay.deleteMarkers()
         overlay.deletePolylines()
     }
 
-    /*onDeletAllaChanged: {
-        overlay.deleteMarkers()
-    }*/
+    onCenterChanged: {
+        overlay.fitViewportToVisibleMapItems()
+        //overlay.fitViewportToMapItems()
+    }
 
     Map {
         id: map
-        /*property variant markers
-        property variant mapItems
-        property int markerCounter: 0 // counter for total amount of markers. Resets to 0 when number of markers = 0
-        property int currentMarker
-        property int lastX : -1
-        property int lastY : -1
-        property int pressX : -1
-        property int pressY : -1
-        property int jitterThreshold : 30
-        property int delegateIndex : 0*/
-        //property bool followme: false
         property PositionSource positionSource
 
         anchors.fill: parent
@@ -58,60 +47,6 @@ Item {
             id:overlay
             parentMap: map
         }
-
-        /*onDelegateIndexChanged: {
-            console.log("delegate", delegateIndex)
-        }*/
-
-        /*Map {
-                id: mapOverlay
-                anchors.fill: parent
-                plugin: Plugin { name: "itemsoverlay" }
-                gesture.enabled: false
-                center: map.center
-                color: 'transparent' // Necessary to make this map transparent
-                minimumFieldOfView: map.minimumFieldOfView
-                maximumFieldOfView: map.maximumFieldOfView
-                minimumTilt: map.minimumTilt
-                maximumTilt: map.maximumTilt
-                minimumZoomLevel: map.minimumZoomLevel
-                maximumZoomLevel: map.maximumZoomLevel
-                zoomLevel: map.zoomLevel
-                tilt: map.tilt;
-                bearing: map.bearing
-                fieldOfView: map.fieldOfView
-                z: map.z + 1
-
-                /*MapCircle {
-                    id: circle
-                    center: QtPositioning.coordinate(44, 10)
-                    radius: 200000
-                    border.width: 5
-
-                    MouseArea {
-                        anchors.fill: parent
-                        drag.target: parent
-                    }
-                }*/
-                /*Marker{
-                    coordinate: QtPositioning.coordinate(44, 10)
-                }
-                Circle {
-                    center: QtPositioning.coordinate(56.41548, 12.987562)
-                }
-        }*/
-
-        /*MapCircle {
-            id: circle
-            center: QtPositioning.coordinate(44, 10)
-            radius: 200000
-            border.width: 5
-
-            MouseArea {
-                anchors.fill: parent
-                drag.target: parent
-            }
-        }*/
 
         /*function calculateScale()
         {
@@ -142,35 +77,12 @@ Item {
             //scaleText.text = text
         }*/
 
-        /*function addMarker()
-        {
-            var count = map.markers.length
-            markerCounter++
-            //var marker = Qt.createQmlObject('import QtQuick 2.0; Rectangle {color: "red"; width: 20; height: 20}',
-                                            //map)
-            var marker = Qt.createQmlObject ('MapComponent {}', map)
-            //var marker = Qt.createQmlObject ('Marks {}', map)
-            //var marker = Qt.createQmlObject ('Marker {}', map)
-            //var marker = Qt.createQmlObject ('Circle {}', map)
-            //var marker = Circle {center: mouseArea.lastCoordinate}
-            map.addMapItem(marker)
-            marker.z = map.z+1
-            marker.coordinate = mouseArea.lastCoordinate
-
-            //update list of markers
-            var myArray = new Array()
-            for (var i = 0; i<count; i++){
-                myArray.push(markers[i])
-            }
-            myArray.push(marker)
-            markers = myArray
-        }*/
-
         //! [mapnavigation]
         // Enable pan, flick, and pinch gestures to zoom in and out
         gesture.acceptedGestures: MapGestureArea.PanGesture | MapGestureArea.FlickGesture | MapGestureArea.PinchGesture | MapGestureArea.RotationGesture | MapGestureArea.TiltGesture
         gesture.flickDeceleration: 3000
         gesture.enabled: true
+        focus: true
 
         onCenterChanged:{
             scaleTimer.restart()

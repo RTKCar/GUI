@@ -10,6 +10,7 @@ Item {
     property alias handDelegate: radioDelegate3
     property alias followButton: followButton
     property alias deleteAllButton: deleteAllButton
+    property alias centerButton: centerButton
     property alias zoomSlider: zoomS
     property alias zoomValue: zoomVal
     property alias tab0: tabButton
@@ -37,7 +38,7 @@ Item {
                 id: radioDelegate1
                 x: 0
                 y: 68
-                width: 120
+                width: 104
                 height: 33
                 checked: true
                 text: qsTr("Mouse")
@@ -47,24 +48,33 @@ Item {
                 id: radioDelegate2
                 x: 0
                 y: 112
-                width: 120
+                width: 104
                 height: 32
                 text: qsTr("Marker")
             }
 
             RadioDelegate {
                 id: radioDelegate3
-                x: 0
-                y: 155
-                width: 120
+                x: 96
+                y: 70
+                width: 104
                 height: 30
                 text: qsTr("Hand")
+            }
+
+            RadioDelegate {
+                id: radioDelegate
+                x: 96
+                y: 102
+                width: 104
+                height: 52
+                text: qsTr("Delete")
             }
 
             RowLayout {
                 id: rowLayout1
                 x: 0
-                y: 197
+                y: 150
                 width: 200
                 height: 45
 
@@ -79,6 +89,25 @@ Item {
                     x: 100
                     width: 90
                     text: qsTr("Center")
+                }
+            }
+
+            RowLayout {
+                id: rowLayout
+                x: 0
+                y: 195
+                width: 200
+                height: 45
+
+                Button {
+                    id: deleteAllButton
+                    width: 60
+                    text: qsTr("Delete All")
+                }
+
+                Button {
+                    id: button
+                    text: qsTr("Button")
                 }
             }
 
@@ -220,13 +249,6 @@ Item {
                     x: 70
                     width: 60
                     text: qsTr("Load")
-                }
-
-                Button {
-                    id: deleteAllButton
-                    x: 135
-                    width: 60
-                    text: qsTr("Delete All")
                 }
             }
         }

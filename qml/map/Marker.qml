@@ -6,7 +6,6 @@ MapQuickItem {
     id: marker
     property alias lastMouseX: markerMouseArea.lastX
     property alias lastMouseY: markerMouseArea.lastY
-    //property Map overlay: null
     property MapComponent overlay: null
     property variant markersConnected
     property variant polylinesConnected
@@ -54,32 +53,22 @@ MapQuickItem {
                 for (var i = 0; i< overlay.markers.length; i++){
                     if (marker == overlay.markers[i]){
                         overlay.currentMarker = i
-                        overlay.connectMarkers()
-                        /*if(!prev) {
+                        if(overlay.previousMarker != overlay.currentMarker) {
                             overlay.connectMarkers()
-                        }*/
-                        //console.log("currentMarker set to: ", i)
+                        } else {
+                            overlay.currentMarker = -1
+                            overlay.previousMarker = -1
+                            console.log("dubbelpress")
+                        }
                         break
                     }
                 }
-                /*if(overlay.currentMarker == -1) {
-                    overlay.addMarker(marker.coordinate)
-                }*/
             }
-
-            /*onPressAndHold:{
-                if (Math.abs(map.pressX - mouse.x ) < map.jitterThreshold
-                        && Math.abs(map.pressY - mouse.y ) < map.jitterThreshold) {
-                    var p = map.fromCoordinate(marker.coordinate)
-                    lastX = p.x
-                    lastY = p.y
-                    map.showMarkerMenu(marker.coordinate)
-                }
-            }*/
         }
     }
 
     function connectMark(Marker) {
+        //only connect to Marker if not already connected
         connectedCount ++
         markersConnected.push(Marker)
         if(markersConnected.length > 2) {
@@ -89,42 +78,15 @@ MapQuickItem {
     }
 
     function connectMarker(MarkerTo) {
-        //console.log("connectMarker")
-        //console.log("lat ",Marker.coordinate.latitude)
-        //console.log("coord ",Marker.coordinate)
-        console.log("hisID ", MarkerTo.returnID())
-        console.log("myID ", markerID)
         connectMark(MarkerTo)
         MarkerTo.connectMark(this)
-        /*markersConnected.push(Marker)
-        Marker.markersConnected.push(this)
-
-        if(markersConnected.length > 2) {
-            rect.color = "Red"
-            //create new Polyline
-        }
-        else {
-            //extend existing Polyline
-        }
-        //console.log("end connect")
-        connectedCount ++
-        /*var polyline = Qt.createQmlObject ('Polyline
-            {path:[{latitude: this.coordinate.latitude, longitude: this.coordinate.lingitude},
-            {latitude: Marker.coordinate.latitude, longitude: Marker.coordinate.longitude}]}', overlay)*/
-        //var polyline = Qt.createQmlObject ('Polyline{}', overlay)
-        /*polyline.path = [{latitude: this.coordinate.latitude, longitude: this.coordinate.lingitude},
-                         {latitude: Marker.coordinate.latitude, longitude: Marker.coordinate.longitude}]*/
-        /*var polyline = Qt.createQmlObject ('Polyline {}', overlay)
-        polyline.addLine(this)
-        polyline.addLine(Marker)
-        polyline.z = overlay.z+1
-        overlay.addMapItem(polyline)
-        polylinesConnected.push(polyline)
-        console.log(polyline.path)*/
     }
 
     function isConnectedTo(Marker) {
         //return markersConnected.contains(Marker)
+        if(this == Marker) {
+            return true
+        }
         for (var i = 0; i< markersConnected.length; i++){
             if (Marker == markersConnected[i]){
                 return true
@@ -168,35 +130,12 @@ MapQuickItem {
         }
     }
 
-    onConnectedCountChanged: {
-
-    }
-
-    /*onMarkersConnectedChanged: {
-        console.log("connectedMarkersChanged")
-        console.log("markers length", markersConnected.length)
-        console.log("connected count", connectedCount)
-        if(markersConnected.length > connectedCount) {
-            console.log("adding polyline")
-            //create Polyline and add coordinates
-            var polyline = Qt.createQmlObject ('Polyline {}', MapComponent)
-            polyline.addLine(this)
-            polyline.addLine(markersConnected[connectedCount-1])
-            polylinesConnected.push(polyline)
-        } else if(markersConnected.length < connectedCount){
-            //remove Polyline
-            console.log("not adding polyline")
-        } else {
-            console.log("unknown polyline")
-        }
-    }*/
-
     Component.onCompleted: {
         //coordinate = overlay.toCoordinate(Qt.point(markerMouseArea.mouseX,
                                                               //markerMouseArea.mouseY));
         markerID = overlay.markerCounter
         markersConnected = new Array();
         polylinesConnected = new Array();
-        console.log(markerID)
+        //console.log(markerID)
     }
 }

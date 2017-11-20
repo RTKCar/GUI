@@ -6,8 +6,6 @@ import QtQuick.Window 2.0
 import QtQuick.Layouts 1.3
 import "map"
 import "menus"
-//import "helper.js" as Helper
-
 
 ApplicationWindow {
     id: appWindow
@@ -34,58 +32,20 @@ ApplicationWindow {
 
         TestMenu{
             id:testTools
-            /*onFollowButtonChanged: {
-                console.log("cliced")
-                mapview.foll = !mapview.foll
-            }*/
             onFollowMe: {
-                console.log("clicked")
                 mapview.foll = !mapview.foll
             }
             onDeleteAll: {
-                console.log("del detected")
                 mapview.deleteAll = !mapview.deleteAll
-                //deletAll()
+            }
+            onCenterMap: {
+                mapview.center = !mapview.center
             }
 
             mapSourca: mapview.mapMap
             onDelegate: {
                 mapview.delegateIndex = index
-                //console.log("delegate", index)
             }
         }
-
-        /*Item {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            Layout.minimumHeight: 400
-            Layout.preferredHeight: appWindow.height
-            Layout.minimumWidth: 400
-            Layout.preferredWidth: appWindow.width - tools.width
-
-            ColumnLayout{
-            id: name
-            anchors.centerIn: parent
-                TextField {
-                    placeholderText: qsTr("Enter name")
-                }
-                Button{
-                    text: "hej"
-                }
-
-            }
-        }*/
-
-
-        /*SideTools {
-            id: tools
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            Layout.minimumHeight: 400
-            Layout.preferredHeight: appWindow.height
-            Layout.minimumWidth: 200
-            Layout.preferredWidth: appWindow.width/4
-            anchors.left: map.right
-        }*/
     }
 }

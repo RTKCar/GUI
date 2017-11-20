@@ -55,37 +55,34 @@ Map {
         markers = myArray
 
         if(markerCounter > 1) {
-            console.log(markers[markerCounter -2].returnID(), " has ",
+            /*console.log(markers[markerCounter -2].returnID(), " has ",
                         markers[markerCounter -2].connectedMarkers(), " connections")
             console.log(markers[markerCounter -2].returnID(), " has ",
-                        markers[markerCounter -2].connectedMarks(), " connections")
+                        markers[markerCounter -2].connectedMarks(), " connections")*/
             //if new Marker was added
             if(currentMarker > 0) {
                 //extending from a pressed marker
                 console.log("extending?")
-
-                markers[currentMarker].connectMarker(marker)
-                //addGeoItem("PolylineItem", markers[currentMarker].coordinate, marker.coordinate)
-                //addQuickPoly(markers[currentMarker].coordinate, marker.coordinate)
-                addPolyline(markers[currentMarker].coordinate, marker.coordinate)
+                if(!markers[currentMarker].isConnectedTo(marker)){
+                    markers[currentMarker].connectMarker(marker)
+                    addPolyline(markers[currentMarker].coordinate, marker.coordinate)
+                }
                 currentMarker = -1
             } else if(markers[markerCounter -2].connectedMarkers() > 1) {
                 //add new marker without Polyline
-                console.log(markers[markerCounter -2].connectedMarkers())
+                //console.log(markers[markerCounter -2].connectedMarkers())
                 console.log("new mark")
             } else {
                 //extending from previous placed marker
-                console.log("last ID ",markers[markerCounter -2].returnID())
-                console.log("current ID ", marker.returnID())
-                markers[markerCounter -2].connectMarker(marker)
-                //addGeoItem("PolylineItem", markers[markerCounter -1].coordinate, marker.coordinate)
-                //addQuickPoly(markers[markerCounter -1].coordinate, marker.coordinate)
-                addPolyline(markers[markerCounter -2].coordinate, marker.coordinate)
+                if(!markers[markerCounter -2].isConnectedTo(marker)){
+                    markers[markerCounter -2].connectMarker(marker)
+                    addPolyline(markers[markerCounter -2].coordinate, marker.coordinate)
+                }
                 console.log("extending connect")
             }
         }
         connection = false
-        printApproved()
+        //printApproved()
     }
 
     function addGeoItem(item, cordi1, cordi2)
@@ -144,7 +141,7 @@ Map {
         mapOverlay.markers = []
         markerCounter = 0
         console.log("markersDeleted")
-        printApproved()
+        //printApproved()
     }
 
     function deletePolylines()
@@ -161,7 +158,7 @@ Map {
     function connectMarkers() {
         // if connection to node from previousMarker or existing
         if(markerCounter > 1 && currentMarker > -1) {
-            if(previousMarker > -1) {
+            if(previousMarker > -1 && !markers[previousMarker].isConnectedTo(markers[currentMarker])) {
                 // connection between two existing nodes
                 markers[previousMarker].connectMarker(markers[currentMarker])
                 addPolyline(markers[previousMarker].coordinate, markers[currentMarker].coordinate)
@@ -169,7 +166,7 @@ Map {
                 currentMarker = -1
                 console.log("connection between existing")
                 connection = true
-            } else if(!connection){
+            } else if(!connection && !markers[markerCounter -1].isConnectedTo(markers[currentMarker])){
                 //} else if(!markers[markerCounter -1].isConnectedTo(markers[currentMarker])){
                 //} else if((markerCounter -1) != currentMarker){
                 // connection from previously placed node to existing
@@ -182,7 +179,7 @@ Map {
                 console.log("node choosed for next round")
             }
         }
-        printApproved()
+        //printApproved()
     }
 
     function connectMarkerToExisting() {
@@ -192,6 +189,9 @@ Map {
     }
 
     function aprovedTrack() {
+        if(markers.length < 3) {
+            return false
+        }
         for (var i = 0; i< markers.length; i++){
             if (markers[i].connectedMarkers() < 2){
                 return false
@@ -303,8 +303,6 @@ Map {
 
             mapOverlay.lastX = -1;
             mapOverlay.lastY = -1;
-            //lastX = -1;
-            //lastY = -1;
         }
     }
 
