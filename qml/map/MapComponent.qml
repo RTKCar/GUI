@@ -18,6 +18,7 @@ Map {
     property int pressY : -1
     property int jitterThreshold : 30
     property int delegateIndex : 0
+    property bool connection: false
 
     anchors.fill: parent
     plugin: Plugin { name: "itemsoverlay" }
@@ -54,6 +55,10 @@ Map {
         markers = myArray
 
         if(markerCounter > 1) {
+            console.log(markers[markerCounter -2].returnID(), " has ",
+                        markers[markerCounter -2].connectedMarkers(), " connections")
+            console.log(markers[markerCounter -2].returnID(), " has ",
+                        markers[markerCounter -2].connectedMarks(), " connections")
             //if new Marker was added
             if(currentMarker > 0) {
                 //extending from a pressed marker
@@ -64,10 +69,14 @@ Map {
                 //addQuickPoly(markers[currentMarker].coordinate, marker.coordinate)
                 addPolyline(markers[currentMarker].coordinate, marker.coordinate)
                 currentMarker = -1
+            } else if(markers[markerCounter -2].connectedMarkers() > 1) {
+                //add new marker without Polyline
+                console.log(markers[markerCounter -2].connectedMarkers())
+                console.log("new mark")
             } else {
                 //extending from previous placed marker
-                //console.log(markerCounter -1)
-                //console.log(markerCounter -2)
+                console.log("last ID ",markers[markerCounter -2].returnID())
+                console.log("current ID ", marker.returnID())
                 markers[markerCounter -2].connectMarker(marker)
                 //addGeoItem("PolylineItem", markers[markerCounter -1].coordinate, marker.coordinate)
                 //addQuickPoly(markers[markerCounter -1].coordinate, marker.coordinate)
@@ -75,6 +84,8 @@ Map {
                 console.log("extending connect")
             }
         }
+        connection = false
+        printApproved()
     }
 
     function addGeoItem(item, cordi1, cordi2)
@@ -121,63 +132,6 @@ Map {
         } else {
             console.log(" is not supported right now, please call us later.")
         }
-
-        /*console.log("cord1 ",coordinate1)
-        console.log("cord2 ",coordinate2)
-        var count = mapOverlay.mapItems.length
-        //var polyline = Qt.createQmlObject ('Polyline{}', mapOverlay)
-        var polyline = Qt.createQmlObject ('Polyline
-                    {path:[{latitude: coordinate1.latitude, longitude: coordinate1.lingitude},
-                    {latitude: coordinate2.latitude, longitude: coordinate2.longitude}]}', mapOverlay)
-
-        /*if (polyline.status == Component.Ready) {
-            var o = co.createObject(map)
-            //o.setGeometry(map.markers, currentMarker)
-            polyline.addCoord(coordinate1)
-            polyline.addCoord(coordinate2)
-            //mapOverlay.addMapItems(polyline)
-            mapOverlay.addMapItem(o)
-            //update list of items
-            var myArray = new Array()
-            for (var i = 0; i<count; i++){
-                myArray.push(mapItems[i])
-            }
-            myArray.push(o)
-            mapItems = myArray
-
-        } else {
-            console.log(" is not supported right now, please call us later.")
-        }*/
-
-        /*polyline.addCoord(coordinate1)
-        polyline.addCoord(coordinate2)
-        mapOverlay.addMapItems(polyline)*/
-        //mapOverlay.addMapItems(polyline)
-        //update list of items
-        /*var myArray = new Array()
-        for (var i = 0; i<count; i++){
-            myArray.push(mapItems[i])
-        }
-        myArray.push(o)
-        mapItems = myArray
-
-
-        /*var co = Qt.createComponent(item+'.qml')
-        if (co.status == Component.Ready) {
-            var o = co.createObject(map)
-            o.setGeometry(map.markers, currentMarker)
-            map.addMapItem(o)
-            //update list of items
-            var myArray = new Array()
-            for (var i = 0; i<count; i++){
-                myArray.push(mapItems[i])
-            }
-            myArray.push(o)
-            mapItems = myArray
-
-        } else {
-            console.log(item + " is not supported right now, please call us later.")
-        }*/
     }
 
     function deleteMarkers()
@@ -190,6 +144,7 @@ Map {
         mapOverlay.markers = []
         markerCounter = 0
         console.log("markersDeleted")
+        printApproved()
     }
 
     function deletePolylines()
@@ -200,7 +155,6 @@ Map {
             mapOverlay.mapItems[i].destroy()
         }
         mapOverlay.mapItems = []
-        //markerCounter = 0
         console.log("ItemsDeleted")
     }
 
@@ -214,16 +168,21 @@ Map {
                 previousMarker = -1
                 currentMarker = -1
                 console.log("connection between existing")
-            } else if((markerCounter -1) != currentMarker){
+                connection = true
+            } else if(!connection){
+                //} else if(!markers[markerCounter -1].isConnectedTo(markers[currentMarker])){
+                //} else if((markerCounter -1) != currentMarker){
                 // connection from previously placed node to existing
                 markers[markerCounter -1].connectMarker(markers[currentMarker])
                 addPolyline(markers[markerCounter -1].coordinate, markers[currentMarker].coordinate)
                 currentMarker = -1
                 console.log("connect to existing")
+                connection = true
             } else {
                 console.log("node choosed for next round")
             }
         }
+        printApproved()
     }
 
     function connectMarkerToExisting() {
@@ -232,6 +191,22 @@ Map {
         }
     }
 
+    function aprovedTrack() {
+        for (var i = 0; i< markers.length; i++){
+            if (markers[i].connectedMarkers() < 2){
+                return false
+            }
+        }
+        return true
+    }
+
+    function printApproved() {
+        console.log("The track is ")
+        if(!aprovedTrack()) {
+            console.log("not ")
+        }
+        console.log("approved")
+    }
 
     Component.onCompleted: {
         markers = new Array();

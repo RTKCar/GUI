@@ -11,6 +11,7 @@ MapQuickItem {
     property variant markersConnected
     property variant polylinesConnected
     property int connectedCount: 0
+    property int markerID: 0
 
     anchorPoint.x: rect.width/2
     anchorPoint.y: rect.height/2
@@ -24,6 +25,7 @@ MapQuickItem {
         border.color: "Black"
         smooth: true
         opacity: markerMouseArea.pressed ? 0.6 : 1.0
+
 
         MouseArea  {
             id: markerMouseArea
@@ -77,12 +79,26 @@ MapQuickItem {
         }
     }
 
-    function connectMarker(Marker) {
+    function connectMark(Marker) {
+        connectedCount ++
+        markersConnected.push(Marker)
+        if(markersConnected.length > 2) {
+            rect.color = "Red"
+        }
+        printConnections()
+    }
+
+    function connectMarker(MarkerTo) {
         //console.log("connectMarker")
         //console.log("lat ",Marker.coordinate.latitude)
         //console.log("coord ",Marker.coordinate)
-        markersConnected.push(Marker)
+        console.log("hisID ", MarkerTo.returnID())
+        console.log("myID ", markerID)
+        connectMark(MarkerTo)
+        MarkerTo.connectMark(this)
+        /*markersConnected.push(Marker)
         Marker.markersConnected.push(this)
+
         if(markersConnected.length > 2) {
             rect.color = "Red"
             //create new Polyline
@@ -105,6 +121,35 @@ MapQuickItem {
         overlay.addMapItem(polyline)
         polylinesConnected.push(polyline)
         console.log(polyline.path)*/
+    }
+
+    function isConnectedTo(Marker) {
+        //return markersConnected.contains(Marker)
+        for (var i = 0; i< markersConnected.length; i++){
+            if (Marker == markersConnected[i]){
+                return true
+            }
+        }
+        return false
+    }
+
+    function connectedMarkers() {
+        return connectedCount
+    }
+
+    function connectedMarks() {
+        return markersConnected.length
+    }
+
+    function returnID() {
+        return markerID
+    }
+
+    function printConnections() {
+        console.log(markerID, " is connected to: ")
+        for (var i = 0; i< markersConnected.length; i++){
+            console.log(markersConnected[i].returnID(), ", ")
+        }
     }
 
     function disconnectMarkers() {
@@ -149,7 +194,9 @@ MapQuickItem {
     Component.onCompleted: {
         //coordinate = overlay.toCoordinate(Qt.point(markerMouseArea.mouseX,
                                                               //markerMouseArea.mouseY));
+        markerID = overlay.markerCounter
         markersConnected = new Array();
         polylinesConnected = new Array();
+        console.log(markerID)
     }
 }
