@@ -2,6 +2,7 @@ import QtQuick 2.5
 import QtQuick.Controls 2.2
 import QtQuick.Window 2.0
 import QtQuick.Layouts 1.3
+import QtLocation 5.9
 
 Item {
     id: menu1
@@ -11,6 +12,7 @@ Item {
     property alias followButton: followButton
     property alias deleteAllButton: deleteAllButton
     property alias centerButton: centerButton
+    property alias progressBar: progressBar
     property alias zoomSlider: zoomS
     property alias zoomValue: zoomVal
     property alias tab0: tabButton
@@ -18,7 +20,7 @@ Item {
     property alias page0: page0
     property alias page1: page1
     property alias stackLayout: stackLayout
-    property var mapSource
+    property Map mapSource
     width: 200
     height: 600
 
@@ -116,7 +118,7 @@ Item {
                 x: 0
                 y: 290
                 width: 200
-                height: 64
+                height: 53
 
                 Label {
                     id: label
@@ -138,6 +140,25 @@ Item {
                     id: zoomVal
                     width: 66
                     height: 16
+                }
+            }
+
+            Flow {
+                id: flow3
+                x: 0
+                y: 343
+                width: 200
+                height: 52
+
+                Label {
+                    id: label1
+                    text: qsTr("Track Approved")
+                }
+
+                ProgressBar {
+                    id: progressBar
+                    y: 20
+                    value: 0
                 }
             }
 

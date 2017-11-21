@@ -19,9 +19,11 @@ Map {
     property int jitterThreshold : 30
     property int delegateIndex : 0
     property bool connection: false
+    property bool approved: false
 
     anchors.fill: parent
     plugin: Plugin { name: "itemsoverlay" }
+    //gesture.enabled: true
     gesture.enabled: false
     center: parentMap.center
     color: 'transparent' // Necessary to make this map transparent
@@ -190,13 +192,16 @@ Map {
 
     function aprovedTrack() {
         if(markers.length < 3) {
+            approved = false
             return false
         }
         for (var i = 0; i< markers.length; i++){
             if (markers[i].connectedMarkers() < 2){
+                approved = false
                 return false
             }
         }
+        approved = true
         return true
     }
 
@@ -211,6 +216,8 @@ Map {
     Component.onCompleted: {
         markers = new Array();
         mapItems = new Array();
+        //mapOverlay.zoomLevel = 15
+        //mapOverlay.center = parentMap.center
     }
 
     onDelegateIndexChanged: {

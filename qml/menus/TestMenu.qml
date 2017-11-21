@@ -1,5 +1,6 @@
 import QtQuick 2.4
 import QtPositioning 5.5
+import QtLocation 5.9
 
 TestMenuForm {
     id:testMenu1
@@ -7,13 +8,10 @@ TestMenuForm {
     signal delegate(var index)
     signal deleteAll()
     signal centerMap()
-    property var mapSourca
+    property Map mapSourca
 
-
-    Component.onCompleted: {
-        mapSourca.zoomLevel = 14
-        mapSource = mapSourca
-    }
+    mapSource: mapSourca
+    zoomSlider.value: mapSource.zoomLevel
 
     followButton.onClicked: {
         followMe()
@@ -55,9 +53,4 @@ TestMenuForm {
     tab1.onClicked: {
         stackLayout.currentIndex = 1
     }
-
-    //switchDelegate.
-    //mouseDelegate:
-    //markerDelegate:
-    //handDelegate:
 }
