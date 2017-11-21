@@ -10,6 +10,7 @@ Map {
     property variant markers
     property variant mapItems
     property int markerCounter: 0 // counter for total amount of markers. Resets to 0 when number of markers = 0
+    property int polylineCounter: 0
     property int currentMarker: -1
     property int previousMarker: -1
     property int lastX : -1
@@ -67,7 +68,7 @@ Map {
                 console.log("extending?")
                 if(!markers[currentMarker].isConnectedTo(marker)){
                     markers[currentMarker].connectMarker(marker)
-                    addPolyline(markers[currentMarker].coordinate, marker.coordinate)
+                    addPolyline(markers[currentMarker], marker)
                 }
                 currentMarker = -1
             } else if(markers[markerCounter -2].connectedMarkers() > 1) {
@@ -78,7 +79,7 @@ Map {
                 //extending from previous placed marker
                 if(!markers[markerCounter -2].isConnectedTo(marker)){
                     markers[markerCounter -2].connectMarker(marker)
-                    addPolyline(markers[markerCounter -2].coordinate, marker.coordinate)
+                    addPolyline(markers[markerCounter -2], marker)
                 }
                 console.log("extending connect")
             }
@@ -112,10 +113,14 @@ Map {
 
     function addPolyline(coordinate1, coordinate2)
     {
+
         var count = mapOverlay.mapItems.length
         var co = Qt.createComponent('Polyline.qml')
         if (co.status == Component.Ready) {
+            polylineCounter++
             var o = co.createObject(mapOverlay)
+            o.setID(polylineCounter)
+            o.setOverlay(mapOverlay)
             o.addCoord(coordinate1, coordinate2)
             mapOverlay.addMapItem(o)
             //update list of items
@@ -146,7 +151,21 @@ Map {
         //printApproved()
     }
 
-    function deletePolylines()
+    function deletePolyline(marker1, marker2, polylineNr) {
+        console.log(marker1, " ", marker2, " ",  polylineNr)
+        markers[marker1 -1].disconnectMarker(marker2)
+        markers[marker1 -1].disconnectPolyline(polylineNr)
+        markers[marker2 -1].disconnectMarker(marker1)
+        markers[marker2 -1].disconnectPolyline(polylineNr)
+        var polyIndex = polyLineIndex(polylineNr)
+        if(polyIndex > -1){
+            mapOverlay.removeMapItem(mapOverlay.mapItems[polyIndex])
+            mapOverlay.mapItems[polyIndex].destroy()
+        }
+        //polylineCounter--
+    }
+
+    function deleteAllPolylines()
     {
         var count = mapOverlay.mapItems.length
         for (var i = 0; i<count; i++){
@@ -154,6 +173,7 @@ Map {
             mapOverlay.mapItems[i].destroy()
         }
         mapOverlay.mapItems = []
+        //polylineCounter = 0
         console.log("ItemsDeleted")
     }
 
@@ -163,7 +183,7 @@ Map {
             if(previousMarker > -1 && !markers[previousMarker].isConnectedTo(markers[currentMarker])) {
                 // connection between two existing nodes
                 markers[previousMarker].connectMarker(markers[currentMarker])
-                addPolyline(markers[previousMarker].coordinate, markers[currentMarker].coordinate)
+                addPolyline(markers[previousMarker], markers[currentMarker])
                 previousMarker = -1
                 currentMarker = -1
                 console.log("connection between existing")
@@ -173,7 +193,7 @@ Map {
                 //} else if((markerCounter -1) != currentMarker){
                 // connection from previously placed node to existing
                 markers[markerCounter -1].connectMarker(markers[currentMarker])
-                addPolyline(markers[markerCounter -1].coordinate, markers[currentMarker].coordinate)
+                addPolyline(markers[markerCounter -1], markers[currentMarker])
                 currentMarker = -1
                 console.log("connect to existing")
                 connection = true
@@ -182,6 +202,15 @@ Map {
             }
         }
         //printApproved()
+    }
+
+    function polyLineIndex(polyID) {
+        var count = mapOverlay.mapItems.length
+        for (var i = 0; i<count; i++){
+            if(mapOverlay.mapItems[i].polylineID == polyID)
+                return i
+        }
+        return -1
     }
 
     function connectMarkerToExisting() {
@@ -216,8 +245,8 @@ Map {
     Component.onCompleted: {
         markers = new Array();
         mapItems = new Array();
-        //mapOverlay.zoomLevel = 15
-        //mapOverlay.center = parentMap.center
+        console.log("maxZoom", overlay.maximumZoomLevel)
+        console.log("minZoom", overlay.minimumZoomLevel)
     }
 
     onDelegateIndexChanged: {

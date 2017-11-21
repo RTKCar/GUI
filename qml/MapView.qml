@@ -21,7 +21,7 @@ Item {
 
     onDeleteAllChanged: {
         overlay.deleteMarkers()
-        overlay.deletePolylines()
+        overlay.deleteAllPolylines()
     }
 
     onCenterChanged: {

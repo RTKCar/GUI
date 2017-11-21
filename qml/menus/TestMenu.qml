@@ -46,6 +46,11 @@ TestMenuForm {
             delegate(2)
     }
 
+    deleteDelegate.onCheckedChanged: {
+        if(deleteDelegate.checked)
+            delegate(3)
+    }
+
     tab0.onClicked: {
         stackLayout.currentIndex = 0
     }

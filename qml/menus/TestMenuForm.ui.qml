@@ -9,6 +9,7 @@ Item {
     property alias mouseDelegate: radioDelegate1
     property alias markerDelegate: radioDelegate2
     property alias handDelegate: radioDelegate3
+    property alias deleteDelegate: radioDelegate4
     property alias followButton: followButton
     property alias deleteAllButton: deleteAllButton
     property alias centerButton: centerButton
@@ -65,7 +66,7 @@ Item {
             }
 
             RadioDelegate {
-                id: radioDelegate
+                id: radioDelegate4
                 x: 96
                 y: 102
                 width: 104
@@ -130,7 +131,7 @@ Item {
                         y: 13
                         from: mapSource.minimumZoomLevel
                         to: mapSource.maximumZoomLevel
-                        value: mapSource.zoomLevel
+                        //value: mapSource.zoomLevel
                         stepSize: 0.5
                         snapMode: "SnapOnRelease"
                     }

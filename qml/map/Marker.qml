@@ -35,19 +35,20 @@ MapQuickItem {
             property int lastY: -1
             anchors.fill: parent
             hoverEnabled : false
-            drag.target: marker
+            //drag.target: marker
             preventStealing: true
+            //Drag.active: markerMouseArea.drag.active
 
             onClicked : {
                 overlay.pressX = mouse.x
                 overlay.pressY = mouse.y
-                var prev = false
+                if(overlay.delegateIndex == 3) {
+                    //disconnect Marker, then delete it
+                    console.log("delete MArk")
+                } else if(overlay.delegateIndex == 1){
+
                 if(overlay.currentMarker != -1) {
                     overlay.previousMarker = overlay.currentMarker
-                } else if(overlay.currentMarker > -1) {
-
-                } else {
-                    prev = true
                 }
                 overlay.currentMarker = -1
                 for (var i = 0; i< overlay.markers.length; i++){
@@ -55,6 +56,11 @@ MapQuickItem {
                         overlay.currentMarker = i
                         if(overlay.previousMarker != overlay.currentMarker) {
                             overlay.connectMarkers()
+                            /*if(overlay.delegateIndex == 1){
+                                overlay.connectMarkers()
+                            } else if(overlay.delegateIndex == 3) {
+                                //delete choosen marker
+                            }*/
                         } else {
                             overlay.currentMarker = -1
                             overlay.previousMarker = -1
@@ -62,6 +68,7 @@ MapQuickItem {
                         }
                         break
                     }
+                }
                 }
             }
         }
@@ -121,13 +128,23 @@ MapQuickItem {
         }
     }
 
-    function disconnectMarker(Marker){
-        connectedCount --
-        //disconnect Marker from 1 or more Polylines
-        markersConnected.pop(Marker)
+    function disconnectMarker(MarkerID){
+        markersConnected.pop(MarkerID)
+        if(markersConnected.length < connectedCount)
+            connectedCount --
         if(markersConnected.length < 3) {
             rect.color = "LimeGreen"
         }
+    }
+
+    function connectPolyline(polylineID) {
+        polylinesConnected.push(polylineID)
+        console.log(markerID, "is connected to line nr ", polylineID)
+    }
+
+    function disconnectPolyline(polylineID) {
+        polylinesConnected.pop(polylineID)
+        console.log(markerID, "is disconnected from line nr ", polylineID)
     }
 
     Component.onCompleted: {
