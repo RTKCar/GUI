@@ -57,7 +57,9 @@ Map {
         myArray.push(marker)
         markers = myArray
 
-        if(markerCounter > 1) {
+        if(mapOverlay.markers.length > 1) {
+            console.log("count > <", mapOverlay.markers.length)
+        //if(markerCounter > 1) {
             /*console.log(markers[markerCounter -2].returnID(), " has ",
                         markers[markerCounter -2].connectedMarkers(), " connections")
             console.log(markers[markerCounter -2].returnID(), " has ",
@@ -71,16 +73,21 @@ Map {
                     addPolyline(markers[currentMarker], marker)
                 }
                 currentMarker = -1
-            } else if(markers[markerCounter -2].connectedMarkers() > 1) {
+            } else if(markers[markers.length -2].connectedMarkers() > 1) {
+                //} else if(markers[markerCounter -2].connectedMarkers() > 1) {
                 //add new marker without Polyline
                 //console.log(markers[markerCounter -2].connectedMarkers())
                 console.log("new mark")
             } else {
                 //extending from previous placed marker
-                if(!markers[markerCounter -2].isConnectedTo(marker)){
+                if(!markers[markers.length -2].isConnectedTo(marker)){
+                    markers[markers.length -2].connectMarker(marker)
+                    addPolyline(markers[markers.length -2], marker)
+                }
+                /*if(!markers[markerCounter -2].isConnectedTo(marker)){
                     markers[markerCounter -2].connectMarker(marker)
                     addPolyline(markers[markerCounter -2], marker)
-                }
+                }*/
                 console.log("extending connect")
             }
         }
@@ -138,6 +145,35 @@ Map {
         }
     }
 
+    function deleteMarker(markerArray, polylineArray, markID) {
+        //var mark = markerIndex(markID)
+        console.log("marker ID ", markID)
+        console.log("arrayLength ", markerArray.length)
+        var count = markerArray.length
+        for (var i = count -1; i> -1; i--){
+            console.log("round ", i)
+            //var tempMark = markerIndex(markerArray[i])
+            //console.log("tempMarkIndex ", tempMark)
+            deletePolyline(markID, markerArray[i], polylineArray[i])
+            /*if(mark > -1 && tempMark > -1) {
+                deletePolyline(mark, tempMark, polylineArray[i])
+            }*/
+        }
+        var mark = markerIndex(markID)
+        if(mark > -1){
+            mapOverlay.removeMapItem(mapOverlay.markers[mark])
+            mapOverlay.markers[mark].destroy()
+            var myArray = new Array()
+            for (var i = 0; i<markers.length; i++){
+                if(i != mark)
+                    myArray.push(markers[i])
+            }
+            markers = myArray
+        }
+        console.log("markers after deletion ", markers.length)
+        console.log("polylines after deletion ", mapItems.length)
+    }
+
     function deleteMarkers()
     {
         var count = mapOverlay.markers.length
@@ -146,21 +182,35 @@ Map {
             mapOverlay.markers[i].destroy()
         }
         mapOverlay.markers = []
-        markerCounter = 0
+        //markerCounter = 0
         console.log("markersDeleted")
         //printApproved()
     }
 
     function deletePolyline(marker1, marker2, polylineNr) {
+        var mark1 = markerIndex(marker1)
+        var mark2 = markerIndex(marker2)
         console.log(marker1, " ", marker2, " ",  polylineNr)
-        markers[marker1 -1].disconnectMarker(marker2)
-        markers[marker1 -1].disconnectPolyline(polylineNr)
-        markers[marker2 -1].disconnectMarker(marker1)
-        markers[marker2 -1].disconnectPolyline(polylineNr)
+        if(mark1 > -1 && mark2 > -1){
+            markers[mark1].disconnectMarker(marker2)
+            markers[mark1].disconnectPolyline(polylineNr)
+            markers[mark2].disconnectMarker(marker1)
+            markers[mark2].disconnectPolyline(polylineNr)
+        }
         var polyIndex = polyLineIndex(polylineNr)
         if(polyIndex > -1){
+            console.log("removing line at index ", polyIndex)
             mapOverlay.removeMapItem(mapOverlay.mapItems[polyIndex])
             mapOverlay.mapItems[polyIndex].destroy()
+            var myArray = new Array()
+            for (var i = 0; i<mapItems.length; i++){
+                if(i != polyIndex)
+                    myArray.push(mapItems[i])
+            }
+            mapItems = myArray
+            //mapOverlay.mapItems.pop(mapItems[polyIndex])
+        } else {
+            console.log("index to low")
         }
         //polylineCounter--
     }
@@ -174,12 +224,12 @@ Map {
         }
         mapOverlay.mapItems = []
         //polylineCounter = 0
-        console.log("ItemsDeleted")
+        //console.log("ItemsDeleted")
     }
 
     function connectMarkers() {
         // if connection to node from previousMarker or existing
-        if(markerCounter > 1 && currentMarker > -1) {
+        if(markers.length > 1 && currentMarker > -1) {
             if(previousMarker > -1 && !markers[previousMarker].isConnectedTo(markers[currentMarker])) {
                 // connection between two existing nodes
                 markers[previousMarker].connectMarker(markers[currentMarker])
@@ -188,12 +238,15 @@ Map {
                 currentMarker = -1
                 console.log("connection between existing")
                 connection = true
-            } else if(!connection && !markers[markerCounter -1].isConnectedTo(markers[currentMarker])){
+            } else if(!connection && !markers[markers.length -1].isConnectedTo(markers[currentMarker])){
+                //} else if(!connection && !markers[markerCounter -1].isConnectedTo(markers[currentMarker])){
                 //} else if(!markers[markerCounter -1].isConnectedTo(markers[currentMarker])){
                 //} else if((markerCounter -1) != currentMarker){
                 // connection from previously placed node to existing
-                markers[markerCounter -1].connectMarker(markers[currentMarker])
-                addPolyline(markers[markerCounter -1], markers[currentMarker])
+                markers[markers.length -1].connectMarker(markers[currentMarker])
+                addPolyline(markers[markers.length -1], markers[currentMarker])
+                /*markers[markerCounter -1].connectMarker(markers[currentMarker])
+                addPolyline(markers[markerCounter -1], markers[currentMarker])*/
                 currentMarker = -1
                 console.log("connect to existing")
                 connection = true
@@ -208,6 +261,15 @@ Map {
         var count = mapOverlay.mapItems.length
         for (var i = 0; i<count; i++){
             if(mapOverlay.mapItems[i].polylineID == polyID)
+                return i
+        }
+        return -1
+    }
+
+    function markerIndex(markID) {
+        var count = mapOverlay.markers.length
+        for (var i = 0; i<count; i++){
+            if(mapOverlay.markers[i].markerID == markID)
                 return i
         }
         return -1

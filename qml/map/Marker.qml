@@ -44,31 +44,31 @@ MapQuickItem {
                 overlay.pressY = mouse.y
                 if(overlay.delegateIndex == 3) {
                     //disconnect Marker, then delete it
+                    overlay.deleteMarker(markersConnected, polylinesConnected, markerID)
                     console.log("delete MArk")
                 } else if(overlay.delegateIndex == 1){
-
-                if(overlay.currentMarker != -1) {
-                    overlay.previousMarker = overlay.currentMarker
-                }
-                overlay.currentMarker = -1
-                for (var i = 0; i< overlay.markers.length; i++){
-                    if (marker == overlay.markers[i]){
-                        overlay.currentMarker = i
-                        if(overlay.previousMarker != overlay.currentMarker) {
-                            overlay.connectMarkers()
-                            /*if(overlay.delegateIndex == 1){
-                                overlay.connectMarkers()
-                            } else if(overlay.delegateIndex == 3) {
-                                //delete choosen marker
-                            }*/
-                        } else {
-                            overlay.currentMarker = -1
-                            overlay.previousMarker = -1
-                            console.log("dubbelpress")
-                        }
-                        break
+                    if(overlay.currentMarker != -1) {
+                        overlay.previousMarker = overlay.currentMarker
                     }
-                }
+                    overlay.currentMarker = -1
+                    for (var i = 0; i< overlay.markers.length; i++){
+                        if (marker == overlay.markers[i]){
+                            overlay.currentMarker = i
+                            if(overlay.previousMarker != overlay.currentMarker) {
+                                overlay.connectMarkers()
+                                /*if(overlay.delegateIndex == 1){
+                                    overlay.connectMarkers()
+                                } else if(overlay.delegateIndex == 3) {
+                                    //delete choosen marker
+                                }*/
+                            } else {
+                                overlay.currentMarker = -1
+                                overlay.previousMarker = -1
+                                console.log("dubbelpress")
+                            }
+                            break
+                        }
+                    }
                 }
             }
         }
@@ -77,7 +77,7 @@ MapQuickItem {
     function connectMark(Marker) {
         //only connect to Marker if not already connected
         connectedCount ++
-        markersConnected.push(Marker)
+        markersConnected.push(Marker.markerID)
         if(markersConnected.length > 2) {
             rect.color = "Red"
         }
@@ -95,7 +95,7 @@ MapQuickItem {
             return true
         }
         for (var i = 0; i< markersConnected.length; i++){
-            if (Marker == markersConnected[i]){
+            if (Marker.markerID == markersConnected[i]){
                 return true
             }
         }
@@ -106,9 +106,9 @@ MapQuickItem {
         return connectedCount
     }
 
-    function connectedMarks() {
+    /*function connectedMarks() {
         return markersConnected.length
-    }
+    }*/
 
     function returnID() {
         return markerID
@@ -117,7 +117,7 @@ MapQuickItem {
     function printConnections() {
         console.log(markerID, " is connected to: ")
         for (var i = 0; i< markersConnected.length; i++){
-            console.log(markersConnected[i].returnID(), ", ")
+            console.log(markersConnected[i], ", ")
         }
     }
 
