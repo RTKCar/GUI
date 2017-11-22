@@ -17,6 +17,15 @@ Item {
     Plugin {
         id: mapPlugin
         name: "osm"
+        /*name: "mapboxgl"
+        PluginParameter {name: "mapbox.map_id"; value: "mapbox.streets"}
+        PluginParameter {name: "mapbox.map_id"; value: "mapbox.outdoors"}
+        PluginParameter {name: "mapbox.map_id"; value: "mapbox.streets-basic"}
+        PluginParameter {name: "mapbox.map_id"; value: "mapbox.bright"}
+        PluginParameter {name: "mapbox.map_id"; value: "mapbox.emerald"}
+        PluginParameter {name: "mapbox.access_token"; value: "pk.eyJ1Ijoib2xpb2RkIiwiYSI6ImNqYWIxOGZscTB4M20ycXF1aDluM2NnaTgifQ.wYR97A-knsp-XR8wwrFSQg"}
+        PluginParameter {name: "mapboxgl.access_token"; value: "pk.eyJ1Ijoib2xpb2RkIiwiYSI6ImNqYWIxOGZscTB4M20ycXF1aDluM2NnaTgifQ.wYR97A-knsp-XR8wwrFSQg"}
+        */
     }
 
     onDeleteAllChanged: {
