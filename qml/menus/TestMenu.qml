@@ -8,6 +8,7 @@ TestMenuForm {
     signal delegate(var index)
     signal deleteAll()
     signal centerMap()
+    signal makeJSONs()
     property Map mapSourca
 
     mapSource: mapSourca
@@ -23,6 +24,10 @@ TestMenuForm {
 
     centerButton.onClicked: {
         centerMap()
+    }
+
+    jsonButton.onClicked: {
+        makeJSONs()
     }
 
     zoomSlider.onValueChanged: {

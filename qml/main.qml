@@ -41,6 +41,9 @@ ApplicationWindow {
             onCenterMap: {
                 mapview.center = !mapview.center
             }
+            onMakeJSONs: {
+                mapview.makeJsons = !mapview.makeJsons
+            }
 
             mapSourca: mapview.mapMap
             onDelegate: {
@@ -51,6 +54,24 @@ ApplicationWindow {
     Component.onCompleted: {
         var JsonString = '{"a":"A whatever, run","b":"B fore something happens"}';
         var JsonObject= JSON.parse(JsonString);
+        /*var jsObject = {
+            'id' : 2,
+            'coord' : {
+                'lat': 12,
+                'long': 56
+            },
+            'connections' : []
+        }
+
+        console.log(jsObject)
+        console.log(jsObject.coord.lat)
+        jsObject.connections.push(4)
+        jsObject.connections.push(3)
+        jsObject.connections.push(7)
+        console.log(jsObject.connections)
+
+        var newObj = JSON.stringify(jsObject)
+        console.log(newObj)*/
 
         //retrieve values from JSON again
         var aString = JsonObject.a;

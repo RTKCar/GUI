@@ -304,6 +304,23 @@ Map {
         console.log("approved")
     }
 
+    function makeJSONs() {
+        var jarr = new Array()
+        for (var i = 0; i< markers.length; i++){
+            markers[i].createJson()
+            jarr.push(markers[i].json)
+        }
+        if(jarr.length > 0){
+            console.log("json attributes: ", Object.keys(jarr[0]))
+        }
+        jarr = JSON.stringify(jarr)
+        jarr = JSON.parse(jarr)
+        delete jarr[0].id
+        for (var i = 0; i< jarr.length; i++){
+            console.log(jarr[i].id, " is connected to ", jarr[i].connections)
+        }
+    }
+
     Component.onCompleted: {
         markers = new Array();
         mapItems = new Array();

@@ -13,6 +13,7 @@ Item {
     property alias followButton: followButton
     property alias deleteAllButton: deleteAllButton
     property alias centerButton: centerButton
+    property alias jsonButton: jsonButton
     property alias progressBar: progressBar
     property alias zoomSlider: zoomS
     property alias zoomValue: zoomVal
@@ -109,8 +110,8 @@ Item {
                 }
 
                 Button {
-                    id: button
-                    text: qsTr("Button")
+                    id: jsonButton
+                    text: qsTr("Make Json")
                 }
             }
 

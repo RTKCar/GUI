@@ -4,13 +4,12 @@ import QtQuick 2.0
 
 MapQuickItem {
     id: marker
-    property alias lastMouseX: markerMouseArea.lastX
-    property alias lastMouseY: markerMouseArea.lastY
     property MapComponent overlay: null
     property variant markersConnected
     property variant polylinesConnected
     property int connectedCount: 0
     property int markerID: 0
+    property var json
 
     anchorPoint.x: rect.width/2
     anchorPoint.y: rect.height/2
@@ -28,9 +27,6 @@ MapQuickItem {
 
         MouseArea  {
             id: markerMouseArea
-            property int pressX : -1
-            property int pressY : -1
-            property int jitterThreshold : 10
             property int lastX: -1
             property int lastY: -1
             anchors.fill: parent
@@ -45,8 +41,8 @@ MapQuickItem {
                 if(overlay.delegateIndex == 3) {
                     //disconnect Marker, then delete it
                     overlay.deleteMarker(markersConnected, polylinesConnected, markerID)
-                    console.log("delete MArk")
                 } else if(overlay.delegateIndex == 1){
+                    // marker has been pressed
                     if(overlay.currentMarker != -1) {
                         overlay.previousMarker = overlay.currentMarker
                     }
@@ -56,15 +52,10 @@ MapQuickItem {
                             overlay.currentMarker = i
                             if(overlay.previousMarker != overlay.currentMarker) {
                                 overlay.connectMarkers()
-                                /*if(overlay.delegateIndex == 1){
-                                    overlay.connectMarkers()
-                                } else if(overlay.delegateIndex == 3) {
-                                    //delete choosen marker
-                                }*/
                             } else {
+                                //same marker was pressed twice
                                 overlay.currentMarker = -1
                                 overlay.previousMarker = -1
-                                console.log("dubbelpress")
                             }
                             break
                         }
@@ -75,13 +66,13 @@ MapQuickItem {
     }
 
     function connectMark(Marker) {
-        //only connect to Marker if not already connected
         connectedCount ++
         markersConnected.push(Marker.markerID)
         if(markersConnected.length > 2) {
             rect.color = "Red"
         }
-        printConnections()
+        //createJson()
+        //printConnections()
     }
 
     function connectMarker(MarkerTo) {
@@ -105,10 +96,6 @@ MapQuickItem {
     function connectedMarkers() {
         return connectedCount
     }
-
-    /*function connectedMarks() {
-        return markersConnected.length
-    }*/
 
     function returnID() {
         return markerID
@@ -139,24 +126,31 @@ MapQuickItem {
 
     function connectPolyline(polylineID) {
         polylinesConnected.push(polylineID)
-        console.log(markerID, "is connected to line nr ", polylineID)
+        //console.log(markerID, "is connected to line nr ", polylineID)
     }
 
     function disconnectPolyline(polylineID) {
         polylinesConnected.pop(polylineID)
-        console.log(markerID, "is disconnected from line nr ", polylineID)
+        //console.log(markerID, "is disconnected from line nr ", polylineID)
+    }
+
+    function createJson(){
+        var jsObject = {
+            'id' : markerID,
+            'coordinates' : coordinate,
+            'connections' : []
+        }
+        for(var i = 0; i<markersConnected.length; i++) {
+            jsObject.connections.push(markersConnected[i])
+        }
+        //console.log(jsObject.id)
+        json = jsObject
+        //json = JSON.stringify(jsObject)
     }
 
     Component.onCompleted: {
-        //coordinate = overlay.toCoordinate(Qt.point(markerMouseArea.mouseX,
-                                                              //markerMouseArea.mouseY));
         markerID = overlay.markerCounter
         markersConnected = new Array();
         polylinesConnected = new Array();
-        //console.log(markerID)
-        /*var data = JSON.stringify(this);
-        console.log(data);
-        var obj = JSON.parse(data);
-        console.log(obj.color);*/
     }
 }

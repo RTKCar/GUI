@@ -11,6 +11,7 @@ Item {
     property bool foll: false
     property bool deleteAll: false
     property bool center: false
+    property bool makeJsons: false
     property alias mapMap: map
     property alias delegateIndex: overlay.delegateIndex
 
@@ -36,6 +37,10 @@ Item {
     onCenterChanged: {
         overlay.fitViewportToVisibleMapItems()
         //overlay.fitViewportToMapItems()
+    }
+
+    onMakeJsonsChanged: {
+        overlay.makeJSONs()
     }
 
     Map {
