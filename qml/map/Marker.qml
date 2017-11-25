@@ -154,5 +154,9 @@ MapQuickItem {
         markersConnected = new Array();
         polylinesConnected = new Array();
         //console.log(markerID)
+        /*var data = JSON.stringify(this);
+        console.log(data);
+        var obj = JSON.parse(data);
+        console.log(obj.color);*/
     }
 }

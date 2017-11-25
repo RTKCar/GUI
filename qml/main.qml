@@ -48,4 +48,15 @@ ApplicationWindow {
             }
         }
     }
+    Component.onCompleted: {
+        var JsonString = '{"a":"A whatever, run","b":"B fore something happens"}';
+        var JsonObject= JSON.parse(JsonString);
+
+        //retrieve values from JSON again
+        var aString = JsonObject.a;
+        var bString = JsonObject.b;
+
+        console.log(aString);
+        console.log(bString);
+    }
 }
