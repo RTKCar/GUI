@@ -16,5 +16,6 @@
         <file>qml/resources/up-arrow.svg</file>
         <file>qml/map/Polyline.qml</file>
         <file>qml/map/PolylineItem.qml</file>
+        <file>qml/map/jsonMarker.qml</file>
     </qresource>
 </RCC>
