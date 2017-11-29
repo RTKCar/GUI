@@ -316,7 +316,7 @@ Map {
         jarr = JSON.stringify(jarr)
         console.log(jarr)
         jarr = JSON.parse(jarr)
-        delete jarr[0].id
+        //delete jarr[0].id
         for (var i = 0; i< jarr.length; i++){
             console.log(jarr[i].id, " is connected to ", jarr[i].connections)
         }
