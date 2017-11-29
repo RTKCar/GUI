@@ -314,6 +314,7 @@ Map {
             console.log("json attributes: ", Object.keys(jarr[0]))
         }
         jarr = JSON.stringify(jarr)
+        console.log(jarr)
         jarr = JSON.parse(jarr)
         delete jarr[0].id
         for (var i = 0; i< jarr.length; i++){
