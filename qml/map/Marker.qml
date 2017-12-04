@@ -45,7 +45,10 @@ MapQuickItem {
                     // marker has been pressed
                     if(overlay.currentMarker != -1) {
                         overlay.previousMarker = overlay.currentMarker
+                    } else {
+                        rect.color = "yellow"
                     }
+
                     overlay.currentMarker = -1
                     for (var i = 0; i< overlay.markers.length; i++){
                         if (marker == overlay.markers[i]){
@@ -56,6 +59,11 @@ MapQuickItem {
                                 //same marker was pressed twice
                                 overlay.currentMarker = -1
                                 overlay.previousMarker = -1
+                                if(markersConnected.length > 2) {
+                                    rect.color = "Red"
+                                } else {
+                                    rect.color = "LimeGreen"
+                                }
                             }
                             break
                         }
@@ -70,7 +78,10 @@ MapQuickItem {
         markersConnected.push(Marker.markerID)
         if(markersConnected.length > 2) {
             rect.color = "Red"
+        } else {
+            rect.color = "LimeGreen"
         }
+
         //createJson()
         //printConnections()
     }

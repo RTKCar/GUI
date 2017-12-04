@@ -13,8 +13,9 @@ Item {
     property alias followButton: followButton
     property alias deleteAllButton: deleteAllButton
     property alias centerButton: centerButton
-    property alias jsonButton: jsonButton
+    property alias sendMapButton: sendMButton
     property alias connectButton: connectButton
+    property alias disconnectButton: disconnectButton
     property alias printButton: printButton
     property alias zoomSlider: zoomS
     property alias zoomValue: zoomVal
@@ -27,6 +28,8 @@ Item {
     property alias notCLabel: nLabel
     property alias notALabel: nLabel2
     property alias approvedLabel: aLabel
+    property alias host: hostField
+    property alias port: portField
     property Map mapSource
     property bool conn: false
     width: 200
@@ -47,7 +50,7 @@ Item {
             RadioDelegate {
                 id: radioDelegate1
                 x: 0
-                y: 116
+                y: 227
                 width: 104
                 height: 33
                 checked: true
@@ -57,7 +60,7 @@ Item {
             RadioDelegate {
                 id: radioDelegate2
                 x: 0
-                y: 155
+                y: 266
                 width: 104
                 height: 32
                 text: qsTr("Marker")
@@ -66,16 +69,17 @@ Item {
             RadioDelegate {
                 id: radioDelegate3
                 x: 96
-                y: 118
+                y: 229
                 width: 104
                 height: 30
                 text: qsTr("Hand")
+                enabled: false
             }
 
             RadioDelegate {
                 id: radioDelegate4
                 x: 96
-                y: 145
+                y: 256
                 width: 104
                 height: 52
                 text: qsTr("Delete")
@@ -84,7 +88,7 @@ Item {
             RowLayout {
                 id: rowLayout1
                 x: 0
-                y: 186
+                y: 299
                 width: 200
                 height: 45
 
@@ -105,7 +109,7 @@ Item {
             RowLayout {
                 id: rowLayout
                 x: 0
-                y: 231
+                y: 345
                 width: 200
                 height: 45
 
@@ -116,16 +120,15 @@ Item {
                 }
 
                 Button {
-                    id: jsonButton
-                    text: qsTr("Make Json")
-                    enabled: false
+                    id: printButton
+                    text: qsTr("Print Track")
                 }
             }
 
             Flow {
                 id: flow1
                 x: 0
-                y: 320
+                y: 437
                 width: 200
                 height: 53
 
@@ -155,9 +158,9 @@ Item {
             StackLayout {
                 id: stackLayout
                 x: 0
-                y: 410
+                y: 488
                 width: 200
-                height: 150
+                height: 84
 
                 Page {
                     id: page0
@@ -167,10 +170,10 @@ Item {
 
                     Image {
                         id: image4
-                        x: 50
-                        y: 25
-                        width: 100
-                        height: 100
+                        x: 70
+                        y: 15
+                        width: 60
+                        height: 60
                         source: "../resources/play-button.svg"
                     }
                 }
@@ -183,37 +186,37 @@ Item {
 
                     Image {
                         id: image
-                        x: 75
-                        y: 10
-                        width: 50
-                        height: 50
+                        x: 87
+                        y: 5
+                        width: 25
+                        height: 25
                         source: "qrc:/qml/resources/up-arrow.svg"
                     }
 
                     Image {
                         id: image1
-                        x: 35
-                        y: 50
-                        width: 50
-                        height: 50
+                        x: 47
+                        y: 30
+                        width: 25
+                        height: 25
                         source: "qrc:/qml/resources/left-arrow.svg"
                     }
 
                     Image {
                         id: image2
-                        x: 115
-                        y: 50
-                        width: 50
-                        height: 50
+                        x: 127
+                        y: 30
+                        width: 25
+                        height: 25
                         source: "qrc:/qml/resources/right-arrow.svg"
                     }
 
                     Image {
                         id: image3
-                        x: 75
-                        y: 90
-                        width: 50
-                        height: 50
+                        x: 87
+                        y: 55
+                        width: 25
+                        height: 25
                         source: "qrc:/qml/resources/down-arrow.svg"
                     }
                 }
@@ -222,20 +225,22 @@ Item {
             TabBar {
                 id: tabBar
                 x: 0
-                y: 560
+                y: 571
                 width: 200
-                height: 40
+                height: 30
 
                 TabButton {
                     id: tabButton
                     x: 0
                     y: 0
+                    height: 30
                     text: qsTr("Start/Stopp")
                 }
 
                 TabButton {
                     id: tabButton1
                     x: 100
+                    height: 30
                     text: qsTr("Steer")
                 }
             }
@@ -243,9 +248,9 @@ Item {
             Flow {
                 id: flow2
                 x: 0
-                y: 276
+                y: 391
                 width: 200
-                height: 45
+                height: 40
                 spacing: 10
 
                 Button {
@@ -261,6 +266,13 @@ Item {
                     x: 70
                     width: 60
                     text: qsTr("Load")
+                    enabled: false
+                }
+
+                Button {
+                    id: button
+                    width: 60
+                    text: qsTr("Quit")
                     enabled: false
                 }
             }
@@ -283,7 +295,7 @@ Item {
 
                 Label {
                     id: cLabel
-                    text: qsTr("Connected")
+                    text: qsTr(" Connected")
                     color: "Red"
                 }
             }
@@ -291,9 +303,9 @@ Item {
             RowLayout {
                 id: rowLayout3
                 x: 0
-                y: 41
+                y: 133
                 width: 200
-                height: 49
+                height: 45
 
                 Button {
                     id: connectButton
@@ -302,10 +314,9 @@ Item {
                 }
 
                 Button {
-                    id: printButton
-                    x: 100
-                    width: 90
-                    text: qsTr("Print Track")
+                    id: disconnectButton
+                    text: qsTr("Disconnect")
+                    enabled: false
                 }
             }
 
@@ -331,6 +342,65 @@ Item {
                     id: aLabel
                     text: qsTr("Approved")
                     color: "Red"
+                }
+            }
+
+            RowLayout {
+                id: rowLayout5
+                x: 0
+                y: 42
+                width: 200
+                height: 40
+
+                Label {
+                    id: label3
+                    text: qsTr("Host:")
+                }
+
+                TextField {
+                    id: hostField
+                    width: 150
+                    placeholderText: qsTr("192.168.0.1")
+                    validator: RegExpValidator {
+                        regExp: /(\d{1,3})([.]\d{1,3})([.]\d{1,3})([.]\d{1,3})$/
+                    }
+                }
+            }
+
+            RowLayout {
+                id: rowLayout6
+                x: 0
+                y: 87
+                width: 200
+                height: 40
+
+                Label {
+                    id: label4
+                    text: qsTr("Port: ")
+                }
+
+                TextField {
+                    id: portField
+                    width: 100
+                    placeholderText: qsTr("9000")
+                    validator: IntValidator {
+                        bottom: 0
+                        top: 9999
+                    }
+                }
+            }
+
+            RowLayout {
+                id: rowLayout7
+                x: 0
+                y: 178
+                width: 200
+                height: 45
+
+                Button {
+                    id: sendMButton
+                    text: qsTr("Send Map")
+                    enabled: false
                 }
             }
         }

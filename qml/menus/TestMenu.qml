@@ -8,8 +8,10 @@ TestMenuForm {
     signal delegate(var index)
     signal deleteAll()
     signal centerMap()
-    signal makeJSONs()
+    //signal makeJSONs()
+    signal sendMap()
     signal connect()
+    signal disconnect()
     signal printTrack()
     property Map mapSourca
     property bool connected: false
@@ -32,12 +34,16 @@ TestMenuForm {
         centerMap()
     }
 
-    jsonButton.onClicked: {
-        makeJSONs()
+    sendMapButton.onClicked: {
+        sendMap()
     }
 
     connectButton.onClicked: {
         connect()
+    }
+
+    disconnectButton.onClicked: {
+        disconnect()
     }
 
     printButton.onClicked: {
@@ -82,10 +88,21 @@ TestMenuForm {
         connectedLabel.color = connected ? "Green" : "Red"
         notCLabel.visible = !connected
         connectButton.enabled = !connected
+        disconnectButton.enabled = connected
+        host.enabled = !connected
+        port.enabled = !connected
+        sendMapButton.enabled = approvedT && connected
+    }
+    host.onAccepted: {
+        console.log("host okey")
+    }
+    port.onAccepted: {
+        console.log("port okey")
     }
 
     onApprovedTChanged: {
-        jsonButton.enabled = approvedT
+        sendMapButton.enabled = approvedT && connected
+        //jsonButton.enabled = approvedT
         notALabel.visible = !approvedT
         approvedLabel.color = approvedT ? "Green" : "Red"
     }

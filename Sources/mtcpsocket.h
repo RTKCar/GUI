@@ -12,16 +12,11 @@ class MyTcpSocket : public QObject
   Q_OBJECT
   Q_PROPERTY(QByteArray Map READ Map WRITE setMap NOTIFY mapChanged)
     Q_PROPERTY(bool isConnected MEMBER _isConnected NOTIFY isConnectedChanged)
-    //Q_PROPERTY(const char Map READ Map WRITE setMap NOTIFY mapChanged)
 public:
   explicit MyTcpSocket(QObject *parent = 0);
 
-  //const char Map();
   QByteArray Map();
-  //bool isConnected();
   void setMap(QByteArray &Map);
-
-
 
 signals:
   //connected();
@@ -32,22 +27,18 @@ signals:
   void isConnectedChanged();
 
 public slots:
-  void doConnect();
+  void doConnect(QString host, quint16 port);
   void connected();
   void disconnected();
+  void disconnect();
   void bytesWritten(qint64 bytes);
   void readyRead();
   void sendJSON();
-  void newConn();
-  void newDisconn();
-  //void sendMessage(char &message);
 
 private:
   QTcpSocket *socket;
   QByteArray map;
   bool _isConnected = false;
-  //const char map;
-  //qint32 num_ber;
 
 };
 

@@ -12,10 +12,11 @@ Item {
     property bool foll: false
     property bool deleteAll: false
     property bool center: false
-    property bool makeJsons: false
+    property bool sendMap: false
     property bool approvedTrack: false
     property alias mapMap: map
     property alias delegateIndex: overlay.delegateIndex
+    property alias mapComponent: overlay
     property MyTcpSocket myTcpSocket: null
     //signal mapVsignal
 
@@ -43,10 +44,14 @@ Item {
         //overlay.fitViewportToMapItems()
     }
 
-    onMakeJsonsChanged: {
+    onSendMapChanged: {
+        overlay.sendMap()
+    }
+
+    /*onMakeJsonsChanged: {
         overlay.makeJSONs()
         //mapVsignal()
-    }
+    }*/
 
     Map {
         id: map

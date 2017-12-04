@@ -16,7 +16,6 @@ ApplicationWindow {
     title: qsTr("RTKCar")
     //height: Screen.height
     //width: Screen.width
-    //signal sendJson()
 
     RowLayout{
         id: rowL
@@ -43,22 +42,36 @@ ApplicationWindow {
             id:testTools
             onFollowMe: {
                 mapview.foll = !mapview.foll
-                mtpSocket.num = 0
             }
             onDeleteAll: {
-                mapview.deleteAll = !mapview.deleteAll
+                //mapview.deleteAll = !mapview.deleteAll
+                mapview.mapComponent.deleteAllPolylines()
+                mapview.mapComponent.deleteMarkers()
             }
             onCenterMap: {
                 mapview.center = !mapview.center
             }
-            onMakeJSONs: {
-                mapview.makeJsons = !mapview.makeJsons
-                //sendJson()
-                //var m = "newMao"
-                //mytcpSocket.Map = m
+            onSendMap: {
+                mapview.mapComponent.sendMap()
+                //mapview.sendMap = !mapview.sendMap
             }
+            printButton.onClicked: {
+                mapview.mapComponent.printMap()
+            }
+            disconnectButton.onClicked: {
+                mytcpSocket.disconnect()
+            }
+
             onConnect: {
-                mytcpSocket.doConnect()
+                var _host = "0.0.0.0"
+                var _port = 5001
+                if(host.acceptableInput) {
+                    _host = host.text
+                }
+                if(port.acceptableInput) {
+                    _port = parseInt(port.text)
+                }
+                mytcpSocket.doConnect(_host, _port)
             }
 
             mapSourca: mapview.mapMap
@@ -71,16 +84,10 @@ ApplicationWindow {
     MyTcpSocket {
         id: mytcpSocket
         onSocketConnected: {
-            console.log("conn")
             testTools.connected = true
         }
         onSocketDisconnected: {
-            console.log("notconn")
             testTools.connected = false
         }
     }
-
-    /*function sendToMe() {
-        console.log("sent to me")
-    }*/
 }

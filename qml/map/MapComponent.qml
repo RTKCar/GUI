@@ -23,6 +23,7 @@ Map {
     property int delegateIndex : 0
     property bool connection: false
     property bool approved: false
+    property variant jsonMap
 
     signal trackApproved()
 
@@ -62,7 +63,7 @@ Map {
         markers = myArray
 
         if(mapOverlay.markers.length > 1) {
-            console.log("count > <", mapOverlay.markers.length)
+            //console.log("count > <", mapOverlay.markers.length)
         //if(markerCounter > 1) {
             /*console.log(markers[markerCounter -2].returnID(), " has ",
                         markers[markerCounter -2].connectedMarkers(), " connections")
@@ -71,7 +72,7 @@ Map {
             //if new Marker was added
             if(currentMarker > 0) {
                 //extending from a pressed marker
-                console.log("extending?")
+                //console.log("extending?")
                 if(!markers[currentMarker].isConnectedTo(marker)){
                     markers[currentMarker].connectMarker(marker)
                     addPolyline(markers[currentMarker], marker)
@@ -82,7 +83,7 @@ Map {
                 //add new marker without Polyline
                 aprovedTrack();
                 //console.log(markers[markerCounter -2].connectedMarkers())
-                console.log("new mark")
+                //console.log("new mark")
             } else {
                 //extending from previous placed marker
                 if(!markers[markers.length -2].isConnectedTo(marker)){
@@ -93,7 +94,7 @@ Map {
                     markers[markerCounter -2].connectMarker(marker)
                     addPolyline(markers[markerCounter -2], marker)
                 }*/
-                console.log("extending connect")
+                //console.log("extending connect")
             }
         }
         connection = false
@@ -116,7 +117,7 @@ Map {
             myArray.push(o)
             mapItems = myArray
 
-            console.log(item, "connected between ", cordi1, " and ", cordi2)
+            //console.log(item, "connected between ", cordi1, " and ", cordi2)
 
         } else {
             console.log(item + " is not supported right now, please call us later.")
@@ -153,11 +154,11 @@ Map {
 
     function deleteMarker(markerArray, polylineArray, markID) {
         //var mark = markerIndex(markID)
-        console.log("marker ID ", markID)
-        console.log("arrayLength ", markerArray.length)
+        //console.log("marker ID ", markID)
+        //console.log("arrayLength ", markerArray.length)
         var count = markerArray.length
         for (var i = count -1; i> -1; i--){
-            console.log("round ", i)
+            //console.log("round ", i)
             //var tempMark = markerIndex(markerArray[i])
             //console.log("tempMarkIndex ", tempMark)
             deletePolyline(markID, markerArray[i], polylineArray[i])
@@ -176,8 +177,8 @@ Map {
             }
             markers = myArray
         }
-        console.log("markers after deletion ", markers.length)
-        console.log("polylines after deletion ", mapItems.length)
+        //console.log("markers after deletion ", markers.length)
+        //console.log("polylines after deletion ", mapItems.length)
         aprovedTrack();
     }
 
@@ -190,7 +191,7 @@ Map {
         }
         mapOverlay.markers = []
         //markerCounter = 0
-        console.log("markersDeleted")
+        //console.log("markersDeleted")
         //printApproved()
         aprovedTrack();
     }
@@ -198,7 +199,7 @@ Map {
     function deletePolyline(marker1, marker2, polylineNr) {
         var mark1 = markerIndex(marker1)
         var mark2 = markerIndex(marker2)
-        console.log(marker1, " ", marker2, " ",  polylineNr)
+        //console.log(marker1, " ", marker2, " ",  polylineNr)
         if(mark1 > -1 && mark2 > -1){
             markers[mark1].disconnectMarker(marker2)
             markers[mark1].disconnectPolyline(polylineNr)
@@ -207,7 +208,7 @@ Map {
         }
         var polyIndex = polyLineIndex(polylineNr)
         if(polyIndex > -1){
-            console.log("removing line at index ", polyIndex)
+            //console.log("removing line at index ", polyIndex)
             mapOverlay.removeMapItem(mapOverlay.mapItems[polyIndex])
             mapOverlay.mapItems[polyIndex].destroy()
             var myArray = new Array()
@@ -246,7 +247,7 @@ Map {
                 addPolyline(markers[previousMarker], markers[currentMarker])
                 previousMarker = -1
                 currentMarker = -1
-                console.log("connection between existing")
+                //console.log("connection between existing")
                 connection = true
             } else if(!connection && !markers[markers.length -1].isConnectedTo(markers[currentMarker])){
                 //} else if(!connection && !markers[markerCounter -1].isConnectedTo(markers[currentMarker])){
@@ -258,7 +259,7 @@ Map {
                 /*markers[markerCounter -1].connectMarker(markers[currentMarker])
                 addPolyline(markers[markerCounter -1], markers[currentMarker])*/
                 currentMarker = -1
-                console.log("connect to existing")
+                //console.log("connect to existing")
                 connection = true
             } else {
                 console.log("node choosed for next round")
@@ -306,14 +307,6 @@ Map {
         return true
     }
 
-    function printApproved() {
-        console.log("The track is ")
-        if(!aprovedTrack()) {
-            console.log("not ")
-        }
-        console.log("approved")
-    }
-
     function makeJSONs() {
         var jarr = new Array()
         for (var i = 0; i< markers.length; i++){
@@ -323,15 +316,31 @@ Map {
         /*if(jarr.length > 0){
             console.log("json attributes: ", Object.keys(jarr[0]))
         }*/
-        jarr = JSON.stringify(jarr)
+        jsonMap = JSON.stringify(jarr)
         /*console.log(jarr)
         jarr = JSON.parse(jarr)
         for (var i = 0; i< jarr.length; i++){
             console.log(jarr[i].id, " is connected to ", jarr[i].connections)
         }*/
         //console.log("tcpconn :", tcpSocket.isConnected)
-        if(jarr.length > 0 && tcpSocket.isConnected) {
+        /*if(jarr.length > 0 && tcpSocket.isConnected) {
             tcpSocket.Map = jarr
+        }*/
+    }
+
+    function sendMap() {
+        makeJSONs()
+        if(jsonMap !== null && jsonMap.length > 0 && tcpSocket.isConnected)
+        {
+            tcpSocket.Map = jsonMap
+        }
+    }
+
+    function printMap(){
+        makeJSONs()
+        var jarr = JSON.parse(jsonMap)
+        for (var i = 0; i< jarr.length; i++){
+            console.log(jarr[i].id, " is connected to ", jarr[i].connections)
         }
     }
 
@@ -340,10 +349,6 @@ Map {
         mapItems = new Array();
         console.log("maxZoom", overlay.maximumZoomLevel)
         console.log("minZoom", overlay.minimumZoomLevel)
-    }
-
-    onDelegateIndexChanged: {
-        console.log("delegate", delegateIndex)
     }
 
     MouseArea {
@@ -386,12 +391,12 @@ Map {
             }
         }
 
-        onPositionChanged: {
+        /*onPositionChanged: {
             if (mouse.button == Qt.LeftButton) {
                 parentMap.lastX = mouse.x
                 parentMap.lastY = mouse.y
             }
-        }
+        }*/
 
 
         onDoubleClicked: {
@@ -402,7 +407,7 @@ Map {
                 case 0:
                     parentMap.zoomLevel = Math.floor(parentMap.zoomLevel + 1)
                     break
-                case 1:
+                /*case 1:
                     if(currentMarker != -1 && markerCounter > 1) {
                         markers[markerCounter -1].connectMarker(markers[currentMarker])
                         console.log("connecting")
@@ -415,7 +420,7 @@ Map {
                 case 2:
                     console.log("unfinished")
                     mapOverlay.deleteMarkers()
-                    break
+                    break*/
                 default:
                     console.log("Unsupported operation")
                 }
