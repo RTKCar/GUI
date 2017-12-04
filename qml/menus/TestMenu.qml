@@ -9,9 +9,15 @@ TestMenuForm {
     signal deleteAll()
     signal centerMap()
     signal makeJSONs()
+    signal connect()
+    signal printTrack()
     property Map mapSourca
+    property bool connected: false
+    property bool approvedT: false
+    //property alias conLabel: connectedLabel
 
     mapSource: mapSourca
+    conn: connected
     zoomSlider.value: mapSource.zoomLevel
 
     followButton.onClicked: {
@@ -28,6 +34,14 @@ TestMenuForm {
 
     jsonButton.onClicked: {
         makeJSONs()
+    }
+
+    connectButton.onClicked: {
+        connect()
+    }
+
+    printButton.onClicked: {
+        printTrack()
     }
 
     zoomSlider.onValueChanged: {
@@ -63,4 +77,20 @@ TestMenuForm {
     tab1.onClicked: {
         stackLayout.currentIndex = 1
     }
+
+    onConnectedChanged: {
+        connectedLabel.color = connected ? "Green" : "Red"
+        notCLabel.visible = !connected
+        connectButton.enabled = !connected
+    }
+
+    onApprovedTChanged: {
+        jsonButton.enabled = approvedT
+        notALabel.visible = !approvedT
+        approvedLabel.color = approvedT ? "Green" : "Red"
+    }
+
+    /*onConnectedChanged: {
+        connectedLabel.visible = connected
+    }*/
 }

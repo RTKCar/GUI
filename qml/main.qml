@@ -6,6 +6,7 @@ import QtQuick.Window 2.0
 import QtQuick.Layouts 1.3
 import "map"
 import "menus"
+import myPackage 1.0
 
 ApplicationWindow {
     id: appWindow
@@ -15,8 +16,10 @@ ApplicationWindow {
     title: qsTr("RTKCar")
     //height: Screen.height
     //width: Screen.width
+    //signal sendJson()
 
     RowLayout{
+        id: rowL
         visible: true
         anchors.fill: parent
 
@@ -28,12 +31,19 @@ ApplicationWindow {
             Layout.preferredHeight: appWindow.height
             Layout.minimumWidth: 400
             Layout.preferredWidth: appWindow.width - TestMenu.width
+
+            myTcpSocket: mytcpSocket
+
+            onApprovedTrackChanged: {
+                testTools.approvedT = approvedTrack
+            }
         }
 
         TestMenu{
             id:testTools
             onFollowMe: {
                 mapview.foll = !mapview.foll
+                mtpSocket.num = 0
             }
             onDeleteAll: {
                 mapview.deleteAll = !mapview.deleteAll
@@ -43,6 +53,12 @@ ApplicationWindow {
             }
             onMakeJSONs: {
                 mapview.makeJsons = !mapview.makeJsons
+                //sendJson()
+                //var m = "newMao"
+                //mytcpSocket.Map = m
+            }
+            onConnect: {
+                mytcpSocket.doConnect()
             }
 
             mapSourca: mapview.mapMap
@@ -51,33 +67,20 @@ ApplicationWindow {
             }
         }
     }
-    Component.onCompleted: {
-        var JsonString = '{"a":"A whatever, run","b":"B fore something happens"}';
-        var JsonObject= JSON.parse(JsonString);
-        /*var jsObject = {
-            'id' : 2,
-            'coord' : {
-                'lat': 12,
-                'long': 56
-            },
-            'connections' : []
+
+    MyTcpSocket {
+        id: mytcpSocket
+        onSocketConnected: {
+            console.log("conn")
+            testTools.connected = true
         }
-
-        console.log(jsObject)
-        console.log(jsObject.coord.lat)
-        jsObject.connections.push(4)
-        jsObject.connections.push(3)
-        jsObject.connections.push(7)
-        console.log(jsObject.connections)
-
-        var newObj = JSON.stringify(jsObject)
-        console.log(newObj)*/
-
-        //retrieve values from JSON again
-        var aString = JsonObject.a;
-        var bString = JsonObject.b;
-
-        console.log(aString);
-        console.log(bString);
+        onSocketDisconnected: {
+            console.log("notconn")
+            testTools.connected = false
+        }
     }
+
+    /*function sendToMe() {
+        console.log("sent to me")
+    }*/
 }

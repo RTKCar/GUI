@@ -2,11 +2,13 @@ import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtLocation 5.9
 import QtPositioning 5.5
+import myPackage 1.0
 
 Map {
     id: mapOverlay
 
     property Map parentMap: null
+    property MyTcpSocket tcpSocket: null
     property variant markers
     property variant mapItems
     property int markerCounter: 0 // counter for total amount of markers. Resets to 0 when number of markers = 0
@@ -21,6 +23,8 @@ Map {
     property int delegateIndex : 0
     property bool connection: false
     property bool approved: false
+
+    signal trackApproved()
 
     anchors.fill: parent
     plugin: Plugin { name: "itemsoverlay" }
@@ -76,6 +80,7 @@ Map {
             } else if(markers[markers.length -2].connectedMarkers() > 1) {
                 //} else if(markers[markerCounter -2].connectedMarkers() > 1) {
                 //add new marker without Polyline
+                aprovedTrack();
                 //console.log(markers[markerCounter -2].connectedMarkers())
                 console.log("new mark")
             } else {
@@ -137,6 +142,7 @@ Map {
             }
             myArray.push(o)
             mapItems = myArray
+            aprovedTrack();
 
             //console.log("connected between ", coordinate1, " and ", coordinate2)
 
@@ -172,6 +178,7 @@ Map {
         }
         console.log("markers after deletion ", markers.length)
         console.log("polylines after deletion ", mapItems.length)
+        aprovedTrack();
     }
 
     function deleteMarkers()
@@ -185,6 +192,7 @@ Map {
         //markerCounter = 0
         console.log("markersDeleted")
         //printApproved()
+        aprovedTrack();
     }
 
     function deletePolyline(marker1, marker2, polylineNr) {
@@ -208,6 +216,7 @@ Map {
                     myArray.push(mapItems[i])
             }
             mapItems = myArray
+            aprovedTrack();
             //mapOverlay.mapItems.pop(mapItems[polyIndex])
         } else {
             console.log("index to low")
@@ -223,6 +232,7 @@ Map {
             mapOverlay.mapItems[i].destroy()
         }
         mapOverlay.mapItems = []
+        aprovedTrack();
         //polylineCounter = 0
         //console.log("ItemsDeleted")
     }
@@ -310,15 +320,18 @@ Map {
             markers[i].createJson()
             jarr.push(markers[i].json)
         }
-        if(jarr.length > 0){
+        /*if(jarr.length > 0){
             console.log("json attributes: ", Object.keys(jarr[0]))
-        }
+        }*/
         jarr = JSON.stringify(jarr)
-        console.log(jarr)
+        /*console.log(jarr)
         jarr = JSON.parse(jarr)
-        //delete jarr[0].id
         for (var i = 0; i< jarr.length; i++){
             console.log(jarr[i].id, " is connected to ", jarr[i].connections)
+        }*/
+        //console.log("tcpconn :", tcpSocket.isConnected)
+        if(jarr.length > 0 && tcpSocket.isConnected) {
+            tcpSocket.Map = jarr
         }
     }
 

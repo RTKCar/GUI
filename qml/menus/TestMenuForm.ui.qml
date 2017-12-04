@@ -14,7 +14,8 @@ Item {
     property alias deleteAllButton: deleteAllButton
     property alias centerButton: centerButton
     property alias jsonButton: jsonButton
-    property alias progressBar: progressBar
+    property alias connectButton: connectButton
+    property alias printButton: printButton
     property alias zoomSlider: zoomS
     property alias zoomValue: zoomVal
     property alias tab0: tabButton
@@ -22,7 +23,12 @@ Item {
     property alias page0: page0
     property alias page1: page1
     property alias stackLayout: stackLayout
+    property alias connectedLabel: cLabel
+    property alias notCLabel: nLabel
+    property alias notALabel: nLabel2
+    property alias approvedLabel: aLabel
     property Map mapSource
+    property bool conn: false
     width: 200
     height: 600
 
@@ -41,7 +47,7 @@ Item {
             RadioDelegate {
                 id: radioDelegate1
                 x: 0
-                y: 68
+                y: 116
                 width: 104
                 height: 33
                 checked: true
@@ -51,7 +57,7 @@ Item {
             RadioDelegate {
                 id: radioDelegate2
                 x: 0
-                y: 112
+                y: 155
                 width: 104
                 height: 32
                 text: qsTr("Marker")
@@ -60,7 +66,7 @@ Item {
             RadioDelegate {
                 id: radioDelegate3
                 x: 96
-                y: 70
+                y: 118
                 width: 104
                 height: 30
                 text: qsTr("Hand")
@@ -69,7 +75,7 @@ Item {
             RadioDelegate {
                 id: radioDelegate4
                 x: 96
-                y: 102
+                y: 145
                 width: 104
                 height: 52
                 text: qsTr("Delete")
@@ -78,7 +84,7 @@ Item {
             RowLayout {
                 id: rowLayout1
                 x: 0
-                y: 150
+                y: 186
                 width: 200
                 height: 45
 
@@ -99,7 +105,7 @@ Item {
             RowLayout {
                 id: rowLayout
                 x: 0
-                y: 195
+                y: 231
                 width: 200
                 height: 45
 
@@ -112,13 +118,14 @@ Item {
                 Button {
                     id: jsonButton
                     text: qsTr("Make Json")
+                    enabled: false
                 }
             }
 
             Flow {
                 id: flow1
                 x: 0
-                y: 290
+                y: 320
                 width: 200
                 height: 53
 
@@ -142,25 +149,6 @@ Item {
                     id: zoomVal
                     width: 66
                     height: 16
-                }
-            }
-
-            Flow {
-                id: flow3
-                x: 0
-                y: 343
-                width: 200
-                height: 52
-
-                Label {
-                    id: label1
-                    text: qsTr("Track Approved")
-                }
-
-                ProgressBar {
-                    id: progressBar
-                    y: 20
-                    value: 0
                 }
             }
 
@@ -255,7 +243,7 @@ Item {
             Flow {
                 id: flow2
                 x: 0
-                y: 243
+                y: 276
                 width: 200
                 height: 45
                 spacing: 10
@@ -265,6 +253,7 @@ Item {
                     x: 5
                     width: 60
                     text: qsTr("Save")
+                    enabled: false
                 }
 
                 Button {
@@ -272,6 +261,76 @@ Item {
                     x: 70
                     width: 60
                     text: qsTr("Load")
+                    enabled: false
+                }
+            }
+
+            RowLayout {
+                id: rowLayout2
+                width: 200
+                height: 22
+
+                Label {
+                    id: label2
+                    text: qsTr("Server:")
+                }
+
+                Label {
+                    id: nLabel
+                    text: qsTr("Not")
+                    color: "Red"
+                }
+
+                Label {
+                    id: cLabel
+                    text: qsTr("Connected")
+                    color: "Red"
+                }
+            }
+
+            RowLayout {
+                id: rowLayout3
+                x: 0
+                y: 41
+                width: 200
+                height: 49
+
+                Button {
+                    id: connectButton
+                    width: 90
+                    text: qsTr("Connect")
+                }
+
+                Button {
+                    id: printButton
+                    x: 100
+                    width: 90
+                    text: qsTr("Print Track")
+                }
+            }
+
+            RowLayout {
+                id: rowLayout4
+                x: 0
+                y: 19
+                width: 200
+                height: 22
+
+                Label {
+                    id: label1
+                    text: qsTr("Track:")
+                }
+
+                Label {
+                    id: nLabel2
+                    text: qsTr("Not")
+                    color: "Red"
+                }
+
+                Label {
+                    id: aLabel
+                    text: qsTr("Approved")
+                    color: "Red"
                 }
             }
         }

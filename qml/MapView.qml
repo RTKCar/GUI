@@ -5,6 +5,7 @@ import QtLocation 5.9
 import QtPositioning 5.5
 import QtQuick.Layouts 1.3
 import "./map"
+import myPackage 1.0
 
 Item {
     id: appWindow
@@ -12,8 +13,11 @@ Item {
     property bool deleteAll: false
     property bool center: false
     property bool makeJsons: false
+    property bool approvedTrack: false
     property alias mapMap: map
     property alias delegateIndex: overlay.delegateIndex
+    property MyTcpSocket myTcpSocket: null
+    //signal mapVsignal
 
     Plugin {
         id: mapPlugin
@@ -41,6 +45,7 @@ Item {
 
     onMakeJsonsChanged: {
         overlay.makeJSONs()
+        //mapVsignal()
     }
 
     Map {
@@ -51,16 +56,23 @@ Item {
         plugin: mapPlugin
         center: QtPositioning.coordinate(56.41548, 12.987562) // Hasslöv
         maximumZoomLevel: 25
-        //maximumZoomLevel: 10
         minimumZoomLevel: 3
-        //minimumZoomLevel: 20
         zoomLevel:14
-        //zoomLevel: Math.floor((maximumZoomLevel - minimumZoomLevel)/2)
 
         MapComponent{
             id:overlay
             parentMap: map
+            tcpSocket: myTcpSocket
+
+            onApprovedChanged: {
+                if(approved) {
+                    approvedTrack = true;
+                } else {
+                    approvedTrack = false;
+                }
+            }
         }
+
 
         /*function calculateScale()
         {
@@ -118,19 +130,9 @@ Item {
             scaleTimer.restart()
         }
 
-        /*onDelegateIndexChanged: {
-            console.log("delegate", delegateIndex)
-        }*/
-
-        /*Component.onCompleted: {
-            markers = new Array();
-            mapItems = new Array();
-        }*/
-
         PositionSource{
             id: positionSource
             active: foll
-            //active: followme
 
             onPositionChanged: {
                 map.center = positionSource.position.coordinate
@@ -147,64 +149,5 @@ Item {
                 //map.calculateScale()
             }
         }
-
-        /*MouseArea {
-            id: mouseArea
-            property variant lastCoordinate
-            anchors.fill: parent
-            acceptedButtons: Qt.LeftButton | Qt.RightButton
-
-            onPressed : {
-                map.lastX = mouse.x
-                map.lastY = mouse.y
-                map.pressX = mouse.x
-                map.pressY = mouse.y
-                lastCoordinate = map.toCoordinate(Qt.point(mouse.x, mouse.y))
-            }
-
-            onPositionChanged: {
-                if (mouse.button == Qt.LeftButton) {
-                    map.lastX = mouse.x
-                    map.lastY = mouse.y
-                }
-            }
-
-
-            onDoubleClicked: {
-                var mouseGeoPos = map.toCoordinate(Qt.point(mouse.x, mouse.y));
-                var preZoomPoint = map.fromCoordinate(mouseGeoPos, false);
-                if (mouse.button === Qt.LeftButton) {
-                    switch (delegateIndex) {
-                    case 0:
-                        map.zoomLevel = Math.floor(map.zoomLevel + 1)
-                        break
-                    case 1:
-                        map.addMarker()
-                        break
-                    case 2:
-                        console.log("unfinished")
-                    default:
-                        console.log("Unsupported operation")
-                    }
-
-                } else if (mouse.button === Qt.RightButton) {
-                    map.zoomLevel = Math.floor(map.zoomLevel - 1)
-                }
-                var postZoomPoint = map.fromCoordinate(mouseGeoPos, false);
-                var dx = postZoomPoint.x - preZoomPoint.x;
-                var dy = postZoomPoint.y - preZoomPoint.y;
-
-                var mapCenterPoint = Qt.point(map.width / 2.0 + dx, map.height / 2.0 + dy);
-                map.center = map.toCoordinate(mapCenterPoint);
-
-                map.lastX = -1;
-                map.lastY = -1;
-                //lastX = -1;
-                //lastY = -1;
-            }
-        }*/
-    //! [end]
     }
-
-
 }
