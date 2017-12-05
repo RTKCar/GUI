@@ -148,11 +148,14 @@ MapQuickItem {
     function createJson(){
         var jsObject = {
             'id' : markerID,
-            'coordinates' : coordinate,
-            'connections' : []
+            //'coord' : coordinate,
+            'coord' : {
+                'lat' : coordinate.latitude,
+                'long' : coordinate.longitude},
+            'conns' : []
         }
         for(var i = 0; i<markersConnected.length; i++) {
-            jsObject.connections.push(markersConnected[i])
+            jsObject.conns.push(markersConnected[i])
         }
         //console.log(jsObject.id)
         json = jsObject

@@ -332,7 +332,7 @@ Map {
         makeJSONs()
         if(jsonMap !== null && jsonMap.length > 0 && tcpSocket.isConnected)
         {
-            tcpSocket.Map = jsonMap
+            tcpSocket.Map = "MAP;" + jsonMap
         }
     }
 

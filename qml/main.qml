@@ -63,8 +63,10 @@ ApplicationWindow {
             }
 
             onConnect: {
-                var _host = "0.0.0.0"
-                var _port = 5001
+                var _host = "192.168.80.14"
+                //var _host = "0.0.0.0"
+                var _port = 2008
+                //var _port = 5001
                 if(host.acceptableInput) {
                     _host = host.text
                 }
@@ -84,9 +86,11 @@ ApplicationWindow {
     MyTcpSocket {
         id: mytcpSocket
         onSocketConnected: {
+            //testTools.ServerIndicator.rlyActive = true
             testTools.connected = true
         }
         onSocketDisconnected: {
+            //testTools.ServerIndicator.rlyActive = false
             testTools.connected = false
         }
     }

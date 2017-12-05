@@ -26,6 +26,8 @@ void MyTcpSocket::doConnect(QString host, quint16 port)
     if(!socket->waitForConnected(5000))
     {
         qDebug() << "Error: " << socket->errorString();
+        //QMessageBox::information(this, tr("Word Not Found"),
+                                             //tr("Sorry, the word cannot be found."));
         socketDisconnected();
     }
 }

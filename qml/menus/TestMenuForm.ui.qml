@@ -2,8 +2,11 @@ import QtQuick 2.5
 import QtQuick.Controls 2.2
 import QtQuick.Window 2.0
 import QtQuick.Layouts 1.3
+import QtQuick.Extras 1.4
 import QtLocation 5.9
 
+
+//import "menus"
 Item {
     id: menu1
     property alias mouseDelegate: radioDelegate1
@@ -19,17 +22,15 @@ Item {
     property alias printButton: printButton
     property alias zoomSlider: zoomS
     property alias zoomValue: zoomVal
-    property alias tab0: tabButton
-    property alias tab1: tabButton1
-    property alias page0: page0
-    property alias page1: page1
-    property alias stackLayout: stackLayout
-    property alias connectedLabel: cLabel
-    property alias notCLabel: nLabel
-    property alias notALabel: nLabel2
-    property alias approvedLabel: aLabel
+    //property alias connectedLabel: cLabel
+    //property alias notCLabel: nLabel
+    //property alias notALabel: nLabel2
+    //property alias approvedLabel: aLabel
     property alias host: hostField
     property alias port: portField
+    property alias serverIndicator: sStatusIndc
+    property alias trackIndicator: tStatusIndc
+    property alias carIndicator: cStatusIndc
     property Map mapSource
     property bool conn: false
     width: 200
@@ -50,7 +51,7 @@ Item {
             RadioDelegate {
                 id: radioDelegate1
                 x: 0
-                y: 227
+                y: 274
                 width: 104
                 height: 33
                 checked: true
@@ -60,7 +61,7 @@ Item {
             RadioDelegate {
                 id: radioDelegate2
                 x: 0
-                y: 266
+                y: 306
                 width: 104
                 height: 32
                 text: qsTr("Marker")
@@ -69,7 +70,7 @@ Item {
             RadioDelegate {
                 id: radioDelegate3
                 x: 96
-                y: 229
+                y: 275
                 width: 104
                 height: 30
                 text: qsTr("Hand")
@@ -79,7 +80,7 @@ Item {
             RadioDelegate {
                 id: radioDelegate4
                 x: 96
-                y: 256
+                y: 296
                 width: 104
                 height: 52
                 text: qsTr("Delete")
@@ -87,8 +88,8 @@ Item {
 
             RowLayout {
                 id: rowLayout1
-                x: 0
-                y: 299
+                x: 2
+                y: 339
                 width: 200
                 height: 45
 
@@ -96,6 +97,8 @@ Item {
                     id: followButton
                     width: 90
                     text: qsTr("Follow")
+                    font.wordSpacing: -3
+                    spacing: -10
                 }
 
                 Button {
@@ -109,7 +112,7 @@ Item {
             RowLayout {
                 id: rowLayout
                 x: 0
-                y: 345
+                y: 384
                 width: 200
                 height: 45
 
@@ -128,7 +131,7 @@ Item {
             Flow {
                 id: flow1
                 x: 0
-                y: 437
+                y: 476
                 width: 200
                 height: 53
 
@@ -155,100 +158,10 @@ Item {
                 }
             }
 
-            StackLayout {
-                id: stackLayout
-                x: 0
-                y: 488
-                width: 200
-                height: 84
-
-                Page {
-                    id: page0
-                    width: 200
-                    height: 150
-                    visible: false
-
-                    Image {
-                        id: image4
-                        x: 70
-                        y: 15
-                        width: 60
-                        height: 60
-                        source: "../resources/play-button.svg"
-                    }
-                }
-
-                Page {
-                    id: page1
-                    width: 200
-                    height: 150
-                    visible: true
-
-                    Image {
-                        id: image
-                        x: 87
-                        y: 5
-                        width: 25
-                        height: 25
-                        source: "qrc:/qml/resources/up-arrow.svg"
-                    }
-
-                    Image {
-                        id: image1
-                        x: 47
-                        y: 30
-                        width: 25
-                        height: 25
-                        source: "qrc:/qml/resources/left-arrow.svg"
-                    }
-
-                    Image {
-                        id: image2
-                        x: 127
-                        y: 30
-                        width: 25
-                        height: 25
-                        source: "qrc:/qml/resources/right-arrow.svg"
-                    }
-
-                    Image {
-                        id: image3
-                        x: 87
-                        y: 55
-                        width: 25
-                        height: 25
-                        source: "qrc:/qml/resources/down-arrow.svg"
-                    }
-                }
-            }
-
-            TabBar {
-                id: tabBar
-                x: 0
-                y: 571
-                width: 200
-                height: 30
-
-                TabButton {
-                    id: tabButton
-                    x: 0
-                    y: 0
-                    height: 30
-                    text: qsTr("Start/Stopp")
-                }
-
-                TabButton {
-                    id: tabButton1
-                    x: 100
-                    height: 30
-                    text: qsTr("Steer")
-                }
-            }
-
             Flow {
                 id: flow2
                 x: 0
-                y: 391
+                y: 430
                 width: 200
                 height: 40
                 spacing: 10
@@ -279,31 +192,25 @@ Item {
 
             RowLayout {
                 id: rowLayout2
+                x: 0
+                y: 0
                 width: 200
                 height: 22
 
                 Label {
                     id: label2
-                    text: qsTr("Server:")
+                    text: qsTr("Server connected:")
                 }
 
-                Label {
-                    id: nLabel
-                    text: qsTr("Not")
-                    color: "Red"
-                }
-
-                Label {
-                    id: cLabel
-                    text: qsTr(" Connected")
-                    color: "Red"
+                MyStatusIndicator {
+                    id: sStatusIndc
                 }
             }
 
             RowLayout {
                 id: rowLayout3
                 x: 0
-                y: 133
+                y: 185
                 width: 200
                 height: 45
 
@@ -323,32 +230,24 @@ Item {
             RowLayout {
                 id: rowLayout4
                 x: 0
-                y: 19
+                y: 34
                 width: 200
                 height: 22
 
                 Label {
                     id: label1
-                    text: qsTr("Track:")
+                    text: qsTr("Track approved:    ")
                 }
 
-                Label {
-                    id: nLabel2
-                    text: qsTr("Not")
-                    color: "Red"
-                }
-
-                Label {
-                    id: aLabel
-                    text: qsTr("Approved")
-                    color: "Red"
+                MyStatusIndicator {
+                    id: tStatusIndc
                 }
             }
 
             RowLayout {
                 id: rowLayout5
                 x: 0
-                y: 42
+                y: 68
                 width: 200
                 height: 40
 
@@ -369,8 +268,8 @@ Item {
 
             RowLayout {
                 id: rowLayout6
-                x: 0
-                y: 87
+                x: 2
+                y: 114
                 width: 200
                 height: 40
 
@@ -393,13 +292,50 @@ Item {
             RowLayout {
                 id: rowLayout7
                 x: 0
-                y: 178
+                y: 231
                 width: 200
                 height: 45
 
                 Button {
                     id: sendMButton
                     text: qsTr("Send Map")
+                    enabled: false
+                }
+            }
+
+            RowLayout {
+                id: rowLayout8
+                x: 0
+                y: 522
+                width: 200
+                height: 22
+
+                Label {
+                    id: label5
+                    text: qsTr("Car connected: ")
+                }
+
+                MyStatusIndicator {
+                    id: cStatusIndc
+                }
+            }
+
+            RowLayout {
+                id: rowLayout9
+                x: 2
+                y: 555
+                width: 198
+                height: 45
+
+                Button {
+                    id: button3
+                    text: qsTr("Start")
+                    enabled: false
+                }
+
+                Button {
+                    id: button4
+                    text: qsTr("Stop")
                     enabled: false
                 }
             }

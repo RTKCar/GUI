@@ -76,17 +76,10 @@ TestMenuForm {
             delegate(3)
     }
 
-    tab0.onClicked: {
-        stackLayout.currentIndex = 0
-    }
-
-    tab1.onClicked: {
-        stackLayout.currentIndex = 1
-    }
-
     onConnectedChanged: {
-        connectedLabel.color = connected ? "Green" : "Red"
-        notCLabel.visible = !connected
+        //connectedLabel.color = connected ? "Green" : "Red"
+        //notCLabel.visible = !connected
+        serverIndicator.rlyActive = connected
         connectButton.enabled = !connected
         disconnectButton.enabled = connected
         host.enabled = !connected
@@ -102,12 +95,9 @@ TestMenuForm {
 
     onApprovedTChanged: {
         sendMapButton.enabled = approvedT && connected
+        trackIndicator.rlyActive = approvedT
         //jsonButton.enabled = approvedT
-        notALabel.visible = !approvedT
-        approvedLabel.color = approvedT ? "Green" : "Red"
+        //notALabel.visible = !approvedT
+        //approvedLabel.color = approvedT ? "Green" : "Red"
     }
-
-    /*onConnectedChanged: {
-        connectedLabel.visible = connected
-    }*/
 }
