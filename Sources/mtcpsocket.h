@@ -6,6 +6,9 @@
 #include <QAbstractSocket>
 #include <QDebug>
 #include <QString>
+//#include <QDialog>
+//#include <QDialogButtonBox>
+//#include <QMessageBox>
 
 class MyTcpSocket : public QObject
 {
@@ -22,6 +25,7 @@ signals:
   //connected();
   void socketConnected();
   void socketDisconnected();
+  void errorConnecting(QString errorMessage);
   void recieved();
   void mapChanged();
   void isConnectedChanged();
@@ -34,6 +38,7 @@ public slots:
   void bytesWritten(qint64 bytes);
   void readyRead();
   void sendJSON();
+  void sendMessage(QByteArray message);
 
 private:
   QTcpSocket *socket;

@@ -11,7 +11,6 @@ Item {
     id: appWindow
     property bool foll: false
     property bool deleteAll: false
-    property bool center: false
     property bool sendMap: false
     property bool approvedTrack: false
     property alias mapMap: map
@@ -39,19 +38,9 @@ Item {
         overlay.deleteAllPolylines()
     }
 
-    onCenterChanged: {
-        overlay.fitViewportToVisibleMapItems()
-        //overlay.fitViewportToMapItems()
-    }
-
     onSendMapChanged: {
         overlay.sendMap()
     }
-
-    /*onMakeJsonsChanged: {
-        overlay.makeJSONs()
-        //mapVsignal()
-    }*/
 
     Map {
         id: map

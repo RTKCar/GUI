@@ -7,8 +7,6 @@ TestMenuForm {
     signal followMe()
     signal delegate(var index)
     signal deleteAll()
-    signal centerMap()
-    //signal makeJSONs()
     signal sendMap()
     signal connect()
     signal disconnect()
@@ -16,7 +14,6 @@ TestMenuForm {
     property Map mapSourca
     property bool connected: false
     property bool approvedT: false
-    //property alias conLabel: connectedLabel
 
     mapSource: mapSourca
     conn: connected
@@ -28,10 +25,6 @@ TestMenuForm {
 
     deleteAllButton.onClicked: {
         deleteAll()
-    }
-
-    centerButton.onClicked: {
-        centerMap()
     }
 
     sendMapButton.onClicked: {

@@ -308,6 +308,7 @@ Map {
     }
 
     function makeJSONs() {
+        console.log("Making Jsons")
         var jarr = new Array()
         for (var i = 0; i< markers.length; i++){
             markers[i].createJson()
@@ -332,7 +333,9 @@ Map {
         makeJSONs()
         if(jsonMap !== null && jsonMap.length > 0 && tcpSocket.isConnected)
         {
-            tcpSocket.Map = "MAP;" + jsonMap
+            console.log("setting map")
+            tcpSocket.sendMessage("MAP;" + jsonMap + ";")
+            //tcpSocket.Map = "MAP;" + jsonMap
         }
     }
 

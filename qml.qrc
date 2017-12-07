@@ -17,5 +17,7 @@
         <file>qml/map/Polyline.qml</file>
         <file>qml/map/PolylineItem.qml</file>
         <file>qml/menus/MyStatusIndicator.qml</file>
+        <file>qml/menus/QuitingPopup.qml</file>
+        <file>qml/menus/MyTextField.qml</file>
     </qresource>
 </RCC>

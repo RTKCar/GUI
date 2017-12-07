@@ -25,10 +25,16 @@ void MyTcpSocket::doConnect(QString host, quint16 port)
     // we need to wait...
     if(!socket->waitForConnected(5000))
     {
+        /*int ret = QMessageBox::warning(this, tr("My Application"),
+                                       tr(socket->errorString()),
+                                       QMessageBox::Save | QMessageBox::Discard
+                                       | QMessageBox::Cancel,
+                                       QMessageBox::Save);*/
         qDebug() << "Error: " << socket->errorString();
         //QMessageBox::information(this, tr("Word Not Found"),
                                              //tr("Sorry, the word cannot be found."));
         socketDisconnected();
+        errorConnecting(socket->errorString());
     }
 }
 
@@ -48,6 +54,7 @@ void MyTcpSocket::connected()
 void MyTcpSocket::disconnect()
 {
     qDebug() << "disconnecting...";
+    socket->write("EXIT;");
     socket->disconnectFromHost();
 }
 
@@ -82,13 +89,23 @@ void MyTcpSocket::sendJSON()
 
 void MyTcpSocket::setMap(QByteArray &Map)
 {
+    qDebug() << "mapSetting";
     if (Map == map)
+        qDebug() << "popup! No changes have been made since the old map";
         return;
 
     map = Map;
     emit mapChanged();
     //qDebug() << map;
     socket->write(map);
+    qDebug() << "wrote map";
+}
+
+void MyTcpSocket::sendMessage(QByteArray message)
+{
+    if(_isConnected){
+        socket->write(message);
+    }
 }
 
 QByteArray MyTcpSocket::Map()
