@@ -57,18 +57,4 @@ MapPolyline {
     function setOverlay(overlayMap) {
         overlay = overlayMap
     }
-
-    /*function returnMarkersConnected() {
-        return markersConnected
-    }*/
-
-    /*function printMarkers() {
-        for (var i = 0; i< markersConnected.length; i++){
-            console.log(markersConnected[i])
-        }
-    }*/
-
-    /*Component.onCompleted: {
-        markersConnected = new Array();
-    }*/
 }

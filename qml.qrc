@@ -19,5 +19,7 @@
         <file>qml/menus/MyStatusIndicator.qml</file>
         <file>qml/menus/QuitingPopup.qml</file>
         <file>qml/menus/MyTextField.qml</file>
+        <file>qml/map/Car.qml</file>
+        <file>qml/map/CarComponent.qml</file>
     </qresource>
 </RCC>

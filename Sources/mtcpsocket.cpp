@@ -76,8 +76,9 @@ void MyTcpSocket::readyRead()
     //QMetaObject::invokeMethod()
 
     // read the data from the socket
-    qDebug() << socket->readAll();
-    emit recieved();
+    //qDebug() << socket->readAll();
+    QByteArray message = socket->readAll();
+    emit recieved(message);
 }
 
 void MyTcpSocket::sendJSON()

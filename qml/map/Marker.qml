@@ -7,22 +7,39 @@ MapQuickItem {
     property MapComponent overlay: null
     property variant markersConnected
     property variant polylinesConnected
-    property int connectedCount: 0
+    //property int connectedCount: 0
     property int markerID: 0
     property var json
 
     anchorPoint.x: rect.width/2
     anchorPoint.y: rect.height/2
+    rotation: 45
+
+    onRotationChanged: {
+        console.log("rotation")
+    }
 
     sourceItem: Rectangle {
         id:rect
         color: "LimeGreen"
         width: 10
         height: 10
-        rotation: 45
+        //rotation: 45
         border.color: "Black"
         smooth: true
         opacity: markerMouseArea.pressed ? 0.6 : 1.0
+
+        onRotationChanged: {
+            console.log("inner rotation")
+        }
+
+        Rectangle {
+            id: innerRect
+            width: 1
+            height: 1
+            color: "Black"
+            anchors.centerIn: rect
+        }
 
 
         MouseArea  {
@@ -74,13 +91,9 @@ MapQuickItem {
     }
 
     function connectMark(Marker) {
-        connectedCount ++
+        //connectedCount ++
         markersConnected.push(Marker.markerID)
-        if(markersConnected.length > 2) {
-            rect.color = "Red"
-        } else {
-            rect.color = "LimeGreen"
-        }
+        connectionColor()
 
         //createJson()
         //printConnections()
@@ -105,7 +118,8 @@ MapQuickItem {
     }
 
     function connectedMarkers() {
-        return connectedCount
+        return markersConnected.length
+        //return connectedCount
     }
 
     function returnID() {
@@ -128,11 +142,12 @@ MapQuickItem {
 
     function disconnectMarker(MarkerID){
         markersConnected.pop(MarkerID)
-        if(markersConnected.length < connectedCount)
-            connectedCount --
-        if(markersConnected.length < 3) {
+        /*if(markersConnected.length < connectedCount)
+            connectedCount --*/
+        /*if(markersConnected.length < 3) {
             rect.color = "LimeGreen"
-        }
+        }*/
+        connectionColor()
     }
 
     function connectPolyline(polylineID) {
@@ -143,6 +158,14 @@ MapQuickItem {
     function disconnectPolyline(polylineID) {
         polylinesConnected.pop(polylineID)
         //console.log(markerID, "is disconnected from line nr ", polylineID)
+    }
+
+    function connectionColor() {
+        if(markersConnected.length > 2) {
+            rect.color = "Red"
+        } else {
+            rect.color = "LimeGreen"
+        }
     }
 
     function createJson(){
@@ -160,6 +183,17 @@ MapQuickItem {
         //console.log(jsObject.id)
         json = jsObject
         //json = JSON.stringify(jsObject)
+    }
+
+    function loadJson(jsonObj) {
+        markerID = jsonObj.id
+        //coordinate.latitude = jsonObj.coord.lat
+        //coordinate.longitude = jsonObj.coord.long
+        for(var i = 0; i<jsonObj.conns.length; i++) {
+            markersConnected.push(jsonObj.conns[i])
+        }
+        connectionColor()
+
     }
 
     Component.onCompleted: {

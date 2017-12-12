@@ -24,6 +24,7 @@ Item {
     property alias printButton: printButton
     property alias zoomSlider: zoomS
     property alias zoomValue: zoomVal
+    property alias speedBox: speedBox
     //property alias connectedLabel: cLabel
     //property alias notCLabel: nLabel
     //property alias notALabel: nLabel2
@@ -341,7 +342,7 @@ Item {
                 y: 494
                 width: 198
                 height: 25
-                spacing: 90
+                spacing: 70
 
                 Label {
                     id: label7
@@ -349,10 +350,10 @@ Item {
                 }
 
                 ComboBox {
-                    id: comboBox1
-                    width: 60
+                    id: speedBox
+                    width: 80
                     height: 25
-                    model: ["0", "3", "5", "7"]
+                    model: ["Low", "Mid", "High"]
                 }
             }
         }

@@ -6,6 +6,7 @@
 #include <QAbstractSocket>
 #include <QDebug>
 #include <QString>
+//#include <QGeoCoordinate>
 //#include <QDialog>
 //#include <QDialogButtonBox>
 //#include <QMessageBox>
@@ -26,7 +27,7 @@ signals:
   void socketConnected();
   void socketDisconnected();
   void errorConnecting(QString errorMessage);
-  void recieved();
+  void recieved(QString message);
   void mapChanged();
   void isConnectedChanged();
 

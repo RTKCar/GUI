@@ -24,8 +24,10 @@ Map {
     property bool connection: false
     property bool approved: false
     property variant jsonMap
+    property Car firstCar: null
 
     signal trackApproved()
+    signal mapCompleted()
 
     anchors.fill: parent
     plugin: Plugin { name: "itemsoverlay" }
@@ -47,7 +49,8 @@ Map {
 
     function addMarker()
     {
-        var count = mapOverlay.markers.length
+        var marker = createMarker(mouseArea.lastCoordinate)
+        /*var count = mapOverlay.markers.length
         markerCounter++
         var marker = Qt.createQmlObject ('Marker {overlay: mapOverlay}', this)
         mapOverlay.addMapItem(marker)
@@ -60,7 +63,7 @@ Map {
             myArray.push(markers[i])
         }
         myArray.push(marker)
-        markers = myArray
+        markers = myArray*/
 
         if(mapOverlay.markers.length > 1) {
             //console.log("count > <", mapOverlay.markers.length)
@@ -101,6 +104,28 @@ Map {
         //printApproved()
     }
 
+    function createMarker(coord) {
+        if(markers !== null) {
+            var count = markers.length
+            markerCounter++
+            console.log(markerCounter)
+        }
+        var marker = Qt.createQmlObject ('Marker {overlay: mapOverlay}', mapOverlay)
+        mapOverlay.addMapItem(marker)
+        marker.z = mapOverlay.z+1
+        marker.coordinate = coord
+
+        //update list of markers
+        var myArray = new Array()
+        for (var i = 0; i<count; i++){
+            myArray.push(markers[i])
+            console.log("list updated")
+        }
+        myArray.push(marker)
+        markers = myArray
+        return marker
+    }
+
     function addGeoItem(item, cordi1, cordi2)
     {
         var count = mapOverlay.mapItems.length
@@ -124,7 +149,7 @@ Map {
         }
     }
 
-    function addPolyline(coordinate1, coordinate2)
+    function addPolyline(marker1, marker2)
     {
 
         var count = mapOverlay.mapItems.length
@@ -134,7 +159,7 @@ Map {
             var o = co.createObject(mapOverlay)
             o.setID(polylineCounter)
             o.setOverlay(mapOverlay)
-            o.addCoord(coordinate1, coordinate2)
+            o.addCoord(marker1, marker2)
             mapOverlay.addMapItem(o)
             //update list of items
             var myArray = new Array()
@@ -334,6 +359,7 @@ Map {
         if(jsonMap !== null && jsonMap.length > 0 && tcpSocket.isConnected)
         {
             console.log("setting map")
+            console.log(jsonMap)
             tcpSocket.sendMessage("MAP;" + jsonMap + ";")
             //tcpSocket.Map = "MAP;" + jsonMap
         }
@@ -343,8 +369,68 @@ Map {
         makeJSONs()
         var jarr = JSON.parse(jsonMap)
         for (var i = 0; i< jarr.length; i++){
-            console.log(jarr[i].id, " is connected to ", jarr[i].connections)
+            console.log(jarr[i].id, " is connected to ", jarr[i].conns)
+            console.log(" and has coordinates: lat: " + jarr[i].coord.lat + " long: " + jarr[i].coord.long)
         }
+    }
+
+    function createCar(coord) {
+        if(approved) {
+            var co = Qt.createComponent('Car.qml')
+            if (co.status == Component.Ready) {
+                var o = co.createObject(mapOverlay)
+                o.coordinate = coord
+                mapOverlay.addMapItem(o)
+                firstCar = o
+            } else {
+                console.log(" is not supported right now, please call us later.")
+            }
+        }
+    }
+
+    function setCarBearing(coord) {
+        if(firstCar == null) {
+            createCar(coord)
+        } else {
+            firstCar.setCoordinate(coord)
+        }
+    }
+
+    function loadJsonMarkers(jsonString) {
+        console.log("loading json")
+        var jsonObjects = JSON.parse(jsonString)
+        //console.log(jsonObjects.length)
+        var list = new Array();
+        for (var i = 0; i<jsonObjects.length; i++){
+            var coord = QtPositioning.coordinate(jsonObjects[i].coord.lat, jsonObjects[i].coord.long)
+            var marker = createMarker(coord)
+            marker.loadJson(jsonObjects[i])
+
+            for (var j = 0; j<jsonObjects[i]["conns"].length; j++){
+                var conn = {'conns': []}
+                var num1 = jsonObjects[i]["id"]
+                var num2 = jsonObjects[i]["conns"][j]
+                if (num1 < num2) {
+                    conn.conns.push(num1)
+                    conn.conns.push(num2)
+                    list.push(conn)
+                }
+            }
+        }
+        console.log("list")
+        for (var i = 0; i<list.length; i++){
+            //console.log(list[i])
+            var mark1 = markers[markerIndex(list[i]["conns"][0])]
+            var mark2 = markers[markerIndex(list[i]["conns"][1])]
+            /*console.log(mark1)
+            console.log(mark1.coordinate)
+            console.log(mark2)
+            console.log(mark2.coordinate)*/
+            addPolyline(mark1, mark2)
+            //addPolyline(markers[markerIndex(list[i][0])],markers[markerIndex(list[i][1])])
+            //console.log(list[i].conns)
+        }
+
     }
 
     Component.onCompleted: {
@@ -352,6 +438,7 @@ Map {
         mapItems = new Array();
         console.log("maxZoom", overlay.maximumZoomLevel)
         console.log("minZoom", overlay.minimumZoomLevel)
+        mapCompleted()
     }
 
     MouseArea {

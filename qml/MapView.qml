@@ -18,19 +18,20 @@ Item {
     property alias mapComponent: overlay
     property MyTcpSocket myTcpSocket: null
     //signal mapVsignal
+    signal mapDone()
 
     Plugin {
         id: mapPlugin
         name: "osm"
-        /*name: "mapboxgl"
-        PluginParameter {name: "mapbox.map_id"; value: "mapbox.streets"}
-        PluginParameter {name: "mapbox.map_id"; value: "mapbox.outdoors"}
-        PluginParameter {name: "mapbox.map_id"; value: "mapbox.streets-basic"}
-        PluginParameter {name: "mapbox.map_id"; value: "mapbox.bright"}
-        PluginParameter {name: "mapbox.map_id"; value: "mapbox.emerald"}
-        PluginParameter {name: "mapbox.access_token"; value: "pk.eyJ1Ijoib2xpb2RkIiwiYSI6ImNqYWIxOGZscTB4M20ycXF1aDluM2NnaTgifQ.wYR97A-knsp-XR8wwrFSQg"}
-        PluginParameter {name: "mapboxgl.access_token"; value: "pk.eyJ1Ijoib2xpb2RkIiwiYSI6ImNqYWIxOGZscTB4M20ycXF1aDluM2NnaTgifQ.wYR97A-knsp-XR8wwrFSQg"}
-        */
+        //name: "mapboxgl"
+        //PluginParameter {name: "mapbox.map_id"; value: "mapbox.streets"}
+        //PluginParameter {name: "mapbox.map_id"; value: "mapbox.outdoors"}
+        //PluginParameter {name: "mapbox.map_id"; value: "mapbox.streets-basic"}
+        //PluginParameter {name: "mapbox.map_id"; value: "mapbox.bright"}
+        //PluginParameter {name: "mapbox.map_id"; value: "mapbox.emerald"}
+        //PluginParameter {name: "mapbox.access_token"; value: "pk.eyJ1Ijoib2xpb2RkIiwiYSI6ImNqYWIxOGZscTB4M20ycXF1aDluM2NnaTgifQ.wYR97A-knsp-XR8wwrFSQg"}
+        //PluginParameter {name: "mapboxgl.access_token"; value: "pk.eyJ1Ijoib2xpb2RkIiwiYSI6ImNqYWIxOGZscTB4M20ycXF1aDluM2NnaTgifQ.wYR97A-knsp-XR8wwrFSQg"}
+
     }
 
     onDeleteAllChanged: {
@@ -48,7 +49,8 @@ Item {
 
         anchors.fill: parent
         plugin: mapPlugin
-        center: QtPositioning.coordinate(56.41548, 12.987562) // Hasslöv
+        center: QtPositioning.coordinate(56.675186674134046, 12.863582808095572) // KungsG
+        //center: QtPositioning.coordinate(56.41548, 12.987562) // Hasslöv
         maximumZoomLevel: 25
         minimumZoomLevel: 3
         zoomLevel:14
@@ -65,6 +67,7 @@ Item {
                     approvedTrack = false;
                 }
             }
+            onMapCompleted: mapDone()
         }
 
 
