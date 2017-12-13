@@ -108,7 +108,7 @@ Map {
         if(markers !== null) {
             var count = markers.length
             markerCounter++
-            console.log(markerCounter)
+            //console.log(markerCounter)
         }
         var marker = Qt.createQmlObject ('Marker {overlay: mapOverlay}', mapOverlay)
         mapOverlay.addMapItem(marker)
@@ -119,7 +119,7 @@ Map {
         var myArray = new Array()
         for (var i = 0; i<count; i++){
             myArray.push(markers[i])
-            console.log("list updated")
+            //console.log("list updated")
         }
         myArray.push(marker)
         markers = myArray
@@ -396,6 +396,13 @@ Map {
         }
     }
 
+    function removeCar() {
+        if(firstCar != null) {
+            mapOverlay.removeMapItem(firstCar)
+            firstCar = null
+        }
+    }
+
     function loadJsonMarkers(jsonString) {
         console.log("loading json")
         var jsonObjects = JSON.parse(jsonString)
@@ -407,10 +414,10 @@ Map {
             marker.loadJson(jsonObjects[i])
 
             for (var j = 0; j<jsonObjects[i]["conns"].length; j++){
-                var conn = {'conns': []}
                 var num1 = jsonObjects[i]["id"]
                 var num2 = jsonObjects[i]["conns"][j]
                 if (num1 < num2) {
+                    var conn = {'conns': []}
                     conn.conns.push(num1)
                     conn.conns.push(num2)
                     list.push(conn)

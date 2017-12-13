@@ -77,17 +77,21 @@ ApplicationWindow {
             }
             startButton.onClicked: {
                 mytcpSocket.sendMessage("START;" + speedBox.currentText + ";")
+                testTools.startButton.enabled = false
+                testTools.stopButton.enabled = true
                 //mapview.mapComponent.setCarBearing()
                 //console.log(speedBox.currentText)
             }
             stopButton.onClicked: {
                 mytcpSocket.sendMessage("STOP;")
+                testTools.startButton.enabled = true
+                testTools.stopButton.enabled = false
                 //mapview.mapComponent.createCar()
             }
 
 
             onConnect: {
-                var _host = "192.168.80.238"
+                var _host = "192.168.81.52"
                 //var _host = "0.0.0.0"
                 var _port = 2009
                 //var _port = 5001
@@ -113,7 +117,7 @@ ApplicationWindow {
         }
 
         Timer {
-                interval: 5000; running: true; repeat: true
+                interval: 1000; running: true; repeat: true
                 onTriggered: {
                     mapview.mapComponent.setCarBearing(testTrack[trackCount])
                     trackCount++
@@ -123,24 +127,6 @@ ApplicationWindow {
             }
     }
 
-    Popup {
-            id: popup
-            x: 100
-            y: 100
-            width: 200
-            height: 300
-            modal: true
-            focus: true
-            closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutsideParent
-
-            ColumnLayout {
-                    anchors.fill: parent
-                    CheckBox { text: qsTr("E-mail") }
-                    CheckBox { text: qsTr("Calendar") }
-                    CheckBox { text: qsTr("Contacts") }
-                }
-
-        }
     MessageDialog {
         id: messageDialog
         icon: StandardIcon.Warning
@@ -174,6 +160,11 @@ ApplicationWindow {
         }
         onSocketDisconnected: {
             testTools.connected = false
+            testTools.startButton.enabled = false
+            testTools.stopButton.enabled = false
+            testTrack = []
+            mapview.mapComponent.removeCar()
+            //OR ?????? testTrack = new Array();
         }
         onErrorConnecting: {
             errorDialog.text = errorMessage
@@ -184,8 +175,18 @@ ApplicationWindow {
             for (var i = 0; i< obj.length; i++){
                 var latlong = obj[i].split(",")
                 if(latlong.length > 1) {
-                    console.log("lat: " + latlong[0])
-                    console.log("long: " + latlong[1])
+                    //console.log("lat: " + latlong[0])
+                    //console.log("long: " + latlong[1])
+                    testTrack.push(QtPositioning.coordinate(latlong[0], latlong[1]))
+                    mapview.mapComponent.setCarBearing(testTrack[trackCount])
+                    trackCount++
+                    if(trackCount === testTrack.length)
+                        trackCount = 0
+                    if(testTrack.length === 1)
+                        testTools.startButton.enabled = true
+                    //!!!!!!!!!!!!!!!!
+                    // set Start/Stop buttons depending on car_data
+                    //!!!!!!!!!!!!!!!!
                 }
             }
         }

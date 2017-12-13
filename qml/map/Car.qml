@@ -51,8 +51,8 @@ MapQuickItem {
         //_thisCoord = QtPositioning.coordinate(coord.latitude, coord.longitude)
         coordinate.latitude = coord.latitude
         coordinate.longitude = coord.longitude
-        console.log("Coord1: lat: " + _lastCoord.latitude + " long: " + _lastCoord.longitude)
-        console.log("Coord2: lat: " + coordinate.latitude + " long: " + coordinate.longitude)
+        //console.log("Coord1: lat: " + _lastCoord.latitude + " long: " + _lastCoord.longitude)
+        //console.log("Coord2: lat: " + coordinate.latitude + " long: " + coordinate.longitude)
         //console.log("Coord2: lat: " + _thisCoord.latitude + " long: " + _thisCoord.longitude)
         calculateBearing()
     }

@@ -325,14 +325,14 @@ Item {
                     text: qsTr("Start")
                     //highlighted: true
                     //Material.background: Material.Teal
-                    //enabled: false
+                    enabled: false
                 }
 
                 Button {
                     id: stopButton
                     text: qsTr("Stop")
                     //Material.elevation: 6
-                    //enabled: false
+                    enabled: false
                 }
             }
 
