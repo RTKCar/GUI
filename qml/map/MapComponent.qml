@@ -25,6 +25,9 @@ Map {
     property bool approved: false
     property variant jsonMap
     property Car firstCar: null
+    property variant carPosition: null
+    property bool simulateCar: false
+    property int previousCarPosition: -1
 
     signal trackApproved()
     signal mapCompleted()
@@ -202,8 +205,6 @@ Map {
             }
             markers = myArray
         }
-        //console.log("markers after deletion ", markers.length)
-        //console.log("polylines after deletion ", mapItems.length)
         aprovedTrack();
     }
 
@@ -215,9 +216,6 @@ Map {
             mapOverlay.markers[i].destroy()
         }
         mapOverlay.markers = []
-        //markerCounter = 0
-        //console.log("markersDeleted")
-        //printApproved()
         aprovedTrack();
     }
 
@@ -247,7 +245,6 @@ Map {
         } else {
             console.log("index to low")
         }
-        //polylineCounter--
     }
 
     function deleteAllPolylines()
@@ -259,8 +256,6 @@ Map {
         }
         mapOverlay.mapItems = []
         aprovedTrack();
-        //polylineCounter = 0
-        //console.log("ItemsDeleted")
     }
 
     function connectMarkers() {
@@ -290,7 +285,6 @@ Map {
                 console.log("node choosed for next round")
             }
         }
-        //printApproved()
     }
 
     function polyLineIndex(polyID) {
@@ -318,7 +312,9 @@ Map {
     }
 
     function aprovedTrack() {
-        if(markers.length < 3) {
+        //if(markers.length < 3) {
+        // specification says minimum of 4 markers, not 3 as previously assumed
+        if(markers.length < 4) {
             approved = false
             return false
         }
@@ -333,35 +329,23 @@ Map {
     }
 
     function makeJSONs() {
-        console.log("Making Jsons")
-        var jarr = new Array()
-        for (var i = 0; i< markers.length; i++){
-            markers[i].createJson()
-            jarr.push(markers[i].json)
+        if(markers.length > 0){
+            console.log("Making Jsons")
+            var jarr = new Array()
+            for (var i = 0; i< markers.length; i++){
+                markers[i].createJson()
+                jarr.push(markers[i].json)
+            }
+            jsonMap = JSON.stringify(jarr)
         }
-        /*if(jarr.length > 0){
-            console.log("json attributes: ", Object.keys(jarr[0]))
-        }*/
-        jsonMap = JSON.stringify(jarr)
-        /*console.log(jarr)
-        jarr = JSON.parse(jarr)
-        for (var i = 0; i< jarr.length; i++){
-            console.log(jarr[i].id, " is connected to ", jarr[i].connections)
-        }*/
-        //console.log("tcpconn :", tcpSocket.isConnected)
-        /*if(jarr.length > 0 && tcpSocket.isConnected) {
-            tcpSocket.Map = jarr
-        }*/
     }
 
     function sendMap() {
         makeJSONs()
         if(jsonMap !== null && jsonMap.length > 0 && tcpSocket.isConnected)
         {
-            console.log("setting map")
             console.log(jsonMap)
             tcpSocket.sendMessage("MAP;" + jsonMap + ";")
-            //tcpSocket.Map = "MAP;" + jsonMap
         }
     }
 
@@ -381,6 +365,7 @@ Map {
                 var o = co.createObject(mapOverlay)
                 o.coordinate = coord
                 mapOverlay.addMapItem(o)
+                o.z = mapOverlay.z+2
                 firstCar = o
             } else {
                 console.log(" is not supported right now, please call us later.")
@@ -403,10 +388,67 @@ Map {
         }
     }
 
+    function simulate() {
+        if(approved) {
+            if(carPosition == null) {
+                carPosition = markers[0]
+                previousCarPosition = carPosition.getID()
+            }
+            ///// INGET JSON-OBJEKT DÄRAV FUNGERAR EJ CONNS!!
+            // kan nu stega tillbaks till föregående positon, ska ej vara valbart bland randoms
+            //var numb = getRandomIntInclusive(0, carPosition.connectedMarkers() -1)
+            //console.log(numb, " random number between 0 and ", carPosition.connectedMarkers() -1)
+            //console.log(carPosition.getConnections(), " connections")
+            var index = markerIndex(nextMarker())
+            //console.log("Marker index ", numb2)
+            carPosition = markers[index]
+            setCarBearing(carPosition.getCoordinates())
+        }
+    }
+
+    function nextMarker() {
+        var random = -1
+        var markerID = -1
+        while(true) {
+            random = getRandomIntInclusive(0, carPosition.connectedMarkers() -1)
+            markerID = carPosition.getConnections()[random]
+            if(markerID != previousCarPosition) {
+                previousCarPosition = carPosition.getID()
+                break
+            }
+        }
+        return markerID
+    }
+
+    Timer {
+        id:simulationTimer
+        interval: 1000; running: false; repeat: true
+        onTriggered: {
+            console.log("Tick")
+            simulate()
+        }
+    }
+
+    onSimulateCarChanged: {
+        if(simulateCar) {
+            simulationTimer.start()
+        } else {
+            simulationTimer.stop()
+            removeCar()
+            carPosition = null
+            previousCarPosition = -1
+        }
+    }
+
+    function getRandomIntInclusive(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
+    }
+
     function loadJsonMarkers(jsonString) {
-        console.log("loading json")
+        //console.log("loading json")
         var jsonObjects = JSON.parse(jsonString)
-        //console.log(jsonObjects.length)
         var list = new Array();
         for (var i = 0; i<jsonObjects.length; i++){
             var coord = QtPositioning.coordinate(jsonObjects[i].coord.lat, jsonObjects[i].coord.long)
@@ -426,16 +468,9 @@ Map {
         }
         console.log("list")
         for (var i = 0; i<list.length; i++){
-            //console.log(list[i])
             var mark1 = markers[markerIndex(list[i]["conns"][0])]
             var mark2 = markers[markerIndex(list[i]["conns"][1])]
-            /*console.log(mark1)
-            console.log(mark1.coordinate)
-            console.log(mark2)
-            console.log(mark2.coordinate)*/
             addPolyline(mark1, mark2)
-            //addPolyline(markers[markerIndex(list[i][0])],markers[markerIndex(list[i][1])])
-            //console.log(list[i].conns)
         }
 
     }
@@ -455,36 +490,13 @@ Map {
         acceptedButtons: Qt.LeftButton | Qt.RightButton
 
         onClicked : {
-            //console.log("first?")
             mapOverlay.lastX = mouse.x
             mapOverlay.lastY = mouse.y
             mapOverlay.pressX = mouse.x
             mapOverlay.pressY = mouse.y
             lastCoordinate = parentMap.toCoordinate(Qt.point(mouse.x, mouse.y))
-            switch (delegateIndex) {
-            case 0:
-                //parentMap.zoomLevel = Math.floor(parentMap.zoomLevel + 1)
-                break
-            case 1:
-                /*console.log(currentMarker)
-                if(currentMarker > 0 && markerCounter > 1) {
-                    console.log("connecting")
-                    markers[markerCounter -1].connectMarker(markers[currentMarker])
-
-                }
-                else {
-                    console.log("adding")
-                    mapOverlay.addMarker()
-
-                }*/
+            if(delegateIndex == 1) {
                 mapOverlay.addMarker()
-                break
-            case 2:
-                console.log("unfinished")
-                //mapOverlay.deleteMarkers()
-                break
-            default:
-                console.log("Unsupported operation")
             }
         }
 
@@ -499,30 +511,9 @@ Map {
         onDoubleClicked: {
             var mouseGeoPos = parentMap.toCoordinate(Qt.point(mouse.x, mouse.y));
             var preZoomPoint = parentMap.fromCoordinate(mouseGeoPos, false);
-            if (mouse.button === Qt.LeftButton) {
-                switch (delegateIndex) {
-                case 0:
-                    parentMap.zoomLevel = Math.floor(parentMap.zoomLevel + 1)
-                    break
-                /*case 1:
-                    if(currentMarker != -1 && markerCounter > 1) {
-                        markers[markerCounter -1].connectMarker(markers[currentMarker])
-                        console.log("connecting")
-                    }
-                    else {
-                        mapOverlay.addMarker()
-                        console.log("adding")
-                    }
-                    break
-                case 2:
-                    console.log("unfinished")
-                    mapOverlay.deleteMarkers()
-                    break*/
-                default:
-                    console.log("Unsupported operation")
-                }
-
-            } else if (mouse.button === Qt.RightButton) {
+            if (delegateIndex == 0 && mouse.button === Qt.LeftButton) {
+                parentMap.zoomLevel = Math.floor(parentMap.zoomLevel + 1)
+            } else if (delegateIndex == 0 && mouse.button === Qt.RightButton) {
                 parentMap.zoomLevel = Math.floor(parentMap.zoomLevel - 1)
             }
             var postZoomPoint = parentMap.fromCoordinate(mouseGeoPos, false);

@@ -10,14 +10,11 @@ import myPackage 1.0
 Item {
     id: appWindow
     property bool foll: false
-    property bool deleteAll: false
-    property bool sendMap: false
     property bool approvedTrack: false
     property alias mapMap: map
     property alias delegateIndex: overlay.delegateIndex
     property alias mapComponent: overlay
     property MyTcpSocket myTcpSocket: null
-    //signal mapVsignal
     signal mapDone()
 
     Plugin {
@@ -34,15 +31,6 @@ Item {
 
     }
 
-    onDeleteAllChanged: {
-        overlay.deleteMarkers()
-        overlay.deleteAllPolylines()
-    }
-
-    onSendMapChanged: {
-        overlay.sendMap()
-    }
-
     Map {
         id: map
         property PositionSource positionSource
@@ -50,7 +38,6 @@ Item {
         anchors.fill: parent
         plugin: mapPlugin
         center: QtPositioning.coordinate(56.675186674134046, 12.863582808095572) // KungsG
-        //center: QtPositioning.coordinate(56.41548, 12.987562) // Hasslöv
         maximumZoomLevel: 25
         minimumZoomLevel: 3
         zoomLevel:14
@@ -109,17 +96,13 @@ Item {
 
         onCenterChanged:{
             scaleTimer.restart()
-            /*if (map.followme)
-                if (map.center != positionSource.position.coordinate) map.followme = false*/
         }
 
         onZoomLevelChanged:{
             scaleTimer.restart()
-            //if (map.followme) map.center = positionSource.position.coordinate
         }
 
         onWidthChanged:{
-            //followME()
             scaleTimer.restart()
         }
 

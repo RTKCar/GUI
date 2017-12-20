@@ -11,9 +11,12 @@ TestMenuForm {
     signal connect()
     signal disconnect()
     signal printTrack()
+    signal simulate(bool value)
     property Map mapSourca
     property bool connected: false
     property bool approvedT: false
+    property bool carConnected: false
+
 
     mapSource: mapSourca
     conn: connected
@@ -69,9 +72,11 @@ TestMenuForm {
             delegate(3)
     }
 
+    simulateSwitch.onCheckedChanged: {
+        simulate(simulateSwitch.checked)
+    }
+
     onConnectedChanged: {
-        //connectedLabel.color = connected ? "Green" : "Red"
-        //notCLabel.visible = !connected
         serverIndicator.rlyActive = connected
         connectButton.enabled = !connected
         disconnectButton.enabled = connected
@@ -89,8 +94,17 @@ TestMenuForm {
     onApprovedTChanged: {
         sendMapButton.enabled = approvedT && connected
         trackIndicator.rlyActive = approvedT
-        //jsonButton.enabled = approvedT
-        //notALabel.visible = !approvedT
-        //approvedLabel.color = approvedT ? "Green" : "Red"
+        saveButton.enabled = approvedT
+    }
+
+    onCarConnectedChanged: {
+        startButton.enabled = !carConnected
+        stopButton.enabled = carConnected
+        carIndicator.rlyActive = carConnected
+        console.log("carIdicator", carConnected)
+    }
+    Component.onCompleted: {
+        //stopButton.enabled = true
+        //carIndicator.rlyActive = true
     }
 }

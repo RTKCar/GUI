@@ -1,13 +1,11 @@
 import QtQuick 2.5;
 import QtLocation 5.6
-import QtQuick 2.0
 
 MapQuickItem {
     id: marker
     property MapComponent overlay: null
     property variant markersConnected
     property variant polylinesConnected
-    //property int connectedCount: 0
     property int markerID: 0
     property var json
 
@@ -15,23 +13,13 @@ MapQuickItem {
     anchorPoint.y: rect.height/2
     rotation: 45
 
-    onRotationChanged: {
-        console.log("rotation")
-    }
-
     sourceItem: Rectangle {
         id:rect
         color: "LimeGreen"
         width: 10
         height: 10
-        //rotation: 45
         border.color: "Black"
         smooth: true
-        opacity: markerMouseArea.pressed ? 0.6 : 1.0
-
-        onRotationChanged: {
-            console.log("inner rotation")
-        }
 
         Rectangle {
             id: innerRect
@@ -48,21 +36,21 @@ MapQuickItem {
             property int lastY: -1
             anchors.fill: parent
             hoverEnabled : false
-            //drag.target: marker
             preventStealing: true
-            //Drag.active: markerMouseArea.drag.active
 
             onClicked : {
                 overlay.pressX = mouse.x
                 overlay.pressY = mouse.y
                 if(overlay.delegateIndex == 3) {
-                    //disconnect Marker, then delete it
+                    //Disconnect Marker, then delete it
                     overlay.deleteMarker(markersConnected, polylinesConnected, markerID)
                 } else if(overlay.delegateIndex == 1){
-                    // marker has been pressed
+                    // Marker has been pressed
                     if(overlay.currentMarker != -1) {
+                        //Two markers in a row have been pressed
                         overlay.previousMarker = overlay.currentMarker
                     } else {
+                        //Change the color on the Marker to notify the user that it has been pressed
                         rect.color = "yellow"
                     }
 
@@ -71,9 +59,10 @@ MapQuickItem {
                         if (marker == overlay.markers[i]){
                             overlay.currentMarker = i
                             if(overlay.previousMarker != overlay.currentMarker) {
+                                //Different Markers has been pressed
                                 overlay.connectMarkers()
                             } else {
-                                //same marker was pressed twice
+                                //Same marker was pressed twice
                                 overlay.currentMarker = -1
                                 overlay.previousMarker = -1
                                 if(markersConnected.length > 2) {
@@ -91,26 +80,24 @@ MapQuickItem {
     }
 
     function connectMark(Marker) {
-        //connectedCount ++
+        //Adds the provided Marker to this Markers connections
         markersConnected.push(Marker.markerID)
         connectionColor()
-
-        //createJson()
-        //printConnections()
     }
 
     function connectMarker(MarkerTo) {
+        //Connects two Markers to each others connections
         connectMark(MarkerTo)
         MarkerTo.connectMark(this)
     }
 
     function isConnectedTo(Marker) {
-        //return markersConnected.contains(Marker)
-        if(this == Marker) {
+        //Checks weather this Marker is connected to the provided Marker
+        if(this === Marker) {
             return true
         }
         for (var i = 0; i< markersConnected.length; i++){
-            if (Marker.markerID == markersConnected[i]){
+            if (Marker.markerID === markersConnected[i]){
                 return true
             }
         }
@@ -118,15 +105,25 @@ MapQuickItem {
     }
 
     function connectedMarkers() {
+        //return number of connection of this Marker
         return markersConnected.length
-        //return connectedCount
     }
 
-    function returnID() {
+    function getConnections() {
+        return markersConnected
+    }
+
+    function getCoordinates() {
+        return coordinate
+    }
+
+    function getID() {
+        //returns the ID of this Marker
         return markerID
     }
 
     function printConnections() {
+        //prints this Markers connections
         console.log(markerID, " is connected to: ")
         for (var i = 0; i< markersConnected.length; i++){
             console.log(markersConnected[i], ", ")
@@ -134,6 +131,7 @@ MapQuickItem {
     }
 
     function disconnectMarkers() {
+        //Disconnects this Marker from all its connections
         for(var i = 0; i<markersConnected.length; i++) {
             var marker = markersConnected(i)
             marker.disconnectMarker(this)
@@ -141,26 +139,23 @@ MapQuickItem {
     }
 
     function disconnectMarker(MarkerID){
+        //Disconnects this Marker to the Marker with the specified MarkerID
         markersConnected.pop(MarkerID)
-        /*if(markersConnected.length < connectedCount)
-            connectedCount --*/
-        /*if(markersConnected.length < 3) {
-            rect.color = "LimeGreen"
-        }*/
         connectionColor()
     }
 
     function connectPolyline(polylineID) {
+        //Adds the Polyline with specified polylineID to this Marker
         polylinesConnected.push(polylineID)
-        //console.log(markerID, "is connected to line nr ", polylineID)
     }
 
     function disconnectPolyline(polylineID) {
+        //Disconnects the Polyline with specified polylineID from this Marker
         polylinesConnected.pop(polylineID)
-        //console.log(markerID, "is disconnected from line nr ", polylineID)
     }
 
     function connectionColor() {
+        //Changes the color of this Marker depending on number of connections
         if(markersConnected.length > 2) {
             rect.color = "Red"
         } else {
@@ -169,9 +164,9 @@ MapQuickItem {
     }
 
     function createJson(){
+        //Saves important information about this Marker to a JSON-object
         var jsObject = {
             'id' : markerID,
-            //'coord' : coordinate,
             'coord' : {
                 'lat' : coordinate.latitude,
                 'long' : coordinate.longitude},
@@ -180,15 +175,12 @@ MapQuickItem {
         for(var i = 0; i<markersConnected.length; i++) {
             jsObject.conns.push(markersConnected[i])
         }
-        //console.log(jsObject.id)
         json = jsObject
-        //json = JSON.stringify(jsObject)
     }
 
     function loadJson(jsonObj) {
+        //Loads important information to this Marker from a JSON-object
         markerID = jsonObj.id
-        //coordinate.latitude = jsonObj.coord.lat
-        //coordinate.longitude = jsonObj.coord.long
         for(var i = 0; i<jsonObj.conns.length; i++) {
             markersConnected.push(jsonObj.conns[i])
         }

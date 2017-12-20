@@ -25,15 +25,14 @@ Item {
     property alias zoomSlider: zoomS
     property alias zoomValue: zoomVal
     property alias speedBox: speedBox
-    //property alias connectedLabel: cLabel
-    //property alias notCLabel: nLabel
-    //property alias notALabel: nLabel2
-    //property alias approvedLabel: aLabel
     property alias host: hostField
     property alias port: portField
     property alias serverIndicator: sStatusIndc
     property alias trackIndicator: tStatusIndc
     property alias carIndicator: cStatusIndc
+    property alias simulateSwitch: simulateSwitch
+    property alias saveButton: saveButton
+    property alias loadButton: loadButton
     property Map mapSource
     property bool conn: false
     width: 200
@@ -54,7 +53,7 @@ Item {
             RowLayout {
                 id: rowLayout1
                 x: 2
-                y: 316
+                y: 305
                 width: 200
                 height: 45
 
@@ -75,8 +74,8 @@ Item {
 
             Flow {
                 id: connectFlow
-                x: 2
-                y: 160
+                x: 0
+                y: 155
                 width: 200
                 height: 92
 
@@ -120,7 +119,7 @@ Item {
             RadioDelegate {
                 id: mouseDelegate
                 x: 0
-                y: 244
+                y: 236
                 width: 104
                 height: 47
                 checked: true
@@ -130,7 +129,7 @@ Item {
             RadioDelegate {
                 id: handDelegate
                 x: 98
-                y: 253
+                y: 245
                 width: 104
                 height: 30
                 text: qsTr("Hand")
@@ -140,7 +139,7 @@ Item {
             RadioDelegate {
                 id: markerDelegate
                 x: 0
-                y: 285
+                y: 277
                 width: 104
                 height: 30
                 text: qsTr("Marker")
@@ -149,7 +148,7 @@ Item {
             RadioDelegate {
                 id: deleteDelegate
                 x: 98
-                y: 280
+                y: 273
                 width: 104
                 height: 39
                 text: qsTr("Delete")
@@ -158,7 +157,7 @@ Item {
             Flow {
                 id: zoomFlow
                 x: 0
-                y: 408
+                y: 393
                 width: 200
                 height: 53
 
@@ -188,25 +187,25 @@ Item {
             Flow {
                 id: saveLoadFlow
                 x: 2
-                y: 362
+                y: 351
                 width: 200
                 height: 40
                 spacing: 10
 
                 Button {
-                    id: button1
+                    id: saveButton
                     x: 5
                     width: 60
                     text: qsTr("Save")
-                    enabled: false
+                    //enabled: false
                 }
 
                 Button {
-                    id: button2
+                    id: loadButton
                     x: 70
                     width: 60
                     text: qsTr("Load")
-                    enabled: false
+                    //enabled: false
                 }
 
                 Button {
@@ -219,8 +218,8 @@ Item {
 
             RowLayout {
                 id: serverConnectedRow
-                x: 2
-                y: 8
+                x: 0
+                y: 5
                 width: 200
                 height: 22
 
@@ -236,8 +235,8 @@ Item {
 
             RowLayout {
                 id: trackApprovedRow
-                x: 2
-                y: 45
+                x: 0
+                y: 38
                 width: 200
                 height: 22
 
@@ -254,7 +253,7 @@ Item {
             RowLayout {
                 id: hostRow
                 x: 0
-                y: 79
+                y: 74
                 width: 200
                 height: 40
 
@@ -276,7 +275,7 @@ Item {
             RowLayout {
                 id: portRow
                 x: 0
-                y: 120
+                y: 114
                 width: 200
                 height: 40
 
@@ -299,7 +298,7 @@ Item {
             RowLayout {
                 id: carConnectedRow
                 x: 0
-                y: 459
+                y: 441
                 width: 200
                 height: 22
 
@@ -315,9 +314,9 @@ Item {
 
             RowLayout {
                 id: startStopRow
-                x: 1
-                y: 525
-                width: 198
+                x: 0
+                y: 505
+                width: 200
                 height: 45
 
                 Button {
@@ -338,9 +337,9 @@ Item {
 
             Row {
                 id: row
-                x: 2
-                y: 494
-                width: 198
+                x: 0
+                y: 479
+                width: 200
                 height: 25
                 spacing: 70
 
@@ -354,6 +353,24 @@ Item {
                     width: 80
                     height: 25
                     model: ["Low", "Mid", "High"]
+                }
+            }
+
+            RowLayout {
+                id: rowLayout
+                x: 0
+                y: 541
+                width: 200
+                height: 37
+
+                SwitchDelegate {
+                    id: simulateSwitch
+                    width: 140
+                    text: qsTr("Simulate:")
+                    padding: 9
+                    bottomPadding: 9
+                    leftPadding: 9
+                    topPadding: 9
                 }
             }
         }
