@@ -98,8 +98,8 @@ TestMenuForm {
     }
 
     onCarConnectedChanged: {
-        startButton.enabled = !carConnected
-        stopButton.enabled = carConnected
+        //startButton.enabled = !carConnected
+        //stopButton.enabled = carConnected
         carIndicator.rlyActive = carConnected
     }
 }
