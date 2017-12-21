@@ -101,10 +101,5 @@ TestMenuForm {
         startButton.enabled = !carConnected
         stopButton.enabled = carConnected
         carIndicator.rlyActive = carConnected
-        console.log("carIdicator", carConnected)
-    }
-    Component.onCompleted: {
-        //stopButton.enabled = true
-        //carIndicator.rlyActive = true
     }
 }

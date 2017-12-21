@@ -3,6 +3,7 @@ import QtQuick.Controls 1.4
 import QtLocation 5.9
 import QtPositioning 5.5
 import myPackage 1.0
+import "../menus"
 
 Map {
     id: mapOverlay
@@ -290,7 +291,7 @@ Map {
     function polyLineIndex(polyID) {
         var count = mapOverlay.mapItems.length
         for (var i = 0; i<count; i++){
-            if(mapOverlay.mapItems[i].polylineID == polyID)
+            if(mapOverlay.mapItems[i].polylineID === polyID)
                 return i
         }
         return -1
@@ -299,7 +300,7 @@ Map {
     function markerIndex(markID) {
         var count = mapOverlay.markers.length
         for (var i = 0; i<count; i++){
-            if(mapOverlay.markers[i].markerID == markID)
+            if(mapOverlay.markers[i].markerID === markID)
                 return i
         }
         return -1
@@ -394,13 +395,7 @@ Map {
                 carPosition = markers[0]
                 previousCarPosition = carPosition.getID()
             }
-            ///// INGET JSON-OBJEKT DÄRAV FUNGERAR EJ CONNS!!
-            // kan nu stega tillbaks till föregående positon, ska ej vara valbart bland randoms
-            //var numb = getRandomIntInclusive(0, carPosition.connectedMarkers() -1)
-            //console.log(numb, " random number between 0 and ", carPosition.connectedMarkers() -1)
-            //console.log(carPosition.getConnections(), " connections")
             var index = markerIndex(nextMarker())
-            //console.log("Marker index ", numb2)
             carPosition = markers[index]
             setCarBearing(carPosition.getCoordinates())
         }
@@ -424,7 +419,6 @@ Map {
         id:simulationTimer
         interval: 1000; running: false; repeat: true
         onTriggered: {
-            console.log("Tick")
             simulate()
         }
     }
@@ -444,6 +438,20 @@ Map {
       min = Math.ceil(min);
       max = Math.floor(max);
       return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
+    }
+
+    function saveMap() {
+        if(approved) {
+            makeJSONs()
+            var map = "Zoom:" + mapOverlay.zoomLevel + ";" + "Center:" + mapOverlay.center.latitude + "," +
+                    mapOverlay.center.longitude + ";" + jsonMap
+            fileDialog.save(map)
+        }
+    }
+
+    function loadMap() {
+        //Clear map?
+        fileDialog.load()
     }
 
     function loadJsonMarkers(jsonString) {
@@ -466,7 +474,7 @@ Map {
                 }
             }
         }
-        console.log("list")
+        //console.log("list")
         for (var i = 0; i<list.length; i++){
             var mark1 = markers[markerIndex(list[i]["conns"][0])]
             var mark2 = markers[markerIndex(list[i]["conns"][1])]
@@ -481,6 +489,23 @@ Map {
         console.log("maxZoom", overlay.maximumZoomLevel)
         console.log("minZoom", overlay.minimumZoomLevel)
         mapCompleted()
+    }
+
+    MyFileDialog{
+        id: fileDialog
+        onTextReceived: {
+            // try catch ?
+            var params = textR.split(";")
+            var zoom = params[0].split(":")
+            mapOverlay.zoomLevel = parseFloat(zoom[1])
+            console.log("new zoom ", zoom[1])
+            var centrCoord = params[1].split(":")
+            var latlong = centrCoord[1].split(",")
+            var point = QtPositioning.coordinate(latlong[0], latlong[1])
+            console.log("new center ", point)
+            mapOverlay.center = point
+            loadJsonMarkers(params[2])
+        }
     }
 
     MouseArea {
@@ -506,7 +531,6 @@ Map {
                 parentMap.lastY = mouse.y
             }
         }*/
-
 
         onDoubleClicked: {
             var mouseGeoPos = parentMap.toCoordinate(Qt.point(mouse.x, mouse.y));

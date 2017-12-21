@@ -8,6 +8,7 @@ MapQuickItem {
     //property MapComponent overlay: null
     property variant _thisCoord
     property variant _lastCoord
+    property variant lastBear: null
 
     anchorPoint.x: body.width/2
     anchorPoint.y: body.height/2
@@ -60,6 +61,14 @@ MapQuickItem {
     function calculateBearing() {
         var bear = coordinate.azimuthTo(_thisCoord)
         var _bear = _lastCoord.azimuthTo(coordinate)
+        if(lastBear != null) {
+            console.log("prev bearing", lastBear)
+            console.log("curr bearing", _bear)
+            var diff = lastBear - _bear
+            console.log("diff bearing", diff)
+        }
+
+        lastBear = _bear
         //var _bear2 = _thisCoord.azimuthTo(_lastCoord)
         //console.log("bearing " + bear)
         console.log("bearing cord1 to cord2 " + _bear)

@@ -20,7 +20,6 @@
         <file>qml/menus/QuitingPopup.qml</file>
         <file>qml/menus/MyTextField.qml</file>
         <file>qml/map/Car.qml</file>
-        <file>qml/map/CarComponent.qml</file>
         <file>qml/menus/MyFileDialog.qml</file>
     </qresource>
 </RCC>
