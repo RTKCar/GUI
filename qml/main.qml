@@ -13,7 +13,9 @@ import QtQuick.Dialogs 1.1
 ApplicationWindow {
     id: appWindow
     visible: true
+//<<<<<<< remoteControl
     height: 630
+//>>>>>>> master
     width: 800
     title: qsTr("RTKCar")
     //height: Screen.height
@@ -95,8 +97,8 @@ ApplicationWindow {
                 //Speed 3-5
                 //speedBox.currentIndex
                 mytcpSocket.sendMessage("START:" + (speedBox.currentIndex+3))
-                testTools.startButton.enabled = false
-                testTools.stopButton.enabled = true
+                //testTools.startButton.enabled = false
+                //testTools.stopButton.enabled = true
             }
             speedBox.onCurrentIndexChanged: {
                 //Updates speed to car
@@ -109,8 +111,22 @@ ApplicationWindow {
             stopButton.onClicked: {
                 //Call apropriate functions at signal
                 mytcpSocket.sendMessage("STOP")
-                testTools.startButton.enabled = true
-                testTools.stopButton.enabled = false
+                //testTools.startButton.enabled = true
+                //testTools.stopButton.enabled = false
+
+                /*var testString = "hejsan:nisse,liten"
+                var splitString1 = testString.split(";")
+                console.log(splitString1.length, " length first split")
+                console.log(splitString1, " first split")
+                console.log(splitString1[0], " first split 0")
+                var splitString2 = splitString1[0].split(":")
+                console.log(splitString2.length, " length second split")
+                console.log(splitString2[0], " second split 0")
+                console.log(splitString2[1], " second split 1")
+                var splitString3 = splitString2[1].split(",")
+                console.log(splitString3.length, " length third split")
+                console.log(splitString3[0], " third split 0")
+                console.log(splitString3[1], " third split 1")*/
             }
 
             onSimulate: {
