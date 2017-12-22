@@ -36,7 +36,6 @@ Item {
     property alias loadButton: loadButton
     property alias manualSwitch: manualSwitch
     property alias stackLayout: stackLayout
-    //property alias manualPage: manualPage
     property Map mapSource
     property bool conn: false
     width: 200
@@ -237,15 +236,12 @@ Item {
                 Button {
                     id: startButton
                     text: qsTr("Start")
-                    //highlighted: true
-                    //Material.background: Material.Teal
                     enabled: false
                 }
 
                 Button {
                     id: stopButton
                     text: qsTr("Stop")
-                    //Material.elevation: 6
                     enabled: false
                 }
             }
@@ -282,7 +278,7 @@ Item {
                     id: autoPage
                     width: 200
                     height: 165
-                    visible: true
+                    visible: false
 
                     RowLayout {
                         id: hostRow
@@ -378,6 +374,18 @@ Item {
                     id: manualPage
                     width: 200
                     height: 165
+                    visible: true
+
+                    Text {
+                        id: text1
+                        width: 200
+                        height: 70
+                        color: "LimeGreen"
+                        text: qsTr("To control the car please use the arrow-keys or w, s, a and d. \n To change the speed use the speedbox.")
+                        visible: true
+                        wrapMode: Text.WordWrap
+                        font.pixelSize: 12
+                    }
                 }
             }
 
@@ -397,6 +405,7 @@ Item {
                     bottomPadding: 6
                     leftPadding: 6
                     topPadding: 6
+                    enabled: false
                 }
             }
 

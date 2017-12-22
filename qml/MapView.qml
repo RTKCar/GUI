@@ -130,8 +130,5 @@ Item {
                 //map.calculateScale()
             }
         }
-        onActiveFocusChanged: {
-            console.log("Mapview focus ", activeFocus)
-        }
     }
 }

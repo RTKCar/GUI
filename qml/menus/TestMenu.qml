@@ -17,16 +17,6 @@ TestMenuForm {
     property bool connected: false
     property bool approvedT: false
     property bool carConnected: false
-    property variant keyList : [
-        Qt.Key_Left,
-        Qt.Key_A,
-        Qt.Key_Right,
-        Qt.Key_D,
-        Qt.Key_Up,
-        Qt.Key_W,
-        Qt.Key_Down,
-        Qt.Key_S
-    ]
 
 
     mapSource: mapSourca
@@ -84,12 +74,14 @@ TestMenuForm {
     }
 
     simulateSwitch.onCheckedChanged: {
-        simulate(simulateSwitch.checked)
+        if(!carConnected && approvedT)
+            simulate(simulateSwitch.checked)
     }
 
     manualSwitch.onCheckedChanged: {
         if(manualSwitch.checked) {
             stackLayout.currentIndex = 1
+            stopButton.clicked()
             stopButton.enabled = false
             startButton.enabled = false
             sendMapButton.enabled = false
@@ -108,6 +100,8 @@ TestMenuForm {
         host.enabled = !connected
         port.enabled = !connected
         sendMapButton.enabled = approvedT && connected
+        if(!connected)
+            manualSwitch.toggle()
     }
     host.onAccepted: {
         console.log("host okey")
@@ -120,11 +114,13 @@ TestMenuForm {
         sendMapButton.enabled = approvedT && connected
         trackIndicator.rlyActive = approvedT
         saveButton.enabled = approvedT
+        simulateSwitch.enabled = !carConnected && approvedT
     }
 
     onCarConnectedChanged: {
-        //startButton.enabled = !carConnected
-        //stopButton.enabled = carConnected
+        startButton.enabled = !carConnected && !manualSwitch.checked
+        stopButton.enabled = carConnected && !manualSwitch.checked
         carIndicator.rlyActive = carConnected
+        simulateSwitch.enabled = !carConnected && approvedT
     }
 }
