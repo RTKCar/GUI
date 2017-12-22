@@ -1,4 +1,5 @@
 import QtQuick 2.5
+import QtQuick.Controls 1.4
 import QtQuick.Controls 2.2
 //import QtQuick.Controls 1.4
 //import QtQuick.Controls.Material 2.2
@@ -33,10 +34,13 @@ Item {
     property alias simulateSwitch: simulateSwitch
     property alias saveButton: saveButton
     property alias loadButton: loadButton
+    property alias manualSwitch: manualSwitch
+    property alias stackLayout: stackLayout
+    //property alias manualPage: manualPage
     property Map mapSource
     property bool conn: false
     width: 200
-    height: 600
+    height: 630
 
     Column {
         id: column
@@ -69,50 +73,6 @@ Item {
                     id: deleteAllButton
                     width: 60
                     text: qsTr("Delete All")
-                }
-            }
-
-            Flow {
-                id: connectFlow
-                x: 0
-                y: 155
-                width: 200
-                height: 92
-
-                RowLayout {
-                    id: connDisconnRow
-                    width: 200
-                    height: 45
-
-                    Button {
-                        id: connectButton
-                        width: 90
-                        text: qsTr("Connect")
-                    }
-
-                    Button {
-                        id: disconnectButton
-                        text: qsTr("Disconnect")
-                        enabled: false
-                    }
-                }
-
-                RowLayout {
-                    id: sendRow
-                    width: 200
-                    height: 45
-
-                    Button {
-                        id: sendMButton
-                        text: qsTr("Send Map")
-                        enabled: false
-                        //Material.foreground: Material.Pink
-                    }
-
-                    Button {
-                        id: printButton
-                        text: qsTr("Print Track")
-                    }
                 }
             }
 
@@ -251,51 +211,6 @@ Item {
             }
 
             RowLayout {
-                id: hostRow
-                x: 0
-                y: 74
-                width: 200
-                height: 40
-
-                Label {
-                    id: label3
-                    text: qsTr("Host:")
-                }
-
-                MyTextField {
-                    id: hostField
-                    width: 100
-                    placeholderText: qsTr("192.168.0.1")
-                    validator: RegExpValidator {
-                        regExp: /(\d{1,3})([.]\d{1,3})([.]\d{1,3})([.]\d{1,3})$/
-                    }
-                }
-            }
-
-            RowLayout {
-                id: portRow
-                x: 0
-                y: 114
-                width: 200
-                height: 40
-
-                Label {
-                    id: label4
-                    text: qsTr("Port: ")
-                }
-
-                MyTextField {
-                    id: portField
-                    width: 100
-                    placeholderText: qsTr("9000")
-                    validator: IntValidator {
-                        bottom: 0
-                        top: 9999
-                    }
-                }
-            }
-
-            RowLayout {
                 id: carConnectedRow
                 x: 0
                 y: 441
@@ -324,14 +239,14 @@ Item {
                     text: qsTr("Start")
                     //highlighted: true
                     //Material.background: Material.Teal
-                    //enabled: false
+                    enabled: false
                 }
 
                 Button {
                     id: stopButton
                     text: qsTr("Stop")
                     //Material.elevation: 6
-                    //enabled: false
+                    enabled: false
                 }
             }
 
@@ -356,21 +271,153 @@ Item {
                 }
             }
 
+            StackLayout {
+                id: stackLayout
+                x: 0
+                y: 74
+                width: 200
+                height: 165
+
+                Page {
+                    id: autoPage
+                    width: 200
+                    height: 165
+                    visible: true
+
+                    RowLayout {
+                        id: hostRow
+                        x: 0
+                        y: 0
+                        width: 200
+                        height: 40
+
+                        Label {
+                            id: label3
+                            text: qsTr("Host:")
+                        }
+
+                        MyTextField {
+                            id: hostField
+                            width: 100
+                            placeholderText: qsTr("192.168.0.1")
+                            validator: RegExpValidator {
+                                regExp: /(\d{1,3})([.]\d{1,3})([.]\d{1,3})([.]\d{1,3})$/
+                            }
+                        }
+                    }
+
+                    RowLayout {
+                        id: portRow
+                        x: 0
+                        y: 40
+                        width: 200
+                        height: 40
+
+                        Label {
+                            id: label4
+                            text: qsTr("Port: ")
+                        }
+
+                        MyTextField {
+                            id: portField
+                            width: 100
+                            placeholderText: qsTr("9000")
+                            validator: IntValidator {
+                                bottom: 0
+                                top: 9999
+                            }
+                        }
+                    }
+
+                    Flow {
+                        id: connectFlow
+                        x: 0
+                        y: 81
+                        width: 200
+                        height: 92
+
+                        RowLayout {
+                            id: connDisconnRow
+                            width: 200
+                            height: 45
+
+                            Button {
+                                id: connectButton
+                                width: 90
+                                text: qsTr("Connect")
+                            }
+
+                            Button {
+                                id: disconnectButton
+                                text: qsTr("Disconnect")
+                                enabled: false
+                            }
+                        }
+
+                        RowLayout {
+                            id: sendRow
+                            width: 200
+                            height: 45
+
+                            Button {
+                                id: sendMButton
+                                text: qsTr("Send Map")
+                                enabled: false
+                                //Material.foreground: Material.Pink
+                            }
+
+                            Button {
+                                id: printButton
+                                text: qsTr("Print Track")
+                            }
+                        }
+                    }
+                }
+
+                Page {
+                    id: manualPage
+                    width: 200
+                    height: 165
+                }
+            }
+
             RowLayout {
                 id: rowLayout
                 x: 0
-                y: 541
+                y: 551
                 width: 200
-                height: 37
+                height: 39
 
                 SwitchDelegate {
                     id: simulateSwitch
                     width: 140
                     text: qsTr("Simulate:")
+                    rightPadding: 6
                     padding: 9
-                    bottomPadding: 9
-                    leftPadding: 9
-                    topPadding: 9
+                    bottomPadding: 6
+                    leftPadding: 6
+                    topPadding: 6
+                }
+            }
+
+            RowLayout {
+                id: rowLayout2
+                x: 0
+                y: 583
+                width: 200
+                height: 36
+
+                SwitchDelegate {
+                    id: manualSwitch
+                    text: qsTr("Manual switch")
+                    rightPadding: 6
+                    bottomPadding: 6
+                    topPadding: 6
+                    leftPadding: 6
+                    font.capitalization: Font.MixedCase
+                    font.weight: Font.Normal
+                    font.letterSpacing: 0
+                    spacing: 8
                 }
             }
         }

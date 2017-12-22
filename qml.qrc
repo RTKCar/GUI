@@ -21,5 +21,6 @@
         <file>qml/menus/MyTextField.qml</file>
         <file>qml/map/Car.qml</file>
         <file>qml/menus/MyFileDialog.qml</file>
+        <file>qml/menus/MyKeyboard.qml</file>
     </qresource>
 </RCC>

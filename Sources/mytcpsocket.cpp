@@ -15,7 +15,7 @@ void MyTcpSocket::doConnect(QString host, quint16 port)
     //QObject::connect(sender, signal, receiver, slot):
     connect(socket, SIGNAL(connected()),this, SLOT(connected()));
     connect(socket, SIGNAL(disconnected()),this, SLOT(disconnected()));
-    connect(socket, SIGNAL(bytesWritten(qint64)),this, SLOT(bytesWritten(qint64)));
+    //connect(socket, SIGNAL(bytesWritten(qint64)),this, SLOT(bytesWritten(qint64)));
     connect(socket, SIGNAL(readyRead()),this, SLOT(readyRead()));
 
     qDebug() << "connecting...";
@@ -79,5 +79,6 @@ void MyTcpSocket::sendMessage(QByteArray message)
 {
     if(_isConnected){
         socket->write(message);
+        qDebug() << message;
     }
 }

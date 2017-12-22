@@ -1,4 +1,5 @@
-import QtQuick 2.5
+import QtQuick 2.7
+//import QtQuick 2.5
 import QtQuick 2.0
 import QtQuick.Controls 1.4
 import QtLocation 5.9
@@ -128,6 +129,9 @@ Item {
             onTriggered: {
                 //map.calculateScale()
             }
+        }
+        onActiveFocusChanged: {
+            console.log("Mapview focus ", activeFocus)
         }
     }
 }

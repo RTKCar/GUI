@@ -1,4 +1,5 @@
-import QtQuick 2.5
+import QtQuick 2.7
+//import QtQuick 2.5
 import QtLocation 5.6
 import QtPositioning 5.5
 import QtQuick.Window 2.0
@@ -12,7 +13,9 @@ import QtQuick.Dialogs 1.1
 ApplicationWindow {
     id: appWindow
     visible: true
-    height: 550
+//<<<<<<< remoteControl
+    height: 630
+//>>>>>>> master
     width: 800
     title: qsTr("RTKCar")
     //height: Screen.height
@@ -23,7 +26,6 @@ ApplicationWindow {
     property bool baseStation
     property bool baseFixed: false
     property bool first: true
-
 
     RowLayout{
         id: rowL
@@ -48,6 +50,18 @@ ApplicationWindow {
             onMapDone: {
                 //Make sure the map is fully loaded before adding Markers to it
                 //mapComponent.loadJsonMarkers(testJson3)
+            }
+            Keys.onPressed: {
+                if(!event.isAutoRepeat && testTools.manualSwitch.checked){
+                //if(!event.isAutoRepeat && testTools.tabBar.currentIndex == 1){
+                myKeyboard.checkKey(event.key, 1)
+                }
+            }
+            Keys.onReleased: {
+                if(!event.isAutoRepeat && testTools.manualSwitch.checked){
+                //if(!event.isAutoRepeat && testTools.tabBar.currentIndex == 1){
+                myKeyboard.checkKey(event.key, 0)
+                }
             }
         }
 
@@ -86,6 +100,14 @@ ApplicationWindow {
                 //testTools.startButton.enabled = false
                 //testTools.stopButton.enabled = true
             }
+            speedBox.onCurrentIndexChanged: {
+                //Updates speed to car
+                if(testTools.carConnected && mytcpSocket.isConnected) {
+                    mytcpSocket.sendMessage("START:" + (speedBox.currentIndex+3))
+                    testTools.startButton.enabled = false
+                    testTools.stopButton.enabled = true
+                }
+            }
             stopButton.onClicked: {
                 //Call apropriate functions at signal
                 mytcpSocket.sendMessage("STOP")
@@ -118,14 +140,34 @@ ApplicationWindow {
                 mapview.mapComponent.loadMap()
             }
 
+            MyKeyboard {
+                id: myKeyboard
+                onKeyEvent: {
+                    if(mytcpSocket.isConnected) {
+                        mytcpSocket.sendMessage(message + ":" + (testTools.speedBox.currentIndex+3))
+                    } else {
+                        console.log("could not send: " + message + ".\nServer not connected.")
+                    }
+                }
+            }
+
+            Keys.onPressed: {
+                if(!event.isAutoRepeat && testTools.manualSwitch.checked){
+                //if(!event.isAutoRepeat && testTools.tabBar.currentIndex == 1){
+                myKeyboard.checkKey(event.key, 1)
+                }
+            }
+            Keys.onReleased: {
+                if(!event.isAutoRepeat && testTools.manualSwitch.checked){
+                //if(!event.isAutoRepeat && testTools.tabBar.currentIndex == 1){
+                myKeyboard.checkKey(event.key, 0)
+                }
+            }
 
             onConnect: {
                 //specifies default host & port and checks input before connecting
                 //var _host = "127.0.0.1"
                 var _host = "192.168.80.38"
-                //var _host = "192.168.80.86"
-                //var _host = "0.0.0.0"
-                //var _port = 2009
                 var _port = 9003
                 if(host.acceptableInput) {
                     _host = host.text
@@ -190,7 +232,7 @@ ApplicationWindow {
             //console.log("end")
 
             var obj = message.split(";")
-            var data = obj.split(":")
+            var data = obj[0].split(":")
             var state = parseInt(data[0])
 
             switch (state){
@@ -199,6 +241,11 @@ ApplicationWindow {
                 var latlong = data[1].split(",")
                 //Check latlong.length?
                 mapview.mapComponent.setCarBearing(QtPositioning.coordinate(latlong[0], latlong[1]))
+                var not = ""
+                if(latlong[2] === 0)
+                    not = "not"
+                console.log(latlong[2])
+                console.log("BaseStation is " + not + " fixed")
                 testTools.carConnected = true
                 if(first) {
                     first = false
@@ -206,10 +253,29 @@ ApplicationWindow {
                 }
                 break
             case 1:
-                // Rover disconnected
+                // Object in front of Rover, at 0 = left, 1 = in front, 2 = right of object
+                var distObj = data[1].split(",")
+                var position = ""
+                var pos = parseInt(distObj[1])
+                switch (pos) {
+                    case 0:
+                        position = "left"
+                        break
+                    case 1:
+                        position = "in front"
+                        break
+                    case 2:
+                        position = "right"
+                        break
+                    default:
+                        position = "in unknown position"
+                }
+
+                console.log("Object detected " + distObj[0] + " cm " + position + " of vehicle")
                 break
             case 2:
-                // Object in front of Rover
+                // Rover disconnected
+                //testTools.carConnected = false
                 break
             case 3:
                 // baseStation position received
