@@ -1,4 +1,5 @@
-import QtQuick 2.4
+//import QtQuick 2.4
+import QtQuick 2.7
 import QtPositioning 5.5
 import QtLocation 5.9
 
@@ -16,6 +17,16 @@ TestMenuForm {
     property bool connected: false
     property bool approvedT: false
     property bool carConnected: false
+    property variant keyList : [
+        Qt.Key_Left,
+        Qt.Key_A,
+        Qt.Key_Right,
+        Qt.Key_D,
+        Qt.Key_Up,
+        Qt.Key_W,
+        Qt.Key_Down,
+        Qt.Key_S
+    ]
 
 
     mapSource: mapSourca
@@ -74,6 +85,20 @@ TestMenuForm {
 
     simulateSwitch.onCheckedChanged: {
         simulate(simulateSwitch.checked)
+    }
+
+    manualSwitch.onCheckedChanged: {
+        if(manualSwitch.checked) {
+            stackLayout.currentIndex = 1
+            stopButton.enabled = false
+            startButton.enabled = false
+            sendMapButton.enabled = false
+        } else {
+            stackLayout.currentIndex = 0
+            startButton.enabled = !carConnected
+            stopButton.enabled = carConnected
+            sendMapButton.enabled = approvedT && connected
+        }
     }
 
     onConnectedChanged: {

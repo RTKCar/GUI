@@ -1,4 +1,5 @@
-import QtQuick 2.5
+import QtQuick 2.7
+//import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtLocation 5.9
 import QtPositioning 5.5
@@ -331,7 +332,7 @@ Map {
 
     function makeJSONs() {
         if(markers.length > 0){
-            console.log("Making Jsons")
+            //console.log("Making Jsons")
             var jarr = new Array()
             for (var i = 0; i< markers.length; i++){
                 markers[i].createJson()
@@ -345,17 +346,19 @@ Map {
         makeJSONs()
         if(jsonMap !== null && jsonMap.length > 0 && tcpSocket.isConnected)
         {
-            console.log(jsonMap)
+            //console.log(jsonMap)
             tcpSocket.sendMessage("MAP;" + jsonMap + ";")
         }
     }
 
     function printMap(){
-        makeJSONs()
-        var jarr = JSON.parse(jsonMap)
-        for (var i = 0; i< jarr.length; i++){
-            console.log(jarr[i].id, " is connected to ", jarr[i].conns)
-            console.log(" and has coordinates: lat: " + jarr[i].coord.lat + " long: " + jarr[i].coord.long)
+        if(approved){
+            makeJSONs()
+            var jarr = JSON.parse(jsonMap)
+            for (var i = 0; i< jarr.length; i++){
+                console.log(jarr[i].id, " is connected to ", jarr[i].conns)
+                console.log(" and has coordinates: lat: " + jarr[i].coord.lat + " long: " + jarr[i].coord.long)
+            }
         }
     }
 
@@ -551,5 +554,4 @@ Map {
             mapOverlay.lastY = -1;
         }
     }
-
 }

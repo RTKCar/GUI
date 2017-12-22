@@ -75,4 +75,8 @@ MapQuickItem {
         //console.log("reversed bearing: cord2 to cord1 " + _bear2)
         car.rotation = _bear
     }
+
+    onActiveFocusChanged: {
+        console.log("Car focus ", activeFocus)
+    }
 }
