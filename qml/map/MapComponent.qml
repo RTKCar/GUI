@@ -4,6 +4,7 @@ import QtQuick.Controls 1.4
 import QtLocation 5.9
 import QtPositioning 5.5
 import myPackage 1.0
+import QtQuick.Dialogs 1.1
 import "../menus"
 
 Map {
@@ -21,7 +22,6 @@ Map {
     property int lastY : -1
     property int pressX : -1
     property int pressY : -1
-    property int jitterThreshold : 30
     property int delegateIndex : 0
     property bool connection: false
     property bool approved: false
@@ -54,7 +54,7 @@ Map {
 
     function addMarker()
     {
-        var marker = createMarker(mouseArea.lastCoordinate)
+        var marker = createMarker(mouseArea.lastCoordinate, 1)
         /*var count = mapOverlay.markers.length
         markerCounter++
         var marker = Qt.createQmlObject ('Marker {overlay: mapOverlay}', this)
@@ -109,7 +109,7 @@ Map {
         //printApproved()
     }
 
-    function createMarker(coord) {
+    function createMarker(coord, layer) {
         if(markers !== null) {
             var count = markers.length
             markerCounter++
@@ -117,7 +117,8 @@ Map {
         }
         var marker = Qt.createQmlObject ('Marker {overlay: mapOverlay}', mapOverlay)
         mapOverlay.addMapItem(marker)
-        marker.z = mapOverlay.z+1
+        marker.z = mapOverlay.z+layer
+        //marker.z = mapOverlay.z+1
         marker.coordinate = coord
 
         //update list of markers
@@ -224,7 +225,6 @@ Map {
     function deletePolyline(marker1, marker2, polylineNr) {
         var mark1 = markerIndex(marker1)
         var mark2 = markerIndex(marker2)
-        //console.log(marker1, " ", marker2, " ",  polylineNr)
         if(mark1 > -1 && mark2 > -1){
             markers[mark1].disconnectMarker(marker2)
             markers[mark1].disconnectPolyline(polylineNr)
@@ -233,7 +233,6 @@ Map {
         }
         var polyIndex = polyLineIndex(polylineNr)
         if(polyIndex > -1){
-            //console.log("removing line at index ", polyIndex)
             mapOverlay.removeMapItem(mapOverlay.mapItems[polyIndex])
             mapOverlay.mapItems[polyIndex].destroy()
             var myArray = new Array()
@@ -243,7 +242,6 @@ Map {
             }
             mapItems = myArray
             aprovedTrack();
-            //mapOverlay.mapItems.pop(mapItems[polyIndex])
         } else {
             console.log("index to low")
         }
@@ -314,8 +312,6 @@ Map {
     }
 
     function aprovedTrack() {
-        //if(markers.length < 3) {
-        // specification says minimum of 4 markers, not 3 as previously assumed
         if(markers.length < 4) {
             approved = false
             return false
@@ -332,7 +328,6 @@ Map {
 
     function makeJSONs() {
         if(markers.length > 0){
-            //console.log("Making Jsons")
             var jarr = new Array()
             for (var i = 0; i< markers.length; i++){
                 markers[i].createJson()
@@ -346,7 +341,6 @@ Map {
         makeJSONs()
         if(jsonMap !== null && jsonMap.length > 0 && tcpSocket.isConnected)
         {
-            //console.log(jsonMap)
             tcpSocket.sendMessage("MAP;" + jsonMap + ";")
         }
     }
@@ -453,8 +447,10 @@ Map {
     }
 
     function loadMap() {
-        //Clear map?
-        fileDialog.load()
+        if(markers.length > 0)
+            messageDialog.open()
+        else
+            fileDialog.load()
     }
 
     function loadJsonMarkers(jsonString) {
@@ -463,7 +459,7 @@ Map {
         var list = new Array();
         for (var i = 0; i<jsonObjects.length; i++){
             var coord = QtPositioning.coordinate(jsonObjects[i].coord.lat, jsonObjects[i].coord.long)
-            var marker = createMarker(coord)
+            var marker = createMarker(coord, 0)
             marker.loadJson(jsonObjects[i])
 
             for (var j = 0; j<jsonObjects[i]["conns"].length; j++){
@@ -494,19 +490,32 @@ Map {
         mapCompleted()
     }
 
+    MessageDialog {
+        //MessageDialog to check weather the user really wants load to clear the track and load a new one
+        id: messageDialog
+        icon: StandardIcon.Warning
+        text: "This clears any existing track, are you sure?"
+        standardButtons: StandardButton.Yes | StandardButton.No
+        onYes: {
+            deleteMarkers()
+            deleteAllPolylines()
+            fileDialog.load()
+        }
+    }
+
     MyFileDialog{
         id: fileDialog
         onTextReceived: {
             // try catch ?
             var params = textR.split(";")
             var zoom = params[0].split(":")
-            mapOverlay.zoomLevel = parseFloat(zoom[1])
+            parentMap.zoomLevel = parseFloat(zoom[1])
             console.log("new zoom ", zoom[1])
             var centrCoord = params[1].split(":")
             var latlong = centrCoord[1].split(",")
             var point = QtPositioning.coordinate(latlong[0], latlong[1])
             console.log("new center ", point)
-            mapOverlay.center = point
+            parentMap.center = point
             loadJsonMarkers(params[2])
         }
     }

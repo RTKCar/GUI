@@ -55,7 +55,7 @@ Item {
 
             RowLayout {
                 id: rowLayout1
-                x: 2
+                x: 5
                 y: 305
                 width: 200
                 height: 45
@@ -64,6 +64,8 @@ Item {
                     id: followButton
                     width: 90
                     text: qsTr("Find Me")
+                    Layout.preferredWidth: 85
+                    Layout.preferredHeight: 30
                     //font.wordSpacing: -3
                     //spacing: -10
                 }
@@ -72,6 +74,8 @@ Item {
                     id: deleteAllButton
                     width: 60
                     text: qsTr("Delete All")
+                    Layout.preferredWidth: 85
+                    Layout.preferredHeight: 30
                 }
             }
 
@@ -102,6 +106,8 @@ Item {
                 width: 104
                 height: 30
                 text: qsTr("Marker")
+                font.weight: Font.ExtraLight
+                spacing: 2
             }
 
             RadioDelegate {
@@ -150,29 +156,6 @@ Item {
                 width: 200
                 height: 40
                 spacing: 10
-
-                Button {
-                    id: saveButton
-                    x: 5
-                    width: 60
-                    text: qsTr("Save")
-                    //enabled: false
-                }
-
-                Button {
-                    id: loadButton
-                    x: 70
-                    width: 60
-                    text: qsTr("Load")
-                    //enabled: false
-                }
-
-                Button {
-                    id: quitButton
-                    width: 60
-                    text: qsTr("Quit")
-                    //enabled: false
-                }
             }
 
             RowLayout {
@@ -189,6 +172,10 @@ Item {
 
                 MyStatusIndicator {
                     id: sStatusIndc
+                    width: 25
+                    height: 25
+                    Layout.preferredHeight: 25
+                    Layout.preferredWidth: 25
                 }
             }
 
@@ -206,6 +193,10 @@ Item {
 
                 MyStatusIndicator {
                     id: tStatusIndc
+                    width: 25
+                    height: 25
+                    Layout.preferredHeight: 25
+                    Layout.preferredWidth: 25
                 }
             }
 
@@ -223,25 +214,34 @@ Item {
 
                 MyStatusIndicator {
                     id: cStatusIndc
+                    width: 25
+                    height: 25
+                    Layout.preferredHeight: 25
+                    Layout.preferredWidth: 25
                 }
             }
 
             RowLayout {
                 id: startStopRow
-                x: 0
+                x: 5
                 y: 505
                 width: 200
                 height: 45
+                spacing: 5
 
                 Button {
                     id: startButton
                     text: qsTr("Start")
+                    Layout.preferredWidth: 85
+                    Layout.preferredHeight: 30
                     enabled: false
                 }
 
                 Button {
                     id: stopButton
                     text: qsTr("Stop")
+                    Layout.preferredWidth: 85
+                    Layout.preferredHeight: 30
                     enabled: false
                 }
             }
@@ -278,7 +278,7 @@ Item {
                     id: autoPage
                     width: 200
                     height: 165
-                    visible: false
+                    visible: true
 
                     RowLayout {
                         id: hostRow
@@ -334,6 +334,7 @@ Item {
 
                         RowLayout {
                             id: connDisconnRow
+                            x: 5
                             width: 200
                             height: 45
 
@@ -341,23 +342,30 @@ Item {
                                 id: connectButton
                                 width: 90
                                 text: qsTr("Connect")
+                                Layout.preferredWidth: 85
+                                Layout.preferredHeight: 30
                             }
 
                             Button {
                                 id: disconnectButton
                                 text: qsTr("Disconnect")
+                                Layout.preferredWidth: 85
+                                Layout.preferredHeight: 30
                                 enabled: false
                             }
                         }
 
                         RowLayout {
                             id: sendRow
+                            x: 5
                             width: 200
                             height: 45
 
                             Button {
                                 id: sendMButton
                                 text: qsTr("Send Map")
+                                Layout.preferredWidth: 85
+                                Layout.preferredHeight: 30
                                 enabled: false
                                 //Material.foreground: Material.Pink
                             }
@@ -365,6 +373,8 @@ Item {
                             Button {
                                 id: printButton
                                 text: qsTr("Print Track")
+                                Layout.preferredWidth: 85
+                                Layout.preferredHeight: 30
                             }
                         }
                     }
@@ -374,7 +384,7 @@ Item {
                     id: manualPage
                     width: 200
                     height: 165
-                    visible: true
+                    visible: false
 
                     Text {
                         id: text1
@@ -427,6 +437,41 @@ Item {
                     font.weight: Font.Normal
                     font.letterSpacing: 0
                     spacing: 8
+                }
+            }
+
+            RowLayout {
+                id: rowLayout3
+                x: 0
+                y: 351
+                width: 200
+                height: 45
+
+                Button {
+                    id: quitButton
+                    width: 60
+                    text: qsTr("Quit")
+                    Layout.preferredHeight: 30
+                    Layout.preferredWidth: 60
+                    //enabled: false
+                }
+
+                Button {
+                    id: loadButton
+                    width: 60
+                    text: qsTr("Load")
+                    Layout.preferredHeight: 30
+                    Layout.preferredWidth: 60
+                    //enabled: false
+                }
+
+                Button {
+                    id: saveButton
+                    width: 60
+                    text: qsTr("Save")
+                    Layout.preferredWidth: 60
+                    Layout.preferredHeight: 30
+                    //enabled: false
                 }
             }
         }
