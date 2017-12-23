@@ -74,19 +74,31 @@ TestMenuForm {
     }
 
     simulateSwitch.onCheckedChanged: {
+        if(simulateSwitch.checked) {
+            stackLayout1.currentIndex = 2
+            stackLayout2.currentIndex = 1
+            speedBox.enabled = false
+            startButton.enabled = false
+        } else {
+            stackLayout1.currentIndex = 0
+            stackLayout2.currentIndex = 0
+            speedBox.enabled = true
+            stopButton.enabled = carConnected
+        }
+        manualSwitch.enabled = !simulateSwitch.checked
         if(!carConnected && approvedT)
             simulate(simulateSwitch.checked)
     }
 
     manualSwitch.onCheckedChanged: {
         if(manualSwitch.checked) {
-            stackLayout.currentIndex = 1
+            stackLayout1.currentIndex = 1
             stopButton.clicked()
             stopButton.enabled = false
             startButton.enabled = false
             sendMapButton.enabled = false
         } else {
-            stackLayout.currentIndex = 0
+            stackLayout1.currentIndex = 0
             startButton.enabled = !carConnected
             stopButton.enabled = carConnected
             sendMapButton.enabled = approvedT && connected

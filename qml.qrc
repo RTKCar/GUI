@@ -8,12 +8,6 @@
         <file>qml/main.qml</file>
         <file>qml/menus/TestMenu.qml</file>
         <file>qml/menus/TestMenuForm.ui.qml</file>
-        <file>qml/resources/marker.png</file>
-        <file>qml/resources/down-arrow.svg</file>
-        <file>qml/resources/left-arrow.svg</file>
-        <file>qml/resources/play-button.svg</file>
-        <file>qml/resources/right-arrow.svg</file>
-        <file>qml/resources/up-arrow.svg</file>
         <file>qml/map/Polyline.qml</file>
         <file>qml/map/PolylineItem.qml</file>
         <file>qml/menus/MyStatusIndicator.qml</file>
@@ -22,5 +16,8 @@
         <file>qml/map/Car.qml</file>
         <file>qml/menus/MyFileDialog.qml</file>
         <file>qml/menus/MyKeyboard.qml</file>
+        <file>qml/menus/MySwitchDelegate.qml</file>
+        <file>qml/menus/MySlider.qml</file>
+        <file>qml/menus/MyRadioDelegate.qml</file>
     </qresource>
 </RCC>

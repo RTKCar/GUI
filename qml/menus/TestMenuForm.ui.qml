@@ -35,11 +35,12 @@ Item {
     property alias saveButton: saveButton
     property alias loadButton: loadButton
     property alias manualSwitch: manualSwitch
-    property alias stackLayout: stackLayout
+    property alias stackLayout1: stackLayout1
+    property alias stackLayout2: stackLayout2
     property Map mapSource
     property bool conn: false
     width: 200
-    height: 630
+    height: 600
 
     Column {
         id: column
@@ -53,84 +54,18 @@ Item {
             x: 0
             y: 0
 
-            RowLayout {
-                id: rowLayout1
-                x: 5
-                y: 305
-                width: 200
-                height: 45
-
-                Button {
-                    id: followButton
-                    width: 90
-                    text: qsTr("Find Me")
-                    Layout.preferredWidth: 85
-                    Layout.preferredHeight: 30
-                    //font.wordSpacing: -3
-                    //spacing: -10
-                }
-
-                Button {
-                    id: deleteAllButton
-                    width: 60
-                    text: qsTr("Delete All")
-                    Layout.preferredWidth: 85
-                    Layout.preferredHeight: 30
-                }
-            }
-
-            RadioDelegate {
-                id: mouseDelegate
-                x: 0
-                y: 236
-                width: 104
-                height: 47
-                checked: true
-                text: qsTr("Mouse")
-            }
-
-            RadioDelegate {
-                id: handDelegate
-                x: 98
-                y: 245
-                width: 104
-                height: 30
-                text: qsTr("Hand")
-                enabled: false
-            }
-
-            RadioDelegate {
-                id: markerDelegate
-                x: 0
-                y: 277
-                width: 104
-                height: 30
-                text: qsTr("Marker")
-                font.weight: Font.ExtraLight
-                spacing: 2
-            }
-
-            RadioDelegate {
-                id: deleteDelegate
-                x: 98
-                y: 273
-                width: 104
-                height: 39
-                text: qsTr("Delete")
-            }
-
             Flow {
                 id: zoomFlow
                 x: 0
-                y: 393
+                y: 328
                 width: 200
-                height: 53
+                height: 43
 
                 Label {
                     id: label
                     text: qsTr("Zoom")
 
-                    Slider {
+                    MySlider {
                         id: zoomS
                         x: 0
                         y: 13
@@ -147,15 +82,6 @@ Item {
                     width: 66
                     height: 16
                 }
-            }
-
-            Flow {
-                id: saveLoadFlow
-                x: 2
-                y: 351
-                width: 200
-                height: 40
-                spacing: 10
             }
 
             RowLayout {
@@ -182,7 +108,7 @@ Item {
             RowLayout {
                 id: trackApprovedRow
                 x: 0
-                y: 38
+                y: 33
                 width: 200
                 height: 22
 
@@ -200,79 +126,12 @@ Item {
                 }
             }
 
-            RowLayout {
-                id: carConnectedRow
-                x: 0
-                y: 441
-                width: 200
-                height: 22
-
-                Label {
-                    id: label5
-                    text: qsTr("Car connected: ")
-                }
-
-                MyStatusIndicator {
-                    id: cStatusIndc
-                    width: 25
-                    height: 25
-                    Layout.preferredHeight: 25
-                    Layout.preferredWidth: 25
-                }
-            }
-
-            RowLayout {
-                id: startStopRow
-                x: 5
-                y: 505
-                width: 200
-                height: 45
-                spacing: 5
-
-                Button {
-                    id: startButton
-                    text: qsTr("Start")
-                    Layout.preferredWidth: 85
-                    Layout.preferredHeight: 30
-                    enabled: false
-                }
-
-                Button {
-                    id: stopButton
-                    text: qsTr("Stop")
-                    Layout.preferredWidth: 85
-                    Layout.preferredHeight: 30
-                    enabled: false
-                }
-            }
-
-            Row {
-                id: row
-                x: 0
-                y: 479
-                width: 200
-                height: 25
-                spacing: 70
-
-                Label {
-                    id: label7
-                    text: qsTr("Speed:")
-                }
-
-                ComboBox {
-                    id: speedBox
-                    width: 80
-                    height: 25
-                    model: ["Low", "Mid", "High"]
-                }
-            }
-
             StackLayout {
-                id: stackLayout
+                id: stackLayout1
                 x: 0
-                y: 74
+                y: 65
                 width: 200
-                height: 165
+                height: 132
 
                 Page {
                     id: autoPage
@@ -285,7 +144,7 @@ Item {
                         x: 0
                         y: 0
                         width: 200
-                        height: 40
+                        height: 29
 
                         Label {
                             id: label3
@@ -295,6 +154,7 @@ Item {
                         MyTextField {
                             id: hostField
                             width: 100
+                            Layout.preferredHeight: 25
                             placeholderText: qsTr("192.168.0.1")
                             validator: RegExpValidator {
                                 regExp: /(\d{1,3})([.]\d{1,3})([.]\d{1,3})([.]\d{1,3})$/
@@ -305,9 +165,9 @@ Item {
                     RowLayout {
                         id: portRow
                         x: 0
-                        y: 40
+                        y: 30
                         width: 200
-                        height: 40
+                        height: 27
 
                         Label {
                             id: label4
@@ -317,6 +177,7 @@ Item {
                         MyTextField {
                             id: portField
                             width: 100
+                            Layout.preferredHeight: 25
                             placeholderText: qsTr("9000")
                             validator: IntValidator {
                                 bottom: 0
@@ -328,19 +189,20 @@ Item {
                     Flow {
                         id: connectFlow
                         x: 0
-                        y: 81
+                        y: 61
                         width: 200
-                        height: 92
+                        height: 69
+                        spacing: 3
 
                         RowLayout {
                             id: connDisconnRow
                             x: 5
                             width: 200
-                            height: 45
+                            height: 30
 
                             Button {
                                 id: connectButton
-                                width: 90
+                                width: 85
                                 text: qsTr("Connect")
                                 Layout.preferredWidth: 85
                                 Layout.preferredHeight: 30
@@ -359,7 +221,7 @@ Item {
                             id: sendRow
                             x: 5
                             width: 200
-                            height: 45
+                            height: 30
 
                             Button {
                                 id: sendMButton
@@ -397,81 +259,299 @@ Item {
                         font.pixelSize: 12
                     }
                 }
+
+                Page {
+                    id: page
+                    width: 200
+                    height: 200
+                }
+            }
+
+            ToolSeparator {
+                id: secondSeparator
+                x: 0
+                y: 193
+                width: 200
+                height: 5
+                rightPadding: 0
+                leftPadding: 0
+                font.capitalization: Font.MixedCase
+            }
+
+            ToolSeparator {
+                id: fourthSeparator
+                x: 0
+                y: 370
+                width: 200
+                height: 5
+                rightPadding: 0
+                leftPadding: 0
+            }
+
+            Flow {
+                id: carFlow
+                x: 0
+                y: 381
+                width: 200
+                height: 101
+                spacing: 3
+
+                RowLayout {
+                    id: carConnectedRow
+                    width: 200
+                    height: 27
+
+                    Label {
+                        id: label5
+                        text: qsTr("Car connected: ")
+                    }
+
+                    MyStatusIndicator {
+                        id: cStatusIndc
+                        width: 25
+                        height: 25
+                        Layout.preferredHeight: 25
+                        Layout.preferredWidth: 25
+                    }
+                }
+
+                Row {
+                    id: speedRow
+                    width: 200
+                    height: 30
+                    spacing: 61
+
+                    Label {
+                        id: label7
+                        text: qsTr("Speed:")
+                    }
+
+                    ComboBox {
+                        id: speedBox
+                        width: 85
+                        height: 30
+                        model: ["Low", "Mid", "High"]
+                    }
+                }
+
+                RowLayout {
+                    id: startStopRow
+                    width: 200
+                    height: 30
+                    spacing: 5
+
+                    Button {
+                        id: startButton
+                        text: qsTr("Start")
+                        Layout.preferredWidth: 85
+                        Layout.preferredHeight: 30
+                        enabled: false
+                    }
+
+                    Button {
+                        id: stopButton
+                        text: qsTr("Stop")
+                        Layout.preferredWidth: 85
+                        Layout.preferredHeight: 30
+                        enabled: false
+                    }
+                }
+            }
+
+            RowLayout {
+                id: rowLayout4
+                x: 0
+                y: 474
+                width: 200
+                height: 39
+                spacing: 0
+
+                MySwitchDelegate {
+                    id: manualSwitch
+                    height: 35
+                    text: "Manual"
+                    rightPadding: 3
+                    leftPadding: 3
+                    spacing: 6
+                    //enabled: false
+                }
+
+                MySwitchDelegate {
+                    id: simulateSwitch
+                    x: 99
+                    height: 35
+                    text: "Simulate"
+                    rightPadding: 3
+                    leftPadding: 3
+                    spacing: 6
+                    enabled: false
+                }
+            }
+
+            ToolSeparator {
+                id: firstSeparator
+                y: 58
+                width: 200
+                height: 5
+                rightPadding: 0
+                leftPadding: 0
+            }
+
+            StackLayout {
+                id: stackLayout2
+                x: 0
+                y: 199
+                width: 200
+                height: 120
+
+                Page {
+                    id: normalPage
+                    width: 200
+                    height: 120
+                    visible: false
+
+                    Column {
+                        id: column1
+                        width: 200
+                        height: 400
+
+                        Flow {
+                            id: markerFlow
+                            width: 200
+                            height: 52
+
+                            MyRadioDelegate {
+                                id: mouseDelegate
+                                width: 100
+                                height: 25
+                                checked: true
+                                text: qsTr("Mouse")
+                                Layout.preferredHeight: 30
+                                padding: 5
+                            }
+
+                            MyRadioDelegate {
+                                id: handDelegate
+                                width: 100
+                                height: 25
+                                text: qsTr("Hand")
+                                padding: 5
+                                Layout.preferredHeight: 30
+                                enabled: false
+                            }
+
+                            MyRadioDelegate {
+                                id: markerDelegate
+                                width: 100
+                                height: 25
+                                text: qsTr("Marker")
+                                padding: 5
+                                Layout.preferredHeight: 30
+                                font.weight: Font.ExtraLight
+                                spacing: -4
+                            }
+
+                            MyRadioDelegate {
+                                id: deleteDelegate
+                                width: 100
+                                height: 25
+                                text: qsTr("Delete")
+                                padding: 5
+                                Layout.preferredHeight: 30
+                            }
+                        }
+
+                        Flow {
+                            id: saveLoadFlow
+                            width: 200
+                            height: 69
+                            spacing: 3
+
+                            RowLayout {
+                                id: rowLayout1
+                                x: 5
+                                width: 200
+                                height: 30
+
+                                Button {
+                                    id: followButton
+                                    width: 85
+                                    text: qsTr("Find Me")
+                                    Layout.preferredWidth: 85
+                                    Layout.preferredHeight: 30
+                                }
+
+                                Button {
+                                    id: deleteAllButton
+                                    width: 85
+                                    text: qsTr("Delete All")
+                                    Layout.preferredWidth: 85
+                                    Layout.preferredHeight: 30
+                                }
+                            }
+
+                            RowLayout {
+                                id: rowLayout3
+                                x: 5
+                                width: 200
+                                height: 30
+
+                                Button {
+                                    id: quitButton
+                                    width: 60
+                                    text: qsTr("Quit")
+                                    Layout.preferredHeight: 30
+                                    Layout.preferredWidth: 60
+                                    //enabled: false
+                                }
+
+                                Button {
+                                    id: loadButton
+                                    width: 60
+                                    text: qsTr("Load")
+                                    Layout.preferredHeight: 30
+                                    Layout.preferredWidth: 60
+                                    //enabled: false
+                                }
+
+                                Button {
+                                    id: saveButton
+                                    width: 60
+                                    text: qsTr("Save")
+                                    Layout.preferredWidth: 60
+                                    Layout.preferredHeight: 30
+                                    enabled: false
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Page {
+                    id: simulatePage
+                    width: 200
+                    height: 120
+                }
+            }
+
+            ToolSeparator {
+                id: thirdSeparator
+                y: 320
+                width: 200
+                height: 5
+                rightPadding: 0
+                leftPadding: 0
             }
 
             RowLayout {
                 id: rowLayout
                 x: 0
-                y: 551
+                y: 540
                 width: 200
-                height: 39
+                height: 50
 
-                SwitchDelegate {
-                    id: simulateSwitch
-                    width: 140
-                    text: qsTr("Simulate:")
-                    rightPadding: 6
-                    padding: 9
-                    bottomPadding: 6
-                    leftPadding: 6
-                    topPadding: 6
-                    enabled: false
-                }
-            }
-
-            RowLayout {
-                id: rowLayout2
-                x: 0
-                y: 583
-                width: 200
-                height: 36
-
-                SwitchDelegate {
-                    id: manualSwitch
-                    text: qsTr("Manual switch")
-                    rightPadding: 6
-                    bottomPadding: 6
-                    topPadding: 6
-                    leftPadding: 6
-                    font.capitalization: Font.MixedCase
-                    font.weight: Font.Normal
-                    font.letterSpacing: 0
-                    spacing: 8
-                }
-            }
-
-            RowLayout {
-                id: rowLayout3
-                x: 0
-                y: 351
-                width: 200
-                height: 45
-
-                Button {
-                    id: quitButton
-                    width: 60
-                    text: qsTr("Quit")
-                    Layout.preferredHeight: 30
-                    Layout.preferredWidth: 60
-                    //enabled: false
-                }
-
-                Button {
-                    id: loadButton
-                    width: 60
-                    text: qsTr("Load")
-                    Layout.preferredHeight: 30
-                    Layout.preferredWidth: 60
-                    //enabled: false
-                }
-
-                Button {
-                    id: saveButton
-                    width: 60
-                    text: qsTr("Save")
-                    Layout.preferredWidth: 60
-                    Layout.preferredHeight: 30
-                    //enabled: false
+                MyRadioDelegate {
+                    id: myRadioDelegate
                 }
             }
         }
