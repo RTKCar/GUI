@@ -1,6 +1,9 @@
 # GUI
 Graphical User Interface for creating maps and controlling the remote car
 
+![Alt text](https://github.com/RTKCar/GUI/blob/master/resources/track.png)
+
+
 ## Getting started
 Currently you need to pull this code and deploy it from Qt Creator, hopefully there will be a dmg/AppImage in the future for easier deployment.
 
