@@ -10,14 +10,14 @@
         <file>qml/menus/TestMenuForm.ui.qml</file>
         <file>qml/map/Polyline.qml</file>
         <file>qml/map/PolylineItem.qml</file>
-        <file>qml/menus/MyStatusIndicator.qml</file>
         <file>qml/menus/QuitingPopup.qml</file>
-        <file>qml/menus/MyTextField.qml</file>
         <file>qml/map/Car.qml</file>
         <file>qml/menus/MyFileDialog.qml</file>
         <file>qml/menus/MyKeyboard.qml</file>
-        <file>qml/menus/MySwitchDelegate.qml</file>
-        <file>qml/menus/MySlider.qml</file>
-        <file>qml/menus/MyRadioDelegate.qml</file>
+        <file>qml/menus/controls/MyRadioDelegate.qml</file>
+        <file>qml/menus/controls/MySlider.qml</file>
+        <file>qml/menus/controls/MyStatusIndicator.qml</file>
+        <file>qml/menus/controls/MySwitchDelegate.qml</file>
+        <file>qml/menus/controls/MyTextField.qml</file>
     </qresource>
 </RCC>

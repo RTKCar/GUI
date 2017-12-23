@@ -7,6 +7,7 @@ import QtQuick.Window 2.0
 import QtQuick.Layouts 1.3
 import QtQuick.Extras 1.4
 import QtLocation 5.9
+import "controls"
 
 Item {
     id: menu1
@@ -229,7 +230,6 @@ Item {
                                 Layout.preferredWidth: 85
                                 Layout.preferredHeight: 30
                                 enabled: false
-                                //Material.foreground: Material.Pink
                             }
 
                             Button {
@@ -331,6 +331,7 @@ Item {
                         width: 85
                         height: 30
                         model: ["Low", "Mid", "High"]
+                        enabled: false
                     }
                 }
 
@@ -373,7 +374,7 @@ Item {
                     rightPadding: 3
                     leftPadding: 3
                     spacing: 6
-                    //enabled: false
+                    enabled: false
                 }
 
                 MySwitchDelegate {
@@ -541,18 +542,6 @@ Item {
                 height: 5
                 rightPadding: 0
                 leftPadding: 0
-            }
-
-            RowLayout {
-                id: rowLayout
-                x: 0
-                y: 540
-                width: 200
-                height: 50
-
-                MyRadioDelegate {
-                    id: myRadioDelegate
-                }
             }
         }
     }

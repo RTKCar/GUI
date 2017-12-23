@@ -32,4 +32,5 @@ HEADERS += \
     Sources/mytcpsocket.h
 
 DISTFILES += \
-    README.md
+    README.md \
+    resources/track.png
