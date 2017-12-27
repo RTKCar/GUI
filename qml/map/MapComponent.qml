@@ -1,5 +1,4 @@
 import QtQuick 2.7
-//import QtQuick 2.5
 import QtQuick.Controls 1.4
 import QtLocation 5.9
 import QtPositioning 5.5
@@ -536,13 +535,6 @@ Map {
                 mapOverlay.addMarker()
             }
         }
-
-        /*onPositionChanged: {
-            if (mouse.button == Qt.LeftButton) {
-                parentMap.lastX = mouse.x
-                parentMap.lastY = mouse.y
-            }
-        }*/
 
         onDoubleClicked: {
             var mouseGeoPos = parentMap.toCoordinate(Qt.point(mouse.x, mouse.y));

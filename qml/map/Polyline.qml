@@ -11,7 +11,7 @@ MapPolyline {
     property int secondMarker
 
     line.color: "Black"
-    line.width: 5
+    line.width: 3
     opacity: 0.5
     smooth: true
 

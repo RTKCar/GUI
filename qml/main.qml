@@ -7,6 +7,7 @@ import QtQuick.Layouts 1.3
 import "map"
 import "menus"
 import myPackage 1.0
+import QtQuick.Controls 1.4
 import QtQuick.Controls 2.1
 import QtQuick.Dialogs 1.1
 
@@ -25,6 +26,15 @@ ApplicationWindow {
     property bool baseFixed: false
     property bool first: true
 
+    //menuBar: MyMenuBar {}
+
+    footer: MyStatusBar {
+        id: statusBar
+    }
+
+
+
+    //Frame {
     RowLayout{
         id: rowL
         visible: true
@@ -39,7 +49,7 @@ ApplicationWindow {
             Layout.minimumWidth: 400
             Layout.preferredWidth: appWindow.width - TestMenu.width
 
-              myTcpSocket: mytcpSocket
+            myTcpSocket: mytcpSocket
 
             onApprovedTrackChanged: {
                 //Update statusIndicator of state
@@ -58,6 +68,24 @@ ApplicationWindow {
                 if(!event.isAutoRepeat && testTools.manualSwitch.checked){
                 myKeyboard.checkKey(event.key, 0)
                 }
+            }
+            MouseArea {
+                id: mouseArea
+                anchors.fill: parent
+                focus: true
+                hoverEnabled: true
+
+                onPositionChanged: {
+                    var mouseGeoPos = mapview.mapMap.toCoordinate(Qt.point(mouse.x, mouse.y));
+                    statusBar.lati = mouseGeoPos.latitude
+                    statusBar.longi = mouseGeoPos.longitude
+                }
+
+                onExited: {
+                    statusBar.lati = ""
+                    statusBar.longi = ""
+                }
+
             }
         }
 
@@ -273,11 +301,6 @@ ApplicationWindow {
             }
         }
     }
-    onClosing: {
-        //Make sure messageDialog is shown before closing
-        close.accepted = false
-        messageDialog.open()
-    }
 
     MyFileDialog{
         id: fileDialog
@@ -285,5 +308,13 @@ ApplicationWindow {
         onTextReceived: {
             console.log("text Received ", textR)
         }
+    }
+
+    //}
+
+    onClosing: {
+        //Make sure messageDialog is shown before closing
+        close.accepted = false
+        messageDialog.open()
     }
 }

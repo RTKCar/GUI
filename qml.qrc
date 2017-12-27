@@ -19,5 +19,7 @@
         <file>qml/menus/controls/MyStatusIndicator.qml</file>
         <file>qml/menus/controls/MySwitchDelegate.qml</file>
         <file>qml/menus/controls/MyTextField.qml</file>
+        <file>qml/menus/MyMenuBar.qml</file>
+        <file>qml/menus/MyStatusBar.qml</file>
     </qresource>
 </RCC>
