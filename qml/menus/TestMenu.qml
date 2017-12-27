@@ -79,6 +79,7 @@ TestMenuForm {
             stackLayout2.currentIndex = 1
             speedBox.enabled = false
             startButton.enabled = false
+            mouseDelegate.checked = true
         } else {
             stackLayout1.currentIndex = 0
             stackLayout2.currentIndex = 0

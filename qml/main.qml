@@ -50,6 +50,7 @@ ApplicationWindow {
             Layout.preferredWidth: appWindow.width - TestMenu.width
 
             myTcpSocket: mytcpSocket
+            statsBar: statusBar
 
             onApprovedTrackChanged: {
                 //Update statusIndicator of state
@@ -69,10 +70,10 @@ ApplicationWindow {
                 myKeyboard.checkKey(event.key, 0)
                 }
             }
-            MouseArea {
+            /*MouseArea {
                 id: mouseArea
                 anchors.fill: parent
-                focus: true
+                //focus: true
                 hoverEnabled: true
 
                 onPositionChanged: {
@@ -85,8 +86,7 @@ ApplicationWindow {
                     statusBar.lati = ""
                     statusBar.longi = ""
                 }
-
-            }
+            }*/
         }
 
         TestMenu{

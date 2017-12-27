@@ -11,6 +11,7 @@ Map {
 
     property Map parentMap: null
     property MyTcpSocket tcpSocket: null
+    property MyStatusBar statusBar
     property variant markers
     property variant mapItems
     property int markerCounter: 0 // counter for total amount of markers. Resets to 0 when number of markers = 0
@@ -524,6 +525,7 @@ Map {
         property variant lastCoordinate
         anchors.fill: parent
         acceptedButtons: Qt.LeftButton | Qt.RightButton
+        hoverEnabled: true
 
         onClicked : {
             mapOverlay.lastX = mouse.x
@@ -553,6 +555,17 @@ Map {
 
             mapOverlay.lastX = -1;
             mapOverlay.lastY = -1;
+        }
+
+        onPositionChanged: {
+            var mouseGeoPos = mapOverlay.toCoordinate(Qt.point(mouse.x, mouse.y));
+            statusBar.lati = mouseGeoPos.latitude
+            statusBar.longi = mouseGeoPos.longitude
+        }
+
+        onExited: {
+            statusBar.lati = ""
+            statusBar.longi = ""
         }
     }
 }

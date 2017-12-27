@@ -6,6 +6,7 @@ import QtLocation 5.9
 import QtPositioning 5.5
 import QtQuick.Layouts 1.3
 import "./map"
+import "./menus"
 import myPackage 1.0
 
 Item {
@@ -16,6 +17,7 @@ Item {
     property alias delegateIndex: overlay.delegateIndex
     property alias mapComponent: overlay
     property MyTcpSocket myTcpSocket: null
+    property MyStatusBar statsBar: null
     signal mapDone()
 
     Plugin {
@@ -47,6 +49,7 @@ Item {
             id:overlay
             parentMap: map
             tcpSocket: myTcpSocket
+            statusBar: statsBar
 
             onApprovedChanged: {
                 if(approved) {
