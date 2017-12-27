@@ -567,5 +567,9 @@ Map {
             statusBar.lati = ""
             statusBar.longi = ""
         }
+
+        onScaleChanged: {
+            console.log("scale changed")
+        }
     }
 }

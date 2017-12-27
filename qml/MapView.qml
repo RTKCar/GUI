@@ -1,5 +1,4 @@
 import QtQuick 2.7
-//import QtQuick 2.5
 import QtQuick 2.0
 import QtQuick.Controls 1.4
 import QtLocation 5.9
@@ -61,35 +60,14 @@ Item {
             onMapCompleted: mapDone()
         }
 
-
-        /*function calculateScale()
-        {
-            var coord1, coord2, dist, text, f
-            f = 0
-            coord1 = map.toCoordinate(Qt.point(0,scale.y))
-            coord2 = map.toCoordinate(Qt.point(0+scaleImage.sourceSize.width,scale.y))
-            dist = Math.round(coord1.distanceTo(coord2))
-
-            if (dist === 0) {
-                // not visible
-            } else {
-                for (var i = 0; i < scaleLengths.length-1; i++) {
-                    if (dist < (scaleLengths[i] + scaleLengths[i+1]) / 2 ) {
-                        f = scaleLengths[i] / dist
-                        dist = scaleLengths[i]
-                        break;
-                    }
-                }
-                if (f === 0) {
-                    f = dist / scaleLengths[i]
-                    dist = scaleLengths[i]
-                }
+        function calculateScale() {
+            if(zoomLevel%1 > 0.5) {
+                zoomLevel = zoomLevel - (zoomLevel%1) + 1
             }
-
-            text = Helper.formatDistance(dist)
-            //scaleImage.width = (scaleImage.sourceSize.width * f) - 2 * scaleImageLeft.sourceSize.width
-            //scaleText.text = text
-        }*/
+            else {
+                zoomLevel = zoomLevel - (zoomLevel%1)
+            }
+        }
 
         //! [mapnavigation]
         // Enable pan, flick, and pinch gestures to zoom in and out
@@ -98,19 +76,7 @@ Item {
         gesture.enabled: true
         focus: true
 
-        onCenterChanged:{
-            scaleTimer.restart()
-        }
-
         onZoomLevelChanged:{
-            scaleTimer.restart()
-        }
-
-        onWidthChanged:{
-            scaleTimer.restart()
-        }
-
-        onHeightChanged:{
             scaleTimer.restart()
         }
 
@@ -130,7 +96,7 @@ Item {
             running: false
             repeat: false
             onTriggered: {
-                //map.calculateScale()
+                map.calculateScale()
             }
         }
     }
