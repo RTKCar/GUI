@@ -30,7 +30,6 @@ MapPolyline {
         onClicked: {
             if(overlay != null && overlay.delegateIndex == 3) {
                 //disconnect Markers connected and delete Polyline
-                console.log("delete poly")
                 if(overlay != null) {
                     overlay.deletePolyline(firstMarker, secondMarker, polylineID)
                 }
@@ -45,9 +44,6 @@ MapPolyline {
         secondMarker = Marker2.markerID
         Marker1.connectPolyline(polylineID)
         Marker2.connectPolyline(polylineID)
-        //markersConnected.push(Marker1.markerID)
-        //markersConnected.push(Marker2.markerID)
-        //console.log("polyline nr ", polylineID, " drawn")
     }
 
     function setID(number) {

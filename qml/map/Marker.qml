@@ -32,15 +32,15 @@ MapQuickItem {
 
         MouseArea  {
             id: markerMouseArea
-            property int lastX: -1
-            property int lastY: -1
+            //property int lastX: -1
+            //property int lastY: -1
             anchors.fill: parent
             hoverEnabled : false
             preventStealing: true
 
             onClicked : {
-                overlay.pressX = mouse.x
-                overlay.pressY = mouse.y
+                //overlay.pressX = mouse.x
+                //overlay.pressY = mouse.y
                 if(overlay.delegateIndex == 3) {
                     //Disconnect Marker, then delete it
                     overlay.deleteMarker(markersConnected, polylinesConnected, markerID)
@@ -113,6 +113,10 @@ MapQuickItem {
         return markersConnected
     }
 
+    function getPolylines() {
+        return polylinesConnected
+    }
+
     function getCoordinates() {
         return coordinate
     }
@@ -151,7 +155,21 @@ MapQuickItem {
 
     function disconnectPolyline(polylineID) {
         //Disconnects the Polyline with specified polylineID from this Marker
-        polylinesConnected.pop(polylineID)
+        var myArray = new Array()
+        for (var i = 0; i<polylinesConnected.length; i++){
+            if(polylinesConnected[i] !== polylineID)
+                myArray.push(polylinesConnected[i])
+        }
+        polylinesConnected = myArray
+    }
+
+    function polyLineIndex(polyID) {
+        var count = polylinesConnected.length
+        for (var i = 0; i<count; i++){
+            if(polylinesConnected[i] === polyID)
+                return i
+        }
+        return -1
     }
 
     function connectionColor() {

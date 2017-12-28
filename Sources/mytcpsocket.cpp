@@ -1,3 +1,5 @@
+//Modified from BogoToBogo QTcpSocket Example: http://www.bogotobogo.com/Qt/Qt5_QTcpSocket.php
+
 #include "mytcpsocket.h"
 
 MyTcpSocket::MyTcpSocket(QObject *parent) :

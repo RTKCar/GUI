@@ -1,3 +1,54 @@
+/****************************************************************************
+**
+** Copyright (C) 2017 The Qt Company Ltd.
+** Contact: https://www.qt.io/licensing/
+**
+** This file is part of the examples of the Qt Toolkit.
+**
+** $QT_BEGIN_LICENSE:BSD$
+** Commercial License Usage
+** Licensees holding valid commercial Qt licenses may use this file in
+** accordance with the commercial license agreement provided with the
+** Software or, alternatively, in accordance with the terms contained in
+** a written agreement between you and The Qt Company. For licensing terms
+** and conditions see https://www.qt.io/terms-conditions. For further
+** information use the contact form at https://www.qt.io/contact-us.
+**
+** BSD License Usage
+** Alternatively, you may use this file under the terms of the BSD license
+** as follows:
+**
+** "Redistribution and use in source and binary forms, with or without
+** modification, are permitted provided that the following conditions are
+** met:
+**   * Redistributions of source code must retain the above copyright
+**     notice, this list of conditions and the following disclaimer.
+**   * Redistributions in binary form must reproduce the above copyright
+**     notice, this list of conditions and the following disclaimer in
+**     the documentation and/or other materials provided with the
+**     distribution.
+**   * Neither the name of The Qt Company Ltd nor the names of its
+**     contributors may be used to endorse or promote products derived
+**     from this software without specific prior written permission.
+**
+**
+** THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+** "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+** LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+** A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+** OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+** SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+** LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+** DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+** THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+** (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+** OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE."
+**
+** $QT_END_LICENSE$
+**
+****************************************************************************/
+
+//Modified from Qt Map Viewer (QML) Example: https://doc-snapshots.qt.io/qt5-5.9/qtlocation-mapviewer-example.html
 import QtQuick 2.7
 import QtQuick.Controls 1.4
 import QtLocation 5.9
@@ -18,10 +69,10 @@ Map {
     property int polylineCounter: 0
     property int currentMarker: -1
     property int previousMarker: -1
-    property int lastX : -1
-    property int lastY : -1
-    property int pressX : -1
-    property int pressY : -1
+    //property int lastX : -1
+    //property int lastY : -1
+    //property int pressX : -1
+    //property int pressY : -1
     property int delegateIndex : 0
     property bool connection: false
     property bool approved: false
@@ -55,104 +106,48 @@ Map {
     function addMarker()
     {
         var marker = createMarker(mouseArea.lastCoordinate, 1)
-        /*var count = mapOverlay.markers.length
-        markerCounter++
-        var marker = Qt.createQmlObject ('Marker {overlay: mapOverlay}', this)
-        mapOverlay.addMapItem(marker)
-        marker.z = mapOverlay.z+1
-        marker.coordinate = mouseArea.lastCoordinate
-
-        //update list of markers
-        var myArray = new Array()
-        for (var i = 0; i<count; i++){
-            myArray.push(markers[i])
-        }
-        myArray.push(marker)
-        markers = myArray*/
 
         if(mapOverlay.markers.length > 1) {
-            //console.log("count > <", mapOverlay.markers.length)
-        //if(markerCounter > 1) {
-            /*console.log(markers[markerCounter -2].returnID(), " has ",
-                        markers[markerCounter -2].connectedMarkers(), " connections")
-            console.log(markers[markerCounter -2].returnID(), " has ",
-                        markers[markerCounter -2].connectedMarks(), " connections")*/
             //if new Marker was added
             if(currentMarker > 0) {
                 //extending from a pressed marker
-                //console.log("extending?")
                 if(!markers[currentMarker].isConnectedTo(marker)){
                     markers[currentMarker].connectMarker(marker)
                     addPolyline(markers[currentMarker], marker)
                 }
                 currentMarker = -1
             } else if(markers[markers.length -2].connectedMarkers() > 1) {
-                //} else if(markers[markerCounter -2].connectedMarkers() > 1) {
                 //add new marker without Polyline
                 aprovedTrack();
-                //console.log(markers[markerCounter -2].connectedMarkers())
-                //console.log("new mark")
             } else {
                 //extending from previous placed marker
                 if(!markers[markers.length -2].isConnectedTo(marker)){
                     markers[markers.length -2].connectMarker(marker)
                     addPolyline(markers[markers.length -2], marker)
                 }
-                /*if(!markers[markerCounter -2].isConnectedTo(marker)){
-                    markers[markerCounter -2].connectMarker(marker)
-                    addPolyline(markers[markerCounter -2], marker)
-                }*/
-                //console.log("extending connect")
             }
         }
         connection = false
-        //printApproved()
     }
 
     function createMarker(coord, layer) {
         if(markers !== null) {
             var count = markers.length
             markerCounter++
-            //console.log(markerCounter)
         }
         var marker = Qt.createQmlObject ('Marker {overlay: mapOverlay}', mapOverlay)
         mapOverlay.addMapItem(marker)
         marker.z = mapOverlay.z+layer
-        //marker.z = mapOverlay.z+1
         marker.coordinate = coord
 
         //update list of markers
         var myArray = new Array()
         for (var i = 0; i<count; i++){
             myArray.push(markers[i])
-            //console.log("list updated")
         }
         myArray.push(marker)
         markers = myArray
         return marker
-    }
-
-    function addGeoItem(item, cordi1, cordi2)
-    {
-        var count = mapOverlay.mapItems.length
-        var co = Qt.createComponent(item+'.qml')
-        if (co.status == Component.Ready) {
-            var o = co.createObject(mapOverlay)
-            o.setGeometry(cordi1, cordi2)
-            mapOverlay.addMapItem(o)
-            //update list of items
-            var myArray = new Array()
-            for (var i = 0; i<count; i++){
-                myArray.push(mapItems[i])
-            }
-            myArray.push(o)
-            mapItems = myArray
-
-            //console.log(item, "connected between ", cordi1, " and ", cordi2)
-
-        } else {
-            console.log(item + " is not supported right now, please call us later.")
-        }
     }
 
     function addPolyline(marker1, marker2)
@@ -160,7 +155,7 @@ Map {
 
         var count = mapOverlay.mapItems.length
         var co = Qt.createComponent('Polyline.qml')
-        if (co.status == Component.Ready) {
+        if (co.status === Component.Ready) {
             polylineCounter++
             var o = co.createObject(mapOverlay)
             o.setID(polylineCounter)
@@ -175,27 +170,15 @@ Map {
             myArray.push(o)
             mapItems = myArray
             aprovedTrack();
-
-            //console.log("connected between ", coordinate1, " and ", coordinate2)
-
         } else {
             console.log(" is not supported right now, please call us later.")
         }
     }
 
     function deleteMarker(markerArray, polylineArray, markID) {
-        //var mark = markerIndex(markID)
-        //console.log("marker ID ", markID)
-        //console.log("arrayLength ", markerArray.length)
         var count = markerArray.length
         for (var i = count -1; i> -1; i--){
-            //console.log("round ", i)
-            //var tempMark = markerIndex(markerArray[i])
-            //console.log("tempMarkIndex ", tempMark)
             deletePolyline(markID, markerArray[i], polylineArray[i])
-            /*if(mark > -1 && tempMark > -1) {
-                deletePolyline(mark, tempMark, polylineArray[i])
-            }*/
         }
         var mark = markerIndex(markID)
         if(mark > -1){
@@ -203,7 +186,7 @@ Map {
             mapOverlay.markers[mark].destroy()
             var myArray = new Array()
             for (var i = 0; i<markers.length; i++){
-                if(i != mark)
+                if(i !== mark)
                     myArray.push(markers[i])
             }
             markers = myArray
@@ -237,7 +220,7 @@ Map {
             mapOverlay.mapItems[polyIndex].destroy()
             var myArray = new Array()
             for (var i = 0; i<mapItems.length; i++){
-                if(i != polyIndex)
+                if(i !== polyIndex)
                     myArray.push(mapItems[i])
             }
             mapItems = myArray
@@ -267,19 +250,12 @@ Map {
                 addPolyline(markers[previousMarker], markers[currentMarker])
                 previousMarker = -1
                 currentMarker = -1
-                //console.log("connection between existing")
                 connection = true
             } else if(!connection && !markers[markers.length -1].isConnectedTo(markers[currentMarker])){
-                //} else if(!connection && !markers[markerCounter -1].isConnectedTo(markers[currentMarker])){
-                //} else if(!markers[markerCounter -1].isConnectedTo(markers[currentMarker])){
-                //} else if((markerCounter -1) != currentMarker){
                 // connection from previously placed node to existing
                 markers[markers.length -1].connectMarker(markers[currentMarker])
                 addPolyline(markers[markers.length -1], markers[currentMarker])
-                /*markers[markerCounter -1].connectMarker(markers[currentMarker])
-                addPolyline(markers[markerCounter -1], markers[currentMarker])*/
                 currentMarker = -1
-                //console.log("connect to existing")
                 connection = true
             } else {
                 console.log("node choosed for next round")
@@ -346,20 +322,16 @@ Map {
     }
 
     function printMap(){
-        if(approved){
-            makeJSONs()
-            var jarr = JSON.parse(jsonMap)
-            for (var i = 0; i< jarr.length; i++){
-                console.log(jarr[i].id, " is connected to ", jarr[i].conns)
-                console.log(" and has coordinates: lat: " + jarr[i].coord.lat + " long: " + jarr[i].coord.long)
-            }
+        for (var i = 0; i< markers.length; i++){
+            console.log("marker ", markers[i].getID(), " is connected to ", markers[i].getConnections(),
+                        " with lines ", markers[i].getPolylines())
         }
     }
 
     function createCar(coord) {
         if(approved) {
             var co = Qt.createComponent('Car.qml')
-            if (co.status == Component.Ready) {
+            if (co.status === Component.Ready) {
                 var o = co.createObject(mapOverlay)
                 o.coordinate = coord
                 mapOverlay.addMapItem(o)
@@ -454,7 +426,6 @@ Map {
     }
 
     function loadJsonMarkers(jsonString) {
-        //console.log("loading json")
         var jsonObjects = JSON.parse(jsonString)
         var list = new Array();
         for (var i = 0; i<jsonObjects.length; i++){
@@ -473,7 +444,6 @@ Map {
                 }
             }
         }
-        //console.log("list")
         for (var i = 0; i<list.length; i++){
             var mark1 = markers[markerIndex(list[i]["conns"][0])]
             var mark2 = markers[markerIndex(list[i]["conns"][1])]
@@ -528,10 +498,10 @@ Map {
         hoverEnabled: true
 
         onClicked : {
-            mapOverlay.lastX = mouse.x
-            mapOverlay.lastY = mouse.y
-            mapOverlay.pressX = mouse.x
-            mapOverlay.pressY = mouse.y
+            //mapOverlay.lastX = mouse.x
+            //mapOverlay.lastY = mouse.y
+            //mapOverlay.pressX = mouse.x
+            //mapOverlay.pressY = mouse.y
             lastCoordinate = parentMap.toCoordinate(Qt.point(mouse.x, mouse.y))
             if(delegateIndex == 1) {
                 mapOverlay.addMarker()
@@ -553,23 +523,21 @@ Map {
             var mapCenterPoint = Qt.point(parentMap.width / 2.0 + dx, parentMap.height / 2.0 + dy);
             parentMap.center = parentMap.toCoordinate(mapCenterPoint);
 
-            mapOverlay.lastX = -1;
-            mapOverlay.lastY = -1;
+            //mapOverlay.lastX = -1;
+            //mapOverlay.lastY = -1;
         }
 
         onPositionChanged: {
+            // Show current Latitude and Longitude on statusBar
             var mouseGeoPos = mapOverlay.toCoordinate(Qt.point(mouse.x, mouse.y));
             statusBar.lati = mouseGeoPos.latitude
             statusBar.longi = mouseGeoPos.longitude
         }
 
         onExited: {
+            // Clear Latitude and Longitude from statusBar
             statusBar.lati = ""
             statusBar.longi = ""
-        }
-
-        onScaleChanged: {
-            console.log("scale changed")
         }
     }
 }
