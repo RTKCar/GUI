@@ -69,10 +69,6 @@ Map {
     property int polylineCounter: 0
     property int currentMarker: -1
     property int previousMarker: -1
-    //property int lastX : -1
-    //property int lastY : -1
-    //property int pressX : -1
-    //property int pressY : -1
     property int delegateIndex : 0
     property bool connection: false
     property bool approved: false
@@ -87,7 +83,6 @@ Map {
 
     anchors.fill: parent
     plugin: Plugin { name: "itemsoverlay" }
-    //gesture.enabled: true
     gesture.enabled: false
     center: parentMap.center
     color: 'transparent' // Necessary to make this map transparent
@@ -104,6 +99,7 @@ Map {
     z: parentMap.z + 1
 
     function addMarker()
+    // Adds a new Marker to the Map
     {
         var marker = createMarker(mouseArea.lastCoordinate, 1)
 
@@ -131,6 +127,7 @@ Map {
     }
 
     function createMarker(coord, layer) {
+        //Creates a new Marker for adding at the specified coordinate and layer
         if(markers !== null) {
             var count = markers.length
             markerCounter++
@@ -151,8 +148,8 @@ Map {
     }
 
     function addPolyline(marker1, marker2)
+    //Adds a Polyline betseen marker1 and marker2 then connects them accordingly
     {
-
         var count = mapOverlay.mapItems.length
         var co = Qt.createComponent('Polyline.qml')
         if (co.status === Component.Ready) {
@@ -176,6 +173,8 @@ Map {
     }
 
     function deleteMarker(markerArray, polylineArray, markID) {
+        //Disconnects Marker with the markID from other Markers in its markerArray
+        //and Polylines in its polylineArray before deleting it from the Map
         var count = markerArray.length
         for (var i = count -1; i> -1; i--){
             deletePolyline(markID, markerArray[i], polylineArray[i])
@@ -195,6 +194,7 @@ Map {
     }
 
     function deleteMarkers()
+    //Deletes all Markers avaliable on the Map
     {
         var count = mapOverlay.markers.length
         for (var i = 0; i<count; i++){
@@ -206,6 +206,8 @@ Map {
     }
 
     function deletePolyline(marker1, marker2, polylineNr) {
+        //Disconnects a Polyline with given id as polylineNr
+        // from its connected Markers, marker1 and marker2 then deletes it
         var mark1 = markerIndex(marker1)
         var mark2 = markerIndex(marker2)
         if(mark1 > -1 && mark2 > -1){
@@ -231,6 +233,7 @@ Map {
     }
 
     function deleteAllPolylines()
+    // Deletes all Polylines avaliable on the Map
     {
         var count = mapOverlay.mapItems.length
         for (var i = 0; i<count; i++){
@@ -264,6 +267,7 @@ Map {
     }
 
     function polyLineIndex(polyID) {
+        // Returns the provided Polylines index in the mapItems List
         var count = mapOverlay.mapItems.length
         for (var i = 0; i<count; i++){
             if(mapOverlay.mapItems[i].polylineID === polyID)
@@ -273,6 +277,7 @@ Map {
     }
 
     function markerIndex(markID) {
+        // Returns the provided Markers index in the markers List
         var count = mapOverlay.markers.length
         for (var i = 0; i<count; i++){
             if(mapOverlay.markers[i].markerID === markID)
@@ -281,13 +286,15 @@ Map {
         return -1
     }
 
-    function connectMarkerToExisting() {
+    /*function connectMarkerToExisting() {
+      No longeer used ?!?!
         if(markerCounter > 1 && markerCounter != currentMarker) {
             markers[markerCounter].connectMarker(markers[currentMarker])
         }
-    }
+    }*/
 
     function aprovedTrack() {
+        //Checks whether there are at least 4 Markers and each one of them has at least 2 connections
         if(markers.length < 4) {
             approved = false
             return false
@@ -303,6 +310,7 @@ Map {
     }
 
     function makeJSONs() {
+        //Creates a JSON out of each Marker and saves it to jsonMap
         if(markers.length > 0){
             var jarr = new Array()
             for (var i = 0; i< markers.length; i++){
@@ -314,6 +322,7 @@ Map {
     }
 
     function sendMap() {
+        //Sends a String containing the jsonMap to the connected TcpSocket
         makeJSONs()
         if(jsonMap !== null && jsonMap.length > 0 && tcpSocket.isConnected)
         {
@@ -322,6 +331,7 @@ Map {
     }
 
     function printMap(){
+        //Prints the current Track and its connections for debbuging purpose
         for (var i = 0; i< markers.length; i++){
             console.log("marker ", markers[i].getID(), " is connected to ", markers[i].getConnections(),
                         " with lines ", markers[i].getPolylines())
@@ -329,6 +339,7 @@ Map {
     }
 
     function createCar(coord) {
+        //Creates a Car at the specified coordinates
         if(approved) {
             var co = Qt.createComponent('Car.qml')
             if (co.status === Component.Ready) {
@@ -343,6 +354,7 @@ Map {
         }
     }
 
+    //Sets the cars new bearing
     function setCarBearing(coord) {
         if(firstCar == null) {
             createCar(coord)
@@ -352,6 +364,7 @@ Map {
     }
 
     function removeCar() {
+        // Deletes the car
         if(firstCar != null) {
             mapOverlay.removeMapItem(firstCar)
             firstCar = null
@@ -359,6 +372,7 @@ Map {
     }
 
     function simulate() {
+        //Simulates an non existing car on the approved track
         if(approved) {
             if(carPosition == null) {
                 carPosition = markers[0]
@@ -371,6 +385,8 @@ Map {
     }
 
     function nextMarker() {
+        //Returns the next random marker not being the previousMarker connected to the carPosition
+        // Used for simulation
         var random = -1
         var markerID = -1
         while(true) {
@@ -385,6 +401,7 @@ Map {
     }
 
     Timer {
+        //Times used for updating the cars Position when simulating
         id:simulationTimer
         interval: 1000; running: false; repeat: true
         onTriggered: {
@@ -393,6 +410,7 @@ Map {
     }
 
     onSimulateCarChanged: {
+        //Starts or stops a new simulation of the car
         if(simulateCar) {
             simulationTimer.start()
         } else {
@@ -404,12 +422,14 @@ Map {
     }
 
     function getRandomIntInclusive(min, max) {
+      //Return a random integer from min to max
       min = Math.ceil(min);
       max = Math.floor(max);
       return Math.floor(Math.random() * (max - min + 1)) + min; //The maximum is inclusive and the minimum is inclusive
     }
 
     function saveMap() {
+        //Creates a jsonMap and saves it to the computer
         if(approved) {
             makeJSONs()
             var map = "Zoom:" + mapOverlay.zoomLevel + ";" + "Center:" + mapOverlay.center.latitude + "," +
@@ -419,6 +439,7 @@ Map {
     }
 
     function loadMap() {
+        //Loads a previously saved Track to the Mao
         if(markers.length > 0)
             messageDialog.open()
         else
@@ -426,6 +447,7 @@ Map {
     }
 
     function loadJsonMarkers(jsonString) {
+        //Loads each Marker in the provided jsonString to the Map
         var jsonObjects = JSON.parse(jsonString)
         var list = new Array();
         for (var i = 0; i<jsonObjects.length; i++){
@@ -474,6 +496,7 @@ Map {
     }
 
     MyFileDialog{
+        //Loads the choosen Track to the Map
         id: fileDialog
         onTextReceived: {
             // try catch ?
@@ -498,17 +521,15 @@ Map {
         hoverEnabled: true
 
         onClicked : {
-            //mapOverlay.lastX = mouse.x
-            //mapOverlay.lastY = mouse.y
-            //mapOverlay.pressX = mouse.x
-            //mapOverlay.pressY = mouse.y
-            lastCoordinate = parentMap.toCoordinate(Qt.point(mouse.x, mouse.y))
             if(delegateIndex == 1) {
+                //Adds a new Marker to the Map
+                lastCoordinate = parentMap.toCoordinate(Qt.point(mouse.x, mouse.y))
                 mapOverlay.addMarker()
             }
         }
 
         onDoubleClicked: {
+            //Zooms in or out
             var mouseGeoPos = parentMap.toCoordinate(Qt.point(mouse.x, mouse.y));
             var preZoomPoint = parentMap.fromCoordinate(mouseGeoPos, false);
             if (delegateIndex == 0 && mouse.button === Qt.LeftButton) {
@@ -522,9 +543,6 @@ Map {
 
             var mapCenterPoint = Qt.point(parentMap.width / 2.0 + dx, parentMap.height / 2.0 + dy);
             parentMap.center = parentMap.toCoordinate(mapCenterPoint);
-
-            //mapOverlay.lastX = -1;
-            //mapOverlay.lastY = -1;
         }
 
         onPositionChanged: {

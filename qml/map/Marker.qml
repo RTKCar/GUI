@@ -32,15 +32,11 @@ MapQuickItem {
 
         MouseArea  {
             id: markerMouseArea
-            //property int lastX: -1
-            //property int lastY: -1
             anchors.fill: parent
             hoverEnabled : false
             preventStealing: true
 
             onClicked : {
-                //overlay.pressX = mouse.x
-                //overlay.pressY = mouse.y
                 if(overlay.delegateIndex == 3) {
                     //Disconnect Marker, then delete it
                     overlay.deleteMarker(markersConnected, polylinesConnected, markerID)

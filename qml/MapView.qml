@@ -69,7 +69,6 @@ Item {
             }
         }
 
-        //! [mapnavigation]
         // Enable pan, flick, and pinch gestures to zoom in and out
         gesture.acceptedGestures: MapGestureArea.PanGesture | MapGestureArea.FlickGesture | MapGestureArea.PinchGesture | MapGestureArea.RotationGesture | MapGestureArea.TiltGesture
         gesture.flickDeceleration: 3000
