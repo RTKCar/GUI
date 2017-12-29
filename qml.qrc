@@ -4,7 +4,6 @@
         <file>qml/map/MapComponent.qml</file>
         <file>qml/map/Marker.qml</file>
         <file>qml/MapView.qml</file>
-        <file>qml/SideTools.qml</file>
         <file>qml/main.qml</file>
         <file>qml/menus/TestMenu.qml</file>
         <file>qml/menus/TestMenuForm.ui.qml</file>

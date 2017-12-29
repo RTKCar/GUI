@@ -46,7 +46,7 @@ void MyTcpSocket::disconnect()
 // called when the socket is disconnected from the host
 {
     qDebug() << "disconnecting...";
-    socket->write("EXIT;");
+    //socket->write("EXIT;");
     socket->disconnectFromHost();
 }
 

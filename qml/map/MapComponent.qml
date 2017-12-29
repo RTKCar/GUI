@@ -79,7 +79,6 @@ Map {
     property int previousCarPosition: -1
 
     signal trackApproved()
-    signal mapCompleted()
 
     anchors.fill: parent
     plugin: Plugin { name: "itemsoverlay" }
@@ -479,11 +478,10 @@ Map {
         mapItems = new Array();
         console.log("maxZoom", overlay.maximumZoomLevel)
         console.log("minZoom", overlay.minimumZoomLevel)
-        mapCompleted()
     }
 
     MessageDialog {
-        //MessageDialog to check weather the user really wants load to clear the track and load a new one
+        //MessageDialog to check weather the user really wants to clear the track and load a new one
         id: messageDialog
         icon: StandardIcon.Warning
         text: "This clears any existing track, are you sure?"

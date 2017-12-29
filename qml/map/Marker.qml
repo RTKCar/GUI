@@ -31,7 +31,6 @@ MapQuickItem {
 
 
         MouseArea  {
-            id: markerMouseArea
             anchors.fill: parent
             hoverEnabled : false
             preventStealing: true
@@ -61,11 +60,12 @@ MapQuickItem {
                                 //Same marker was pressed twice
                                 overlay.currentMarker = -1
                                 overlay.previousMarker = -1
-                                if(markersConnected.length > 2) {
+                                connectionColor()
+                                /*if(markersConnected.length > 2) {
                                     rect.color = "Red"
                                 } else {
                                     rect.color = "LimeGreen"
-                                }
+                                }*/
                             }
                             break
                         }

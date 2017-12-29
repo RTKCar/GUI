@@ -113,8 +113,8 @@ TestMenuForm {
         host.enabled = !connected
         port.enabled = !connected
         sendMapButton.enabled = approvedT && connected
-        if(!connected)
-            manualSwitch.toggle()
+        //if(!connected)
+            //manualSwitch.toggle()
     }
     host.onAccepted: {
         console.log("host okey")

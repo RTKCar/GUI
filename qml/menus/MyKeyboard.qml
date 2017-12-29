@@ -14,5 +14,4 @@ Item {
         if (key === Qt.Key_Down || key === Qt.Key_S)
             keyEvent("MANUAL:s:" + state + ";")
     }
-
 }

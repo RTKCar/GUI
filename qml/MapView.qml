@@ -17,18 +17,12 @@ Item {
     property alias mapComponent: overlay
     property MyTcpSocket myTcpSocket: null
     property MyStatusBar statsBar: null
-    signal mapDone()
 
     Plugin {
         id: mapPlugin
         name: "osm"
         //name: "mapboxgl"
-        //PluginParameter {name: "mapbox.map_id"; value: "mapbox.streets"}
         //PluginParameter {name: "mapbox.map_id"; value: "mapbox.outdoors"}
-        //PluginParameter {name: "mapbox.map_id"; value: "mapbox.streets-basic"}
-        //PluginParameter {name: "mapbox.map_id"; value: "mapbox.bright"}
-        //PluginParameter {name: "mapbox.map_id"; value: "mapbox.emerald"}
-        //PluginParameter {name: "mapbox.access_token"; value: "pk.eyJ1Ijoib2xpb2RkIiwiYSI6ImNqYWIxOGZscTB4M20ycXF1aDluM2NnaTgifQ.wYR97A-knsp-XR8wwrFSQg"}
         //PluginParameter {name: "mapboxgl.access_token"; value: "pk.eyJ1Ijoib2xpb2RkIiwiYSI6ImNqYWIxOGZscTB4M20ycXF1aDluM2NnaTgifQ.wYR97A-knsp-XR8wwrFSQg"}
 
     }
@@ -57,7 +51,6 @@ Item {
                     approvedTrack = false;
                 }
             }
-            onMapCompleted: mapDone()
         }
 
         function calculateScale() {
@@ -76,7 +69,7 @@ Item {
         focus: true
 
         onZoomLevelChanged:{
-            scaleTimer.restart()
+            //scaleTimer.restart()
         }
 
         PositionSource{
