@@ -1,7 +1,7 @@
 # GUI
 Graphical User Interface for creating maps and controlling the remote car
 
-![Alt text](https://github.com/RTKCar/GUI/blob/master/resources/track.png)
+![Alt text](https://github.com/RTKCar/GUI/blob/master/resources/GUI.png)
 
 
 ## Getting started

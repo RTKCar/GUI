@@ -182,7 +182,7 @@ Item {
                                 bottom: 0
                                 top: 9999
                             }
-                            text: "9905"
+                            //text: "9905"
                             //enabled:false
                         }
                     }

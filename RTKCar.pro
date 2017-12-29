@@ -33,4 +33,5 @@ HEADERS += \
 
 DISTFILES += \
     README.md \
-    resources/track.png
+    resources/track.png \
+    resources/GUI.png
