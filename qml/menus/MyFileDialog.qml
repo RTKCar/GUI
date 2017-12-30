@@ -6,7 +6,7 @@ import QtQuick.Controls 1.2
 
 Item {
     property string savingText: ""
-    signal textReceived(string textR)
+    signal textReceived(string textR, string textUrl)
     FileDialog{
         id: saveDialog
         title: "Please choose a file"
@@ -34,7 +34,7 @@ Item {
          selectedNameFilter: "text files (*.txt)"
          onAccepted: {
             var textInput = loadFile(loadDialog.fileUrl)
-            textReceived(textInput)
+            textReceived(textInput, loadDialog.fileUrl)
          }
          onRejected: {
              console.log("Canceled")
@@ -52,7 +52,7 @@ Item {
 
 
     function loadFile(fileUrl){
-        console.log(fileUrl, " url")
+        //console.log(fileUrl, " url")
         var request = new XMLHttpRequest();
         request.open("GET", fileUrl, false);
         request.send(null);
