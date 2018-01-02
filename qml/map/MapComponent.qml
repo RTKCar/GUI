@@ -508,14 +508,14 @@ Map {
         id: fileDialog
         onTextReceived: {
             try {
-            var params = textR.split(";")
-            var zoom = params[0].split(":")   
-            var centrCoord = params[1].split(":")
-            var latlong = centrCoord[1].split(",")
-            var point = QtPositioning.coordinate(latlong[0], latlong[1])
-            parentMap.zoomLevel = parseFloat(zoom[1])
-            parentMap.center = point
-            loadJsonMarkers(params[2])
+                var params = textR.split(";")
+                var zoom = params[0].split(":")
+                var centrCoord = params[1].split(":")
+                var latlong = centrCoord[1].split(",")
+                var point = QtPositioning.coordinate(latlong[0], latlong[1])
+                parentMap.zoomLevel = parseFloat(zoom[1])
+                parentMap.center = point
+                loadJsonMarkers(params[2])
             } catch(error) {
                 console.log("Error loading map")
                 console.log(error, " at line ", error.lineNumber, " in ", error.fileName,
