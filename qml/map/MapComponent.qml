@@ -478,6 +478,8 @@ Map {
         mapItems = new Array();
         console.log("maxZoom", overlay.maximumZoomLevel)
         console.log("minZoom", overlay.minimumZoomLevel)
+        console.log("Output from MapComponent: Component.onCompleted.",
+                    "\n Add more try/catchs like the one in MyFileDialog in MapComponent")
     }
 
     MessageDialog {

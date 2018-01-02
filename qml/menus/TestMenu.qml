@@ -13,11 +13,12 @@ TestMenuForm {
     signal disconnect()
     signal printTrack()
     signal simulate(bool value)
+    signal errorMessage(string eMessage)
     property Map mapSourca
     property bool connected: false
     property bool approvedT: false
     property bool carConnected: false
-
+    property bool mapSent: false
 
     mapSource: mapSourca
     conn: connected
@@ -83,8 +84,9 @@ TestMenuForm {
         } else {
             stackLayout1.currentIndex = 0
             stackLayout2.currentIndex = 0
-            speedBox.enabled = true
-            stopButton.enabled = carConnected
+            speedBox.enabled = carConnected && mapSent
+            startButton.enabled = carConnected && mapSent
+            stopButton.enabled = carConnected && mapSent
         }
         manualSwitch.enabled = !simulateSwitch.checked
         if(!carConnected && approvedT)
@@ -131,9 +133,19 @@ TestMenuForm {
     }
 
     onCarConnectedChanged: {
-        startButton.enabled = !carConnected && !manualSwitch.checked
-        stopButton.enabled = carConnected && !manualSwitch.checked
+        startButton.enabled = carConnected && !manualSwitch.checked && mapSent
+        speedBox.enabled = carConnected && !manualSwitch.checked && mapSent
+        stopButton.enabled = carConnected && !manualSwitch.checked && mapSent
         carIndicator.rlyActive = carConnected
         simulateSwitch.enabled = !carConnected && approvedT
+        if(!mapSent) {
+            errorMessage("send map before controlling the car")
+        }
+    }
+
+    onMapSentChanged: {
+        startButton.enabled = carConnected && !manualSwitch.checked && mapSent
+        speedBox.enabled = carConnected && !manualSwitch.checked && mapSent
+        stopButton.enabled = carConnected && !manualSwitch.checked && mapSent
     }
 }

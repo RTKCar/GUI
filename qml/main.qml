@@ -102,6 +102,7 @@ ApplicationWindow {
                 if(mytcpSocket.isConnected)
                     mytcpSocket.sendMessage("STOP")
                 testTools.startButton.enabled = true
+                testTools.speedBox.enabled = true
                 testTools.stopButton.enabled = false
             }
 
@@ -114,6 +115,10 @@ ApplicationWindow {
             }
             loadButton.onClicked: {
                 mapview.mapComponent.loadMap()
+            }
+            onErrorMessage: {
+                errorDialog.text = eMessage
+                errorDialog.open()
             }
 
             MyKeyboard {
@@ -195,11 +200,16 @@ ApplicationWindow {
         onSocketDisconnected: {
             testTools.connected = false
             testTools.carConnected = false
+            first = true
             //mapview.mapComponent.removeCar()
         }
         onErrorConnecting: {
             errorDialog.text = errorMessage
             errorDialog.open()
+        }
+        onMapSent: {
+            testTools.mapSent = true
+            console.log("Map successfully sent to host")
         }
         onRecieved: {
             //Split recieved message to extract latitude and longitude for car or baseStation.
@@ -218,11 +228,11 @@ ApplicationWindow {
                 if(latlong[2] === 0)
                     not = "not"
                 console.log(latlong[2])
-                console.log("BaseStation is " + not + " fixed")
-                testTools.carConnected = true
+                console.log("BaseStation is " + not + " fixed")            
                 if(first) {
                     first = false
-                    testTools.startButton.enabled = true
+                    testTools.carConnected = true
+                    //testTools.startButton.enabled = true
                 }
                 break
             case 1:
@@ -249,7 +259,8 @@ ApplicationWindow {
                 break
             case 2:
                 // Rover disconnected
-                //testTools.carConnected = false
+                testTools.carConnected = false
+                first = true
                 break
             case 3:
                 // baseStation position received
@@ -269,5 +280,14 @@ ApplicationWindow {
         //Make sure messageDialog is shown before closing
         close.accepted = false
         messageDialog.open()
+    }
+
+    Timer {
+        //Times used for debugging and testing
+        id:debugTimer
+        interval: 1000; running: true; repeat: false
+        onTriggered: {
+            //testTools.carConnected = !testTools.carConnected
+        }
     }
 }

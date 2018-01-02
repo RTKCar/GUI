@@ -22,6 +22,7 @@ signals:
   void errorConnecting(QString errorMessage);
   void recieved(QString message);
   void isConnectedChanged();
+  void mapSent();
 
 public slots:
   void doConnect(QString host, quint16 port);

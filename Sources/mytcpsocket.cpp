@@ -77,10 +77,13 @@ void MyTcpSocket::readyRead()
 }
 
 void MyTcpSocket::sendMessage(QByteArray message)
-// Sends passed message along to the host
+// Sends provided message along to the host
 {
     if(_isConnected){
         socket->write(message);
         qDebug() << message;
+        if(message.startsWith("MAP")) {
+            emit mapSent();
+        }
     }
 }
