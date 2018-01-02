@@ -484,7 +484,10 @@ Map {
         console.log("maxZoom", overlay.maximumZoomLevel)
         console.log("minZoom", overlay.minimumZoomLevel)
         console.log("Output from MapComponent: Component.onCompleted.",
-                    "\n Add more try/catchs like the one in MyFileDialog in MapComponent")
+                    "\n * Add more try/catchs like the one in MyFileDialog in MapComponent",
+                    "\n * Add indicator for baseStation fixed or not",
+                    "\n * Ta bort krav 11.11 om GUI:t uppdateringsfrekvens?",
+                    "\n * Indikation om att bilen frånkopplas finns ej?!")
     }
 
     MessageDialog {

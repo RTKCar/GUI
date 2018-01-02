@@ -213,15 +213,24 @@ ApplicationWindow {
         }
         onRecieved: {
             //Split recieved message to extract latitude and longitude for car or baseStation.
-
-            var obj = message.split(";")
-            var data = obj[0].split(":")
-            var state = parseInt(data[0])
+            try {
+                var obj = message.split(";")
+                var data = obj[0].split(":")
+                var state = parseInt(data[0])
+            } catch(error) {
+                console.log(error, " at line ", error.lineNumber, " in ", error.fileName,
+                            "\nWhen splitting or parsing message")
+            }
 
             switch (state){
             case 0:
                 // Rover position received
-                var latlong = data[1].split(",")
+                try {
+                    var latlong = data[1].split(",")
+                } catch(error) {
+                    console.log(error, " at line ", error.lineNumber, " in ", error.fileName,
+                                "\nWhen splitting Rover position")
+                }
                 //Check latlong.length?
                 mapview.mapComponent.setCarBearing(QtPositioning.coordinate(latlong[0], latlong[1]))
                 var not = ""
@@ -237,9 +246,15 @@ ApplicationWindow {
                 break
             case 1:
                 // Object in front of Rover, at 0 = left, 1 = in front, 2 = right of object
-                var distObj = data[1].split(",")
-                var position = ""
-                var pos = parseInt(distObj[1])
+                try {
+                    var distObj = data[1].split(",")
+                    var position = ""
+                    var pos = parseInt(distObj[1])
+                } catch(error) {
+                    console.log(error, " at line ", error.lineNumber, " in ", error.fileName,
+                                "\nWhen splitting or parsing Object in Rovers path")
+                }
+
                 switch (pos) {
                     case 0:
                         position = "left"
@@ -265,8 +280,14 @@ ApplicationWindow {
             case 3:
                 // baseStation position received
                 //Check latlong.length?
-                var latlong = data[1].split(",")
-                var baseCoord = QtPositioning.coordinate(latlong[0], latlong[1])
+                try {
+                    var latlong = data[1].split(",")
+                    var baseCoord = QtPositioning.coordinate(latlong[0], latlong[1])
+                } catch(error) {
+                    console.log(error, " at line ", error.lineNumber, " in ", error.fileName,
+                                "\nWhen splitting baseStations position")
+                }
+
                 console.log("BaseStation is at coordinate ", baseCoord)
                 //Push to track
                 break
@@ -287,7 +308,7 @@ ApplicationWindow {
         id:debugTimer
         interval: 10000; running: true; repeat: true
         onTriggered: {
-            testTools.carConnected = !testTools.carConnected
+            //testTools.carConnected = !testTools.carConnected
         }
     }
 }
