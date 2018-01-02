@@ -82,11 +82,11 @@ TestMenuForm {
             startButton.enabled = false
             mouseDelegate.checked = true
         } else {
-            stackLayout1.currentIndex = 0
-            stackLayout2.currentIndex = 0
-            speedBox.enabled = carConnected && mapSent
-            startButton.enabled = carConnected && mapSent
-            stopButton.enabled = carConnected && mapSent
+            stackLayout1.currentIndex = stackLayout2.currentIndex = 0
+            //stackLayout2.currentIndex = 0
+            speedBox.enabled = startButton.enabled = stopButton.enabled = carConnected && mapSent
+            //startButton.enabled = carConnected && mapSent
+            //stopButton.enabled = carConnected && mapSent
         }
         manualSwitch.enabled = !simulateSwitch.checked
         if(!carConnected && approvedT)
@@ -97,13 +97,13 @@ TestMenuForm {
         if(manualSwitch.checked) {
             stackLayout1.currentIndex = 1
             stopButton.clicked()
-            stopButton.enabled = false
-            startButton.enabled = false
-            sendMapButton.enabled = false
+            stopButton.enabled = startButton.enabled = speedBox.enabled = sendMapButton.enabled = false
+            //startButton.enabled = false
+            //sendMapButton.enabled = false
         } else {
             stackLayout1.currentIndex = 0
-            startButton.enabled = !carConnected
-            stopButton.enabled = carConnected
+            startButton.enabled = stopButton.enabled = speedBox.enabled = carConnected && mapSent
+            //stopButton.enabled = carConnected && mapSent
             sendMapButton.enabled = approvedT && connected
         }
     }
@@ -112,8 +112,8 @@ TestMenuForm {
         serverIndicator.rlyActive = connected
         connectButton.enabled = !connected
         disconnectButton.enabled = connected
-        host.enabled = !connected
-        port.enabled = !connected
+        host.enabled = port.enabled = !connected
+        //port.enabled = !connected
         sendMapButton.enabled = approvedT && connected
         //if(!connected)
             //manualSwitch.toggle()
@@ -134,8 +134,9 @@ TestMenuForm {
 
     onCarConnectedChanged: {
         startButton.enabled = carConnected && !manualSwitch.checked && mapSent
-        speedBox.enabled = carConnected && !manualSwitch.checked && mapSent
-        stopButton.enabled = carConnected && !manualSwitch.checked && mapSent
+        //speedBox.enabled = carConnected && !manualSwitch.checked && mapSent
+        //stopButton.enabled = carConnected && !manualSwitch.checked && mapSent
+        speedBox.enabled = stopButton.enabled = startButton.enabled
         carIndicator.rlyActive = carConnected
         simulateSwitch.enabled = !carConnected && approvedT
         if(!mapSent) {

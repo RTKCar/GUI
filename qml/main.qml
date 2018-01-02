@@ -285,9 +285,9 @@ ApplicationWindow {
     Timer {
         //Times used for debugging and testing
         id:debugTimer
-        interval: 1000; running: true; repeat: false
+        interval: 10000; running: true; repeat: true
         onTriggered: {
-            //testTools.carConnected = !testTools.carConnected
+            testTools.carConnected = !testTools.carConnected
         }
     }
 }

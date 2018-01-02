@@ -186,6 +186,8 @@ Map {
             for (var i = 0; i<markers.length; i++){
                 if(i !== mark)
                     myArray.push(markers[i])
+                else
+                    mapOverlay.markers[i].destroy()
             }
             markers = myArray
         }
@@ -223,6 +225,9 @@ Map {
             for (var i = 0; i<mapItems.length; i++){
                 if(i !== polyIndex)
                     myArray.push(mapItems[i])
+                else {
+                    mapItems[i].destroy()
+                }
             }
             mapItems = myArray
             aprovedTrack();
@@ -260,7 +265,7 @@ Map {
                 currentMarker = -1
                 connection = true
             } else {
-                console.log("node choosed for next round")
+                //node choosed for next round
             }
         }
     }
