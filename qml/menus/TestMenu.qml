@@ -97,7 +97,8 @@ TestMenuForm {
         if(manualSwitch.checked) {
             stackLayout1.currentIndex = 1
             stopButton.clicked()
-            stopButton.enabled = startButton.enabled = speedBox.enabled = sendMapButton.enabled = false
+            stopButton.enabled = startButton.enabled = sendMapButton.enabled = false
+            speedBox.enabled = true
             //startButton.enabled = false
             //sendMapButton.enabled = false
         } else {
@@ -115,7 +116,9 @@ TestMenuForm {
         host.enabled = port.enabled = !connected
         //port.enabled = !connected
         sendMapButton.enabled = approvedT && connected
-        //if(!connected)
+        //if(connected && startButton.enabled)
+        if(connected)
+            manualSwitch.enabled = true
             //manualSwitch.toggle()
     }
     host.onAccepted: {
@@ -133,7 +136,9 @@ TestMenuForm {
     }
 
     onCarConnectedChanged: {
-        startButton.enabled = carConnected && !manualSwitch.checked && mapSent
+        //for testing
+        //startButton.enabled = carConnected && !manualSwitch.checked && mapSent
+
         //speedBox.enabled = carConnected && !manualSwitch.checked && mapSent
         //stopButton.enabled = carConnected && !manualSwitch.checked && mapSent
         speedBox.enabled = stopButton.enabled = startButton.enabled
@@ -145,8 +150,12 @@ TestMenuForm {
     }
 
     onMapSentChanged: {
-        startButton.enabled = carConnected && !manualSwitch.checked && mapSent
-        speedBox.enabled = carConnected && !manualSwitch.checked && mapSent
+        //for testing
+        //startButton.enabled = carConnected && !manualSwitch.checked && mapSent
+        speedBox.enabled = carConnected
         stopButton.enabled = carConnected && !manualSwitch.checked && mapSent
+    }
+    speedBox.onCurrentIndexChanged: {
+        speedBox.focus = false
     }
 }

@@ -85,16 +85,15 @@ ApplicationWindow {
             startButton.onClicked: {
                 //Call apropriate functions at signal
                 if(mytcpSocket.isConnected)
-                    mytcpSocket.sendMessage("START:" + (speedBox.currentIndex+3))
+                    mytcpSocket.sendMessage("START;")
                 testTools.startButton.enabled = false
                 testTools.stopButton.enabled = true
             }
             speedBox.onCurrentIndexChanged: {
                 //Updates speed to car
-                if(testTools.carConnected && mytcpSocket.isConnected) {
-                    mytcpSocket.sendMessage("START:" + (speedBox.currentIndex+3))
-                    testTools.startButton.enabled = false
-                    testTools.stopButton.enabled = true
+                if(mytcpSocket.isConnected) {
+                //if(manualSwitch.checked && mytcpSocket.isConnected) {
+                    mytcpSocket.sendMessage("SPEED:" + (speedBox.currentIndex+3) + ";")
                 }
             }
             stopButton.onClicked: {
@@ -102,7 +101,7 @@ ApplicationWindow {
                 if(mytcpSocket.isConnected)
                     mytcpSocket.sendMessage("STOP")
                 testTools.startButton.enabled = true
-                testTools.speedBox.enabled = true
+                //testTools.speedBox.enabled = true
                 testTools.stopButton.enabled = false
             }
 
@@ -125,7 +124,7 @@ ApplicationWindow {
                 id: myKeyboard
                 onKeyEvent: {
                     if(mytcpSocket.isConnected) {
-                        mytcpSocket.sendMessage(message + ":" + (testTools.speedBox.currentIndex+3))
+                        mytcpSocket.sendMessage(message)
                     } else {
                         console.log("could not send: " + message + ".\nServer not connected.")
                     }
@@ -145,10 +144,10 @@ ApplicationWindow {
 
             onConnect: {
                 //specifies default host & port and checks input before connecting
-                var _host = "127.0.0.1"
-                //var _host = "192.168.80.38"
-                var _port = 5001
-                //var _port = 9003
+                //var _host = "127.0.0.1"
+                var _host = "192.168.80.38"
+                //var _port = 5001
+                var _port = 9003
                 if(host.acceptableInput) {
                     _host = host.text
                 } else {
@@ -215,6 +214,8 @@ ApplicationWindow {
             //Split recieved message to extract latitude and longitude for car or baseStation.
             try {
                 var obj = message.split(";")
+                console.log("in mytcpSocket in main onRecieved for-loop for each message in obj",
+                            "so that no message is lost, may receive message from both RTK and Rover")
                 var data = obj[0].split(":")
                 var state = parseInt(data[0])
             } catch(error) {

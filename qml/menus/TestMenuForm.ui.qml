@@ -346,7 +346,7 @@ Item {
                         text: qsTr("Start")
                         Layout.preferredWidth: 85
                         Layout.preferredHeight: 30
-                        enabled: false
+                        //enabled: false
                     }
 
                     Button {
@@ -354,7 +354,7 @@ Item {
                         text: qsTr("Stop")
                         Layout.preferredWidth: 85
                         Layout.preferredHeight: 30
-                        enabled: false
+                        //enabled: false
                     }
                 }
             }
