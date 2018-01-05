@@ -67,7 +67,7 @@ void MyTcpSocket::bytesWritten(qint64 bytes)
 void MyTcpSocket::readyRead()
 // Called when socket is ready to read data
 {
-    qDebug() << "reading...";
+    //qDebug() << "reading...";
 
     // Read the data from the socket and pass is along in recieved
     if(_isConnected){
@@ -81,7 +81,8 @@ void MyTcpSocket::sendMessage(QByteArray message)
 {
     if(_isConnected){
         socket->write(message);
-        qDebug() << message;
+        qDebug() << QTime::currentTime() <<" " << message;
+        //qDebug() << message;
         if(message.startsWith("MAP")) {
             emit mapSent();
         }

@@ -8,6 +8,7 @@
 #include <QAbstractSocket>
 #include <QDebug>
 #include <QString>
+#include <QTime>
 
 class MyTcpSocket : public QObject
 {

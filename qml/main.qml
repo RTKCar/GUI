@@ -13,7 +13,7 @@ import myPackage 1.0
 ApplicationWindow {
     id: appWindow
     visible: true
-    height: 630 //Screen.height
+    height: 530 //Screen.height
     width: 800 //Screen.width
     title: qsTr("RTKCar")
     property bool first: true
@@ -84,10 +84,14 @@ ApplicationWindow {
             }
             startButton.onClicked: {
                 //Call apropriate functions at signal
+                //console.log("start pressed", Qt.formatDateTime())
+                var today = new Date()
+                //console.log("start pressed ", Qt.formatDateTime(today, 'hh:mm:ss.zzz'))
                 if(mytcpSocket.isConnected)
                     mytcpSocket.sendMessage("START;")
                 testTools.startButton.enabled = false
                 testTools.stopButton.enabled = true
+
             }
             speedBox.onCurrentIndexChanged: {
                 //Updates speed to car
@@ -98,6 +102,9 @@ ApplicationWindow {
             }
             stopButton.onClicked: {
                 //Call apropriate functions at signal
+                var today = new Date()
+                //console.log("stop pressed ", Qt.formatTime(today, 'hh:mm:ss.zzz'))
+                //console.log("stop pressed", Qt.formatDateTime())
                 if(mytcpSocket.isConnected)
                     mytcpSocket.sendMessage("STOP")
                 testTools.startButton.enabled = true
@@ -123,6 +130,7 @@ ApplicationWindow {
             MyKeyboard {
                 id: myKeyboard
                 onKeyEvent: {
+                    //console.log("key pressed or released ", Qt.formatTime(new Date(), 'hh:mm:ss.zzz'))
                     if(mytcpSocket.isConnected) {
                         mytcpSocket.sendMessage(message)
                     } else {
@@ -145,7 +153,8 @@ ApplicationWindow {
             onConnect: {
                 //specifies default host & port and checks input before connecting
                 //var _host = "127.0.0.1"
-                var _host = "192.168.80.38"
+                var _host = "192.168.43.140"
+                //var _host = "192.168.80.38"
                 //var _port = 5001
                 var _port = 9003
                 if(host.acceptableInput) {
@@ -200,7 +209,7 @@ ApplicationWindow {
             testTools.connected = false
             testTools.carConnected = false
             first = true
-            //mapview.mapComponent.removeCar()
+            mapview.mapComponent.removeCar()
         }
         onErrorConnecting: {
             errorDialog.text = errorMessage
@@ -214,8 +223,8 @@ ApplicationWindow {
             //Split recieved message to extract latitude and longitude for car or baseStation.
             try {
                 var obj = message.split(";")
-                console.log("in mytcpSocket in main onRecieved for-loop for each message in obj",
-                            "so that no message is lost, may receive message from both RTK and Rover")
+                //console.log("in mytcpSocket in main onRecieved for-loop for each message in obj",
+                            //"so that no message is lost, may receive message from both RTK and Rover")
                 var data = obj[0].split(":")
                 var state = parseInt(data[0])
             } catch(error) {
@@ -271,7 +280,7 @@ ApplicationWindow {
                 }
 
                 console.log("Object detected " + distObj[0] + " cm " + position + " of vehicle")
-                console.log("popup-window instead?")
+                //console.log("popup-window instead?")
                 break
             case 2:
                 // Rover disconnected

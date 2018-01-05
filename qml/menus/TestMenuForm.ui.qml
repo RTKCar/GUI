@@ -331,7 +331,8 @@ Item {
                         width: 85
                         height: 30
                         model: ["Low", "Mid", "High"]
-                        enabled: false
+                        enabled: connected
+                        //enabled: false
                     }
                 }
 
@@ -346,6 +347,7 @@ Item {
                         text: qsTr("Start")
                         Layout.preferredWidth: 85
                         Layout.preferredHeight: 30
+                        enabled: connected
                         //enabled: false
                     }
 
@@ -354,6 +356,7 @@ Item {
                         text: qsTr("Stop")
                         Layout.preferredWidth: 85
                         Layout.preferredHeight: 30
+                        enabled: connected
                         //enabled: false
                     }
                 }
