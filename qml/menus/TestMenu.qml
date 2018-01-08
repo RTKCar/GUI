@@ -19,6 +19,7 @@ TestMenuForm {
     property bool approvedT: false
     property bool carConnected: false
     property bool mapSent: false
+    property bool testMode: false
 
     mapSource: mapSourca
     conn: connected
@@ -83,13 +84,8 @@ TestMenuForm {
             mouseDelegate.checked = true
         } else {
             stackLayout1.currentIndex = stackLayout2.currentIndex = 0
-            //stackLayout2.currentIndex = 0
-            //for testing
-            //speedBox.enabled = startButton.enabled = stopButton.enabled = carConnected && mapSent
-            startButton.enabled = stopButton.enabled = connected && mapSent
+            startButton.enabled = stopButton.enabled = carConnected && mapSent || testMode
             speedBox.enabled = connected
-            //startButton.enabled = carConnected && mapSent
-            //stopButton.enabled = carConnected && mapSent
         }
         manualSwitch.enabled = !simulateSwitch.checked
         if(!carConnected && approvedT)
@@ -102,15 +98,21 @@ TestMenuForm {
             stopButton.clicked()
             stopButton.enabled = startButton.enabled = sendMapButton.enabled = false
             speedBox.enabled = true
-            //startButton.enabled = false
-            //sendMapButton.enabled = false
         } else {
             stackLayout1.currentIndex = 0
-            //for testing
-            //startButton.enabled = stopButton.enabled = speedBox.enabled = carConnected && mapSent
-            startButton.enabled = stopButton.enabled = connected && mapSent
+            startButton.enabled = stopButton.enabled = carConnected && mapSent || testMode
             speedBox.enabled = connected
-            //stopButton.enabled = carConnected && mapSent
+            sendMapButton.enabled = approvedT && connected
+        }
+    }
+
+    testSwitch.onCheckedChanged: {
+        testMode = testSwitch.checked
+        if(testSwitch.checked) {
+            stopButton.enabled = startButton.enabled = speedBox.enabled = sendMapButton.enabled = true
+        } else {
+            startButton.enabled = stopButton.enabled = carConnected && mapSent
+            speedBox.enabled = connected
             sendMapButton.enabled = approvedT && connected
         }
     }
@@ -120,12 +122,10 @@ TestMenuForm {
         connectButton.enabled = !connected
         disconnectButton.enabled = connected
         host.enabled = port.enabled = !connected
-        //port.enabled = !connected
         sendMapButton.enabled = approvedT && connected
         //if(connected && startButton.enabled)
         if(connected)
             manualSwitch.enabled = startButton.enabled = stopButton.enabled = true
-            //manualSwitch.toggle()
     }
     host.onAccepted: {
         console.log("host okey")
@@ -142,24 +142,19 @@ TestMenuForm {
     }
 
     onCarConnectedChanged: {
-        //for testing
-        //startButton.enabled = carConnected && !manualSwitch.checked && mapSent
-
-        //speedBox.enabled = carConnected && !manualSwitch.checked && mapSent
-        //stopButton.enabled = carConnected && !manualSwitch.checked && mapSent
-        speedBox.enabled = stopButton.enabled = startButton.enabled = carConnected
+        stopButton.enabled = startButton.enabled = carConnected && !manualSwitch.checked && mapSent || testMode
+        speedBox.enabled = carConnected
         carIndicator.rlyActive = carConnected
         simulateSwitch.enabled = !carConnected && approvedT
-        if(!mapSent) {
+        if(!mapSent && !testMode) {
             errorMessage("send map before controlling the car")
         }
     }
 
     onMapSentChanged: {
-        //for testing
-        //startButton.enabled = carConnected && !manualSwitch.checked && mapSent
-        //speedBox.enabled = carConnected
-        //stopButton.enabled = carConnected && !manualSwitch.checked && mapSent
+        startButton.enabled = carConnected && !manualSwitch.checked && mapSent || testMode
+        speedBox.enabled = carConnected || testMode
+        stopButton.enabled = carConnected && !manualSwitch.checked && mapSent || testMode
     }
     speedBox.onCurrentIndexChanged: {
         speedBox.focus = false

@@ -344,7 +344,7 @@ Map {
 
     function createCar(coord) {
         //Creates a Car at the specified coordinates
-        if(approved) {
+        //if(approved) {
             var co = Qt.createComponent('Car.qml')
             if (co.status === Component.Ready) {
                 var o = co.createObject(mapOverlay)
@@ -355,7 +355,7 @@ Map {
             } else {
                 console.log(" is not supported right now, please call us later.")
             }
-        }
+       // }
     }
 
     //Sets the cars new bearing
@@ -484,9 +484,6 @@ Map {
         console.log("maxZoom", overlay.maximumZoomLevel)
         console.log("minZoom", overlay.minimumZoomLevel)
         console.log("Output from MapComponent: Component.onCompleted.",
-                    "\n * Add more try/catchs like the one in MyFileDialog in MapComponent",
-                    "\n * Add indicator for baseStation fixed or not",
-                    "\n * Ta bort krav 11.11 om GUI:t uppdateringsfrekvens?",
                     "\n * Indikation om att bilen frånkopplas finns ej?!")
     }
 

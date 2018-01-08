@@ -81,7 +81,7 @@ void MyTcpSocket::sendMessage(QByteArray message)
 {
     if(_isConnected){
         socket->write(message);
-        qDebug() << QTime::currentTime() <<" " << message;
+        //qDebug() << QTime::currentTime() <<" " << message;
         //qDebug() << message;
         if(message.startsWith("MAP")) {
             emit mapSent();

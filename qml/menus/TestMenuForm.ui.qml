@@ -36,6 +36,9 @@ Item {
     property alias manualSwitch: manualSwitch
     property alias stackLayout1: stackLayout1
     property alias stackLayout2: stackLayout2
+    property alias testSwitch: testSwitch
+    property alias fixedIndicator: fStatusIndc
+    property alias objectIndicator: objectIndicator
     property Map mapSource
     property bool conn: false
     width: 200
@@ -293,7 +296,7 @@ Item {
                 x: 0
                 y: 381
                 width: 200
-                height: 101
+                height: 128
                 spacing: 3
 
                 RowLayout {
@@ -315,6 +318,26 @@ Item {
                     }
                 }
 
+                RowLayout {
+                    id: rowLayout2
+                    width: 200
+                    height: 28
+
+                    Label {
+                        id: label8
+                        text: qsTr("Object detected")
+                    }
+
+                    StatusIndicator {
+                        id: objectIndicator
+                        color: "Yellow"
+                        Layout.preferredHeight: 25
+                        Layout.preferredWidth: 25
+                        active: true
+                        visible: false
+                    }
+                }
+
                 Row {
                     id: speedRow
                     width: 200
@@ -331,8 +354,8 @@ Item {
                         width: 85
                         height: 30
                         model: ["Low", "Mid", "High"]
-                        enabled: connected
-                        //enabled: false
+                        //enabled: connected
+                        enabled: false
                     }
                 }
 
@@ -347,8 +370,8 @@ Item {
                         text: qsTr("Start")
                         Layout.preferredWidth: 85
                         Layout.preferredHeight: 30
-                        enabled: connected
-                        //enabled: false
+                        //enabled: connected
+                        enabled: false
                     }
 
                     Button {
@@ -356,8 +379,8 @@ Item {
                         text: qsTr("Stop")
                         Layout.preferredWidth: 85
                         Layout.preferredHeight: 30
-                        enabled: connected
-                        //enabled: false
+                        //enabled: connected
+                        enabled: false
                     }
                 }
             }
@@ -365,9 +388,9 @@ Item {
             RowLayout {
                 id: rowLayout4
                 x: 0
-                y: 474
+                y: 509
                 width: 200
-                height: 39
+                height: 34
                 spacing: 0
 
                 MySwitchDelegate {
@@ -545,6 +568,35 @@ Item {
                 height: 5
                 rightPadding: 0
                 leftPadding: 0
+            }
+
+            RowLayout {
+                id: rowLayout
+                x: 0
+                y: 538
+                width: 200
+                height: 35
+                spacing: 0
+
+                MySwitchDelegate {
+                    id: testSwitch
+                    width: 137
+                    height: 35
+                    text: "TestMode"
+                }
+
+                Label {
+                    id: label6
+                    height: 32
+                    text: qsTr("Fixed")
+                    Layout.rowSpan: 2
+                }
+
+                MyStatusIndicator {
+                    id: fStatusIndc
+                    Layout.preferredHeight: 25
+                    Layout.preferredWidth: 25
+                }
             }
         }
     }

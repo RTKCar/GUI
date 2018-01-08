@@ -13,7 +13,7 @@ import myPackage 1.0
 ApplicationWindow {
     id: appWindow
     visible: true
-    height: 530 //Screen.height
+    height: 600 //Screen.height
     width: 800 //Screen.width
     title: qsTr("RTKCar")
     property bool first: true
@@ -89,9 +89,8 @@ ApplicationWindow {
                 //console.log("start pressed ", Qt.formatDateTime(today, 'hh:mm:ss.zzz'))
                 if(mytcpSocket.isConnected)
                     mytcpSocket.sendMessage("START;")
-                testTools.startButton.enabled = false
+                testTools.startButton.enabled = false || testTools.testMode
                 testTools.stopButton.enabled = true
-
             }
             speedBox.onCurrentIndexChanged: {
                 //Updates speed to car
@@ -109,7 +108,7 @@ ApplicationWindow {
                     mytcpSocket.sendMessage("STOP")
                 testTools.startButton.enabled = true
                 //testTools.speedBox.enabled = true
-                testTools.stopButton.enabled = false
+                testTools.stopButton.enabled = false || testTools.testMode
             }
 
             onSimulate: {
@@ -243,11 +242,17 @@ ApplicationWindow {
                 }
                 //Check latlong.length?
                 mapview.mapComponent.setCarBearing(QtPositioning.coordinate(latlong[0], latlong[1]))
-                var not = ""
+                if(testTools.testMode)
+                    console.log("Car at lat: ", latlong[0], " and long: ", latlong[1])
+                if(latlong[2] === 1)
+                    testTools.fixedIndicator.rlyActive = true
+                else
+                    testTools.fixedIndicator.rlyActive = false
+                /*var not = ""
                 if(latlong[2] === 0)
                     not = "not"
                 console.log(latlong[2])
-                console.log("BaseStation is " + not + " fixed")            
+                console.log("BaseStation is " + not + " fixed")*/
                 if(first) {
                     first = false
                     testTools.carConnected = true
@@ -256,6 +261,8 @@ ApplicationWindow {
                 break
             case 1:
                 // Object in front of Rover, at 0 = left, 1 = in front, 2 = right of object
+                testTools.objectIndicator.visible = true
+                roverTimer.restart()
                 try {
                     var distObj = data[1].split(",")
                     var position = ""
@@ -311,6 +318,15 @@ ApplicationWindow {
         //Make sure messageDialog is shown before closing
         close.accepted = false
         messageDialog.open()
+    }
+
+    Timer {
+        //Times used for Rover objects
+        id:roverTimer
+        interval: 5000; running: false; repeat: false
+        onTriggered: {
+            testTools.objectIndicator.visible = false
+        }
     }
 
     Timer {
